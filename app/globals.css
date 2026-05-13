@@ -1,0 +1,393 @@
+@import "tailwindcss";
+
+/* ─── BRAND TOKENS ─────────────────────────────────────────────────────── */
+:root {
+  --pts-bg:        #333337;
+  --pts-gold:      #a88f64;
+  --pts-gold-2:    #cfba90;
+  --pts-black:     #1a1a1c;
+  --pts-parchment: #cfba90;
+  --pts-muted:     rgba(207, 186, 144, 0.6);
+  --pts-line:      rgba(168, 143, 100, 0.15);
+  --pts-deep:      #0d0d0f;
+}
+
+@theme inline {
+  --color-pts-bg:        var(--pts-bg);
+  --color-pts-gold:      var(--pts-gold);
+  --color-pts-gold-2:    var(--pts-gold-2);
+  --color-pts-black:     var(--pts-black);
+  --color-pts-parchment: var(--pts-parchment);
+  --color-pts-muted:     var(--pts-muted);
+  --color-pts-line:      var(--pts-line);
+  --color-pts-deep:      var(--pts-deep);
+  --font-heading: var(--font-cinzel), ui-serif, Georgia, serif;
+  --font-body: "Glacial Indifference", ui-sans-serif, system-ui, sans-serif;
+  --shadow-lux:  0 40px 100px rgba(0, 0, 0, 0.6);
+  --shadow-gold: 0 0 80px rgba(168, 143, 100, 0.12);
+}
+
+/* ─── BASE ──────────────────────────────────────────────────────────────── */
+html {
+  background: var(--pts-bg);
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--pts-bg);
+  color: var(--pts-parchment);
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: none; /* Custom cursor */
+}
+
+/* ─── GLOBAL GRAIN ──────────────────────────────────────────────────────── */
+.grain-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.02;
+  mix-blend-mode: overlay;
+  animation: grain-drift 8s steps(10, end) infinite;
+}
+
+@keyframes grain-drift {
+  0%, 100% { transform: translate(0, 0); }
+  10%       { transform: translate(-2%, -3%); }
+  20%       { transform: translate(3%, 2%); }
+  30%       { transform: translate(-1%, 4%); }
+  40%       { transform: translate(4%, -1%); }
+  50%       { transform: translate(-3%, 3%); }
+  60%       { transform: translate(2%, -4%); }
+  70%       { transform: translate(-4%, 1%); }
+  80%       { transform: translate(1%, -2%); }
+  90%       { transform: translate(-2%, 4%); }
+}
+
+/* ─── CINEMATIC VIGNETTE ────────────────────────────────────────────────── */
+.cinematic-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: radial-gradient(ellipse at center, transparent 65%, rgba(13, 13, 15, 0.4) 100%);
+}
+
+.tunnel-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 91;
+  background: radial-gradient(circle at center, transparent 20%, rgba(13, 13, 15, 0.95) 100%);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* ─── SECTION CLARITY ───────────────────────────────────────────────────── */
+.section-border-top {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pts-gold-2), transparent);
+  opacity: 0.15;
+}
+
+.section-label {
+  position: absolute;
+  top: 40px;
+  right: 60px;
+  opacity: 0.2;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* ─── TYPOGRAPHY ────────────────────────────────────────────────────────── */
+.lux-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Cinematic text clip reveal */
+.text-clip-reveal {
+  overflow: hidden;
+  display: block;
+}
+
+/* ─── MIST ANIMATIONS ───────────────────────────────────────────────────── */
+.mist-drift {
+  background: radial-gradient(ellipse 80% 60% at 50% 50%,
+    rgba(168, 143, 100, 0.06) 0%,
+    rgba(53, 53, 55, 0.12) 50%,
+    transparent 100%
+  );
+  animation: mist-move 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.mist-drift-slow {
+  background: radial-gradient(ellipse 120% 80% at 50% 50%,
+    rgba(168, 143, 100, 0.04) 0%,
+    rgba(13, 13, 15, 0.08) 60%,
+    transparent 100%
+  );
+  animation: mist-move-slow 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes mist-move {
+  0%   { transform: translate(-5%, -8%) scale(1.05); opacity: 0.5; }
+  33%  { transform: translate(6%, -3%) scale(1.12); opacity: 0.7; }
+  66%  { transform: translate(-3%, 7%) scale(0.98); opacity: 0.4; }
+  100% { transform: translate(8%, 2%) scale(1.08); opacity: 0.6; }
+}
+
+@keyframes mist-move-slow {
+  0%   { transform: translate(3%, 5%) scale(1); opacity: 0.35; }
+  50%  { transform: translate(-8%, -4%) scale(1.1); opacity: 0.5; }
+  100% { transform: translate(5%, -8%) scale(0.95); opacity: 0.3; }
+}
+
+/* ─── GOLD SHIMMER ──────────────────────────────────────────────────────── */
+.gold-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(207, 186, 144, 0.12) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ─── GOLD LINE DRAW ────────────────────────────────────────────────────── */
+.line-draw {
+  transform-origin: left center;
+  animation: line-draw 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes line-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ─── FLOATING ELEMENTS ─────────────────────────────────────────────────── */
+.float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(0.5deg); }
+  66%       { transform: translateY(-6px) rotate(-0.5deg); }
+}
+
+/* ─── CINEMATIC PULSE ───────────────────────────────────────────────────── */
+.gold-pulse {
+  animation: gold-pulse 3s ease-in-out infinite;
+}
+
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 143, 100, 0); }
+  50%       { box-shadow: 0 0 0 8px rgba(168, 143, 100, 0); }
+}
+
+/* ─── GLASS & DEPTH ─────────────────────────────────────────────────────── */
+.glass-panel {
+  background: rgba(53, 53, 55, 0.55);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(168, 143, 100, 0.1);
+}
+
+.glass-deep {
+  background: rgba(13, 13, 15, 0.7);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid rgba(168, 143, 100, 0.08);
+}
+
+/* ─── GPU ACCELERATION ──────────────────────────────────────────────────── */
+.gpu-layer {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ─── PERSPECTIVE CARDS ─────────────────────────────────────────────────── */
+.perspective-card {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── GOLD GLOW ─────────────────────────────────────────────────────────── */
+.gold-glow {
+  background: radial-gradient(circle, rgba(168, 143, 100, 0.18) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+.gold-glow-sm {
+  background: radial-gradient(circle, rgba(168, 143, 100, 0.12) 0%, transparent 60%);
+  filter: blur(30px);
+}
+
+/* ─── SCROLLBAR ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 3px; }
+::-webkit-scrollbar-track { background: var(--pts-bg); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--pts-gold), transparent);
+  border-radius: 10px;
+}
+
+/* ─── HORIZONTAL SCROLL SECTION ─────────────────────────────────────────── */
+.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* ─── CINEMATIC SECTION TRANSITION ─────────────────────────────────────── */
+.section-transition {
+  position: relative;
+}
+
+.section-transition::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 143, 100, 0.2) 30%,
+    rgba(207, 186, 144, 0.4) 50%,
+    rgba(168, 143, 100, 0.2) 70%,
+    transparent 100%
+  );
+}
+
+/* ─── STAT COUNTER ──────────────────────────────────────────────────────── */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ─── CINEMATIC CURSOR ──────────────────────────────────────────────────── */
+* {
+  cursor: none !important;
+}
+
+/* ─── PROGRESS BAR ──────────────────────────────────────────────────────── */
+.progress-line {
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--pts-gold), var(--pts-gold-2), var(--pts-gold));
+  transition: transform 0.1s linear;
+}
+
+/* ─── CLIP PATH REVEAL ──────────────────────────────────────────────────── */
+.clip-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.clip-reveal.is-visible {
+  clip-path: inset(0 0% 0 0);
+}
+
+/* ─── DIAGONAL LINE DECORATIONS ─────────────────────────────────────────── */
+.diagonal-line {
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(168, 143, 100, 0.15) 50%,
+    transparent 100%
+  );
+}
+
+/* ─── LOADER ENHANCEMENTS ───────────────────────────────────────────────── */
+.loader-glow {
+  text-shadow: 0 0 40px rgba(168, 143, 100, 0.4), 0 0 80px rgba(168, 143, 100, 0.15);
+}
+
+/* ─── MAGNETIC BUTTON GLOW ──────────────────────────────────────────────── */
+.btn-gold-glow:hover {
+  box-shadow:
+    0 0 20px rgba(168, 143, 100, 0.25),
+    0 0 60px rgba(168, 143, 100, 0.1),
+    inset 0 0 20px rgba(168, 143, 100, 0.05);
+}
+
+/* ─── LENIS SMOOTH DEFAULTS ─────────────────────────────────────────────── */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ─── PAGE LAYOUT RHYTHM (consistent section shells) ──────────────────── */
+.section-bridge {
+  position: relative;
+  scroll-margin-top: 5.5rem;
+}
+
+.page-section {
+  padding-top: clamp(4rem, 10vw, 7rem);
+  padding-bottom: clamp(4rem, 10vw, 7rem);
+}
+
+.section-inner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 92rem;
+  padding-left: clamp(1.25rem, 3vw, 2.5rem);
+  padding-right: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.scene-3d {
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+
+/* Ambient drift — very subtle, section-level decoration */
+@keyframes ambient-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(2%, -1.5%) scale(1.03); opacity: 0.55; }
+}
+
+.ambient-orb {
+  animation: ambient-drift 22s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.float-gentle {
+  animation: float-gentle 10s ease-in-out infinite;
+}

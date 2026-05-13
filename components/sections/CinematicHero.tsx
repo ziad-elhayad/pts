@@ -1,0 +1,342 @@
+"use client";
+
+import { useRef, useEffect } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { VideoSection } from "@/components/VideoSection";
+import { MagneticButton } from "@/components/ui/MagneticButton";
+import { FloatingScrollIndicator } from "@/components/ui/FloatingCTA";
+import { heroMedia } from "@/lib/media";
+import { site } from "@/lib/site";
+import { t } from "@/lib/dictionary";
+import { useLocale } from "@/contexts/LocaleContext";
+import { prefersReducedMotion } from "@/lib/motionPref";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+export function CinematicHero() {
+  const { locale } = useLocale();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const layer1Ref = useRef<HTMLDivElement>(null);
+  const layer2Ref = useRef<HTMLDivElement>(null);
+  const auroraRef = useRef<HTMLDivElement>(null);
+  const topLineRef = useRef<HTMLDivElement>(null);
+  const botLineRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      mouseRef.current = {
+        x: (e.clientX / innerWidth - 0.5) * 2,
+        y: (e.clientY / innerHeight - 0.5) * 2,
+      };
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  useEffect(() => {
+    const tick = () => {
+      const { x, y } = mouseRef.current;
+      if (layer1Ref.current) {
+        gsap.to(layer1Ref.current, {
+          x: x * -22,
+          y: y * -12,
+          duration: 2.2,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }
+      if (layer2Ref.current) {
+        gsap.to(layer2Ref.current, {
+          x: x * 14,
+          y: y * 8,
+          duration: 3.2,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }
+    };
+    gsap.ticker.add(tick);
+    return () => gsap.ticker.remove(tick);
+  }, []);
+
+  const tagline = t(locale, "hero.tagline");
+  const words = tagline.split(" ");
+
+  /* Intro + ambient (unique hero signature) */
+  useGSAP(
+    () => {
+      const reduced = prefersReducedMotion();
+      const kicker = sectionRef.current?.querySelector(".hero-kicker");
+      const sweeps = sectionRef.current?.querySelectorAll(".hero-word-sweep");
+      const wordInners = sectionRef.current?.querySelectorAll(".hero-word-inner");
+      const sub = sectionRef.current?.querySelector(".hero-sub");
+      const ctas = sectionRef.current?.querySelector(".hero-ctas");
+      const scrollEl = sectionRef.current?.querySelector(".hero-scroll-hint");
+      const coords = sectionRef.current?.querySelector(".hero-coords");
+
+      if (reduced) {
+        gsap.set([kicker, wordInners, sub, ctas, scrollEl, coords, topLineRef.current, botLineRef.current], {
+          opacity: 1,
+          clearProps: "transform,filter",
+        });
+        return;
+      }
+
+      if (
+        !topLineRef.current ||
+        !botLineRef.current ||
+        !kicker ||
+        !sub ||
+        !ctas ||
+        !scrollEl ||
+        !coords ||
+        !wordInners ||
+        wordInners.length === 0
+      ) {
+        return;
+      }
+
+      const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+      intro.fromTo(topLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0);
+      intro.fromTo(botLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0.12);
+      intro.fromTo(
+        kicker,
+        { opacity: 0, x: -40, filter: "blur(8px)" },
+        { opacity: 1, x: 0, filter: "blur(0px)", duration: 1 },
+        0.2,
+      );
+      intro.fromTo(
+        wordInners,
+        { yPercent: 125, rotateX: 56, opacity: 0.2, transformOrigin: "50% 0%" },
+        { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.25, stagger: 0.09 },
+        0.35,
+      );
+      if (sweeps && sweeps.length) {
+        intro.fromTo(
+          sweeps,
+          { xPercent: -130 },
+          { xPercent: 130, duration: 1.15, stagger: 0.07, ease: "power2.inOut" },
+          0.55,
+        );
+      }
+      intro.fromTo(
+        sub,
+        { opacity: 0, y: 36, filter: "blur(10px)" },
+        { opacity: 0.55, y: 0, filter: "blur(0px)", duration: 1.2 },
+        0.75,
+      );
+      intro.fromTo(
+        ctas,
+        { opacity: 0, y: 28, rotateX: 12, transformOrigin: "50% 100%" },
+        { opacity: 1, y: 0, rotateX: 0, duration: 1.15 },
+        0.95,
+      );
+      intro.fromTo(scrollEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.9 }, 1.15);
+      intro.fromTo(coords, { opacity: 0, y: 10 }, { opacity: 0.35, y: 0, duration: 1 }, 1.35);
+
+      if (auroraRef.current) {
+        gsap.to(auroraRef.current, {
+          rotate: 360,
+          duration: 48,
+          repeat: -1,
+          ease: "none",
+        });
+      }
+    },
+    { scope: sectionRef, dependencies: [locale] },
+  );
+
+  useGSAP(
+    () => {
+      const media = mediaRef.current;
+      const content = contentRef.current;
+      const overlay = overlayRef.current;
+      if (!media || !content) return;
+
+      gsap.to(media, {
+        yPercent: 32,
+        scale: 1.12,
+        rotateY: -4,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0,
+        },
+      });
+
+      gsap.to(content, {
+        autoAlpha: 0,
+        yPercent: -22,
+        rotateX: 8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "50% top",
+          scrub: 0,
+        },
+      });
+
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "bottom top",
+        pin: true,
+        pinSpacing: false,
+        scrub: true,
+      });
+
+      if (overlay) {
+        gsap.to(overlay, {
+          opacity: 0.72,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+    },
+    { scope: sectionRef },
+  );
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative h-[100svh] min-h-[700px] w-full overflow-hidden bg-pts-deep [perspective:1600px]"
+    >
+      <div
+        ref={auroraRef}
+        className="pointer-events-none absolute -left-1/2 top-1/2 z-[1] h-[180%] w-[200%] -translate-y-1/2 opacity-30 will-change-transform"
+        style={{
+          background:
+            "conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(168,143,100,0.06) 60deg, transparent 120deg, rgba(207,186,144,0.04) 200deg, transparent 280deg)",
+        }}
+        aria-hidden
+      />
+
+      <div
+        ref={mediaRef}
+        className="gpu-layer absolute inset-[-8%] will-change-transform [transform-style:preserve-3d]"
+        style={{ transformOrigin: "center center" }}
+      >
+        <VideoSection
+          poster={heroMedia.poster}
+          src={heroMedia.videoHd}
+          srcLarge={heroMedia.videoUhd}
+          className="h-full w-full"
+          overlayClassName="none"
+          lazyVideo
+        />
+      </div>
+
+      <div
+        ref={layer1Ref}
+        className="pointer-events-none absolute inset-[-5%] z-[2] will-change-transform"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 50% at 30% 40%, rgba(168,143,100,0.08) 0%, transparent 60%)",
+        }}
+      />
+      <div
+        ref={layer2Ref}
+        className="pointer-events-none absolute inset-[-5%] z-[3] will-change-transform"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 70% 60%, rgba(13,13,15,0.25) 0%, transparent 60%)",
+        }}
+      />
+
+      <div
+        ref={overlayRef}
+        className="pointer-events-none absolute inset-0 z-[4] opacity-60"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(13,13,15,0.3) 0%, rgba(13,13,15,0.1) 30%, rgba(13,13,15,0.7) 80%, rgba(13,13,15,0.92) 100%)",
+        }}
+        aria-hidden
+      />
+
+      <div className="pointer-events-none absolute inset-0 z-[5] mix-blend-soft-light" aria-hidden>
+        <div className="mist-drift absolute -left-1/4 top-0 h-[120%] w-[150%] opacity-60" />
+        <div className="mist-drift-slow absolute -right-1/3 top-1/4 h-full w-[140%] opacity-40" />
+      </div>
+
+      <div
+        ref={topLineRef}
+        className="pointer-events-none absolute left-0 right-0 top-0 z-[6] h-px origin-center scale-x-0 will-change-transform"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(168,143,100,0.35), transparent)" }}
+      />
+      <div
+        ref={botLineRef}
+        className="pointer-events-none absolute bottom-0 left-0 right-0 z-[6] h-px origin-center scale-x-0 will-change-transform"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(168,143,100,0.22), transparent)" }}
+      />
+
+      <div
+        ref={contentRef}
+        className="hero-content relative z-10 flex h-full transform-gpu flex-col justify-end px-6 pb-24 pt-40 [transform-style:preserve-3d] sm:px-10 lg:px-20"
+      >
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="hero-kicker mb-8 flex items-center gap-5 opacity-0">
+            <div className="h-px w-12 bg-pts-gold/60" />
+            <p className="lux-heading text-[0.52rem] tracking-[0.55em] text-pts-gold opacity-90">
+              {t(locale, "hero.kicker")}
+            </p>
+          </div>
+
+          <h1 className="max-w-5xl font-heading text-[clamp(1.75rem,4.2vw,3.75rem)] uppercase leading-[1.06] tracking-[0.08em] text-pts-parchment [perspective:1200px]">
+            {words.map((word, wi) => (
+              <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-2 align-top">
+                <span className="hero-word-inner relative inline-block will-change-transform">
+                  {word}
+                  <span
+                    className="hero-word-sweep pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-transparent via-pts-gold/25 to-transparent mix-blend-screen will-change-transform"
+                  />
+                </span>
+              </span>
+            ))}
+          </h1>
+
+          <p className="hero-sub mt-10 max-w-xl text-[0.6rem] uppercase leading-[2.15] tracking-[0.26em] text-pts-muted opacity-0">
+            {site.description}
+          </p>
+
+          <div className="hero-ctas mt-12 flex flex-wrap gap-5 opacity-0 [transform-style:preserve-3d]">
+            <MagneticButton href="/contact" className="btn-gold-glow">
+              {t(locale, "cta.inquire")}
+            </MagneticButton>
+            <MagneticButton
+              href={site.whatsapp}
+              className="border-white/15 bg-transparent text-pts-parchment/80"
+            >
+              {t(locale, "cta.begin")}
+            </MagneticButton>
+          </div>
+
+          <div className="hero-scroll-hint mt-14 opacity-0">
+            <FloatingScrollIndicator />
+          </div>
+        </div>
+
+        <div className="hero-coords absolute bottom-8 right-10 text-right opacity-0">
+          <p className="lux-heading text-[0.45rem] tracking-[0.5em] text-pts-gold">21°N 39°E</p>
+          <p className="lux-heading mt-1 text-[0.4rem] tracking-[0.4em] text-pts-gold/60">JEDDAH · GLOBAL</p>
+        </div>
+      </div>
+    </section>
+  );
+}
