@@ -362,7 +362,7 @@ html.lenis, html.lenis body {
 .section-bridge {
   position: relative;
   scroll-margin-top: 5.5rem;
-  transform: translateZ(0); /* Force GPU layer for stacking stability */
+  /* Removed translateZ(0) to fix iOS Safari fixed pinning bug */
 }
 
 .page-section {

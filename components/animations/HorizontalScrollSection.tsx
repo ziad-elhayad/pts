@@ -56,6 +56,12 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
 
     const getScrollDistance = () => track.scrollWidth - window.innerWidth;
 
+    if (isTouch) {
+      // On mobile, we use native horizontal scrolling with CSS snap for the best experience
+      // No GSAP pinning or x-translation needed for the track itself
+      return; 
+    }
+
     const slideTween = gsap.to(track, {
       x: () => -getScrollDistance(),
       ease: "none",
@@ -64,11 +70,10 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: isLowEnd ? 0.1 : (isTouch ? 0.4 : 0.8),
-        invalidateOnRefresh: true, // Crucial for mobile orientation/address bar changes
-        pinType: isTouch ? "fixed" : "transform", // Fixed is more stable on real mobile
+        scrub: isLowEnd ? 0.1 : 0.8,
+        invalidateOnRefresh: true,
         fastScrollEnd: true,
-        anticipatePin: isTouch ? 1.5 : 1, // More anticipation for touch devices
+        anticipatePin: 1,
         onUpdate: (self) => {
           if (progress) {
             progress.style.transform = `scaleX(${self.progress}) translateZ(0)`;
