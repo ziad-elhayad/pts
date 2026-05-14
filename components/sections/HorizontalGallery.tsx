@@ -68,9 +68,15 @@ export const HorizontalGallery = memo(function HorizontalGallery() {
 
     const updateHeight = () => {
       const distance = getScrollDistance();
-      wrapper.style.height = distance > 0 ? `${window.innerHeight + distance}px` : "auto";
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      // On mobile, use a more stable height reference to avoid URL bar resize loops
+      const baseHeight = isTouch ? document.documentElement.clientHeight : window.innerHeight;
+      
+      wrapper.style.height = distance > 0 ? `${baseHeight + distance}px` : "auto";
+      
+      // Debounce refresh slightly
       ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 200);
     };
 
     const ro = new ResizeObserver(updateHeight);

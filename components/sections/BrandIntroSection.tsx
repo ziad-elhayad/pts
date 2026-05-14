@@ -180,7 +180,7 @@ export function BrandIntroSection() {
   return (
     <section
       ref={sectionRef}
-      className="section-transition relative overflow-hidden border-t border-pts-line/20 h-[100svh] min-h-[700px] w-full"
+      className="section-transition relative overflow-hidden border-t border-pts-line/20 h-[100svh] min-h-[500px] sm:min-h-[700px] w-full"
     >
       {/* Background Image Layer */}
       <div className="absolute inset-0 z-0">

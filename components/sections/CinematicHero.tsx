@@ -175,7 +175,7 @@ export const CinematicHero = memo(function CinematicHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[100svh] min-h-[700px] w-full overflow-hidden bg-pts-deep [perspective:1600px]"
+      className="relative h-[100svh] min-h-[500px] sm:min-h-[700px] w-full overflow-hidden bg-pts-deep [perspective:1600px]"
     >
       {!isLowEnd && (
         <div

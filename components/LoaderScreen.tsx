@@ -41,6 +41,7 @@ export function LoaderScreen() {
       onComplete: () => {
         sessionStorage.setItem(SESSION_KEY, "1");
         document.documentElement.style.overflow = "";
+        document.body.style.overflow = ""; // Safety for some mobile browsers
         setVisible(false);
       },
     });

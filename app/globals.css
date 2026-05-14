@@ -40,7 +40,13 @@ body {
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  cursor: none; /* Custom cursor */
+  cursor: default; /* Fallback */
+}
+
+@media (hover: hover) {
+  body {
+    cursor: none;
+  }
 }
 
 /* ─── GLOBAL GRAIN ──────────────────────────────────────────────────────── */
@@ -286,8 +292,10 @@ body {
 }
 
 /* ─── CINEMATIC CURSOR ──────────────────────────────────────────────────── */
-* {
-  cursor: none !important;
+@media (hover: hover) {
+  * {
+    cursor: none !important;
+  }
 }
 
 /* ─── PROGRESS BAR ──────────────────────────────────────────────────────── */
@@ -401,10 +409,19 @@ html.lenis, html.lenis body {
 
 /* On mobile or weak devices, avoid expensive blur filters if they cause lag */
 .eco-mode .glass-panel,
-.eco-mode .glass-deep {
+.eco-mode .glass-deep,
+.glass-panel-mobile-fallback {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  background: rgba(13, 13, 15, 0.96) !important;
+  background: rgba(13, 13, 15, 0.98) !important;
+}
+
+@media (max-width: 768px) {
+  .glass-panel, .glass-deep {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(13, 13, 15, 0.98) !important;
+  }
 }
 
 /* Reduce animation complexity on weak hardware */

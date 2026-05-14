@@ -25,11 +25,11 @@ export function HomePage() {
         <CinematicHero />
       </CinematicSection>
 
-      <CinematicSection id="intro" mist className="page-section">
+      <CinematicSection id="intro" mist>
         <BrandIntroSection />
       </CinematicSection>
 
-      <CinematicSection id="mice" mist className="page-section">
+      <CinematicSection id="mice" mist>
         <MiceOverviewSection />
       </CinematicSection>
 
