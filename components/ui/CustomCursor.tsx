@@ -18,7 +18,9 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouch) return;
+
     const ring  = ringRef.current;
     const dot   = dotRef.current;
     if (!ring || !dot) return;

@@ -24,13 +24,19 @@ export function SmoothScrollProvider({
 
     // Mobile: skip Lenis entirely, rely on native scroll
     if (isTouch) {
-      // Removed ScrollTrigger.normalizeScroll(true) as it blocks scroll on some devices
+      // Normalize scroll for mobile - this fixes the address bar resize / pinning jump issues
+      ScrollTrigger.normalizeScroll({ 
+        allowNestedScroll: true,
+        lockAxis: true,
+        momentum: true 
+      });
       
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 500);
+      }, 800);
 
       return () => {
+        ScrollTrigger.normalizeScroll(false);
         clearTimeout(timer);
       };
     }

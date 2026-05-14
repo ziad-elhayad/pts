@@ -261,7 +261,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         {/* ── Gallery Track ──────────────────────────────────────────── */}
         <div className={clsx(
           "relative flex-1 w-full flex items-stretch z-10",
-          isTouch ? "overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory py-10" : "overflow-hidden h-full"
+          isTouch ? "overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory py-10 px-[10vw]" : "overflow-hidden h-full"
         )}>
           <div
             ref={trackRef}
