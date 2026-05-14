@@ -56,7 +56,7 @@ export function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: 1, // Cinematic smoothing
+        scrub: isTouch ? 0.4 : 1, // More responsive on mobile, cinematic on desktop
         invalidateOnRefresh: true,
         anticipatePin: 1,
         onUpdate: (self) => {

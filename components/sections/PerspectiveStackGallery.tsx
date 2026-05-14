@@ -37,9 +37,9 @@ export function PerspectiveStackGallery() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${totalItems * (isTouch ? 80 : 95)}%`,
+        end: `+=${totalItems * (isTouch ? 45 : 55)}%`,
         pin: true,
-        scrub: isTouch ? 0.45 : 0.85, // More responsive scrub on mobile
+        scrub: isTouch ? 0.2 : 0.6, 
         anticipatePin: 1,
       },
     });
@@ -86,7 +86,7 @@ export function PerspectiveStackGallery() {
           z: 100,
           duration: 1,
           ease: "power2.inOut"
-        }, 1.2); // Start exit a bit later for breathing room
+        }, 0.45); // Start first exit much sooner
       } 
       // Middle items: enter, stay, exit
       else {
@@ -99,7 +99,7 @@ export function PerspectiveStackGallery() {
           z: 0,
           duration: 1,
           ease: "power2.out"
-        }, i * 1.2);
+        }, i * 0.45);
 
         // Exit transition (except for the last one)
         if (i < totalItems - 1) {
@@ -111,7 +111,7 @@ export function PerspectiveStackGallery() {
             z: 100,
             duration: 1,
             ease: "power2.inOut"
-          }, (i + 1) * 1.2);
+          }, (i + 1) * 0.45);
         }
       }
     });

@@ -22,9 +22,9 @@ export function DestinationsSection() {
         {destinationTiles.map((tile, i) => (
           <div key={tile.city} className="w-[85vw] sm:w-[480px] aspect-[16/11] flex-shrink-0">
             <motion.div
-              whileHover={{ y: -8 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative h-full w-full overflow-hidden border border-pts-line shadow-2xl"
+              whileHover={{ y: -10, scale: 1.02 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative h-full w-full overflow-hidden border border-pts-gold/20 shadow-2xl transition-colors duration-500 hover:border-pts-gold/60 hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(168,143,100,0.15)]"
             >
               <Image
                 src={tile.src}

@@ -51,12 +51,14 @@ export function MagneticButton({
   const inner = (
     <motion.span
       style={{ transform }}
+      whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.98 }}
       className={clsx(
         "relative inline-flex items-center justify-center gap-2 overflow-hidden",
         "border border-pts-gold/40 bg-pts-gold/8 px-7 py-3.5",
         "text-[0.66rem] uppercase tracking-[0.36em] text-pts-gold-2",
-        "transition-[border-color,box-shadow] duration-500",
-        "hover:border-pts-gold hover:shadow-[0_0_30px_rgba(168,143,100,0.18),0_0_80px_rgba(168,143,100,0.06)]",
+        "transition-[border-color,box-shadow,transform] duration-500",
+        "hover:border-pts-gold hover:shadow-[0_0_40px_rgba(168,143,100,0.22),0_0_100px_rgba(168,143,100,0.08)]",
         className,
       )}
     >

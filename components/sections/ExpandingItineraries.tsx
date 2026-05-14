@@ -157,7 +157,7 @@ export function ExpandingItineraries() {
         aria-hidden
       />
 
-      <div className="relative flex flex-col sm:flex-row h-[120vh] sm:h-[90vh] min-h-[800px] sm:min-h-[600px] w-full items-stretch">
+      <div className="relative flex flex-col sm:flex-row h-[140vh] sm:h-[90vh] min-h-[750px] sm:min-h-[600px] w-full items-stretch">
         {EXPERIENCES.map((item, index) => {
           const isActive = activeIndex === index;
           return (
@@ -207,7 +207,7 @@ export function ExpandingItineraries() {
                 )}
               />
 
-              <div className="absolute inset-0 flex flex-col justify-between overflow-hidden p-6 sm:p-10 lg:p-14">
+              <div className="absolute inset-0 flex flex-col justify-between overflow-hidden p-5 sm:p-10 lg:p-14">
                 <div className="exp-tag lux-heading text-[0.48rem] tracking-[0.5em] text-pts-gold opacity-0">
                   {item.tag}
                 </div>
@@ -218,8 +218,8 @@ export function ExpandingItineraries() {
                       className={clsx(
                         "font-heading font-light uppercase leading-[1.1] text-pts-gold-2 transition-all duration-[1600ms] whitespace-nowrap origin-center",
                         isActive
-                          ? "rotate-0 text-[clamp(1.1rem,4vw,2.35rem)] opacity-100"
-                          : "rotate-0 sm:-rotate-90 text-[0.85rem] sm:text-lg opacity-60",
+                          ? "rotate-0 text-[clamp(1.2rem,5vw,2.35rem)] opacity-100"
+                          : "rotate-0 sm:-rotate-90 text-[0.75rem] sm:text-lg opacity-60",
                       )}
                     >
                       {item.title}
@@ -235,7 +235,7 @@ export function ExpandingItineraries() {
                         </span>
                       </div>
                       <div className="glass-deep max-w-md border border-pts-gold/15 p-8">
-                        <p className="text-[0.58rem] uppercase leading-[2.15] tracking-[0.2em] text-pts-gold-2/80">
+                        <p className="text-[0.55rem] sm:text-[0.58rem] uppercase leading-[2.15] tracking-[0.18em] sm:tracking-[0.2em] text-pts-gold-2/80">
                           {item.description}
                         </p>
                         <div className="mt-8 flex items-center gap-4">

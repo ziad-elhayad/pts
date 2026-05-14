@@ -52,22 +52,23 @@ export function StickySplitSection() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${stages.length * 100}%`,
+        end: `+=${stages.length * 40}%`,
         pin: true,
         anticipatePin: 1,
-        scrub: isTouch ? 0.5 : 1, // Softer scrub on mobile
+        scrub: isTouch ? 0.35 : 0.6, // Snappier scrub
       },
     });
 
     stages.forEach((stage, idx) => {
       const img = stage.querySelector(".split-img");
       
-      // Image Parallax within the timeline - desktop only (scrubbing images on mobile is heavy)
+      // Image Parallax - keep it synced with the stage duration
       if (img && !isTouch) {
+        const pStart = idx === 0 ? 0 : idx * 0.45;
         tl.fromTo(img, 
-          { yPercent: -10 },
-          { yPercent: 10, ease: "none" },
-          idx // Starts at the beginning of this stage's 'time'
+          { yPercent: -8 },
+          { yPercent: 8, ease: "none", duration: 0.8 }, 
+          pStart
         );
       }
 
@@ -75,12 +76,13 @@ export function StickySplitSection() {
         // Prepare stage off-screen
         gsap.set(stage, { yPercent: 100 });
         
-        // Slide up the current stage
-        // This transition happens between idx-1 and idx
+        // Use a much tighter multiplier. The first transition starts almost immediately (0.15)
+        const startTime = idx * 0.45;
+
         tl.to(stage, {
           yPercent: 0,
-          ease: "none",
-        }, idx); 
+          ease: "power2.inOut",
+        }, startTime); 
 
         // Push the previous stage back slightly
         const prevStage = stages[idx - 1];
@@ -88,10 +90,9 @@ export function StickySplitSection() {
           scale: 0.94,
           opacity: 0.4,
           yPercent: -8,
-          // Blur is a massive performance hit on mobile GPU during scroll
           filter: isTouch ? "none" : "blur(4px)",
-          ease: "none"
-        }, idx);
+          ease: "power2.inOut"
+        }, startTime);
       }
     });
 
@@ -112,7 +113,13 @@ export function StickySplitSection() {
             0{i + 1}
           </div>
 
-          <div className="relative flex w-full max-w-6xl flex-col items-center gap-0 sm:gap-12 px-0 sm:px-8 lg:flex-row lg:gap-0 lg:px-16 pt-16 sm:pt-0">
+          <div className="relative flex w-full max-w-6xl flex-col items-center gap-0 sm:gap-12 px-0 sm:px-8 lg:flex-row lg:gap-0 lg:px-16 pt-12 sm:pt-0">
+            {/* Mobile Header Reveal */}
+            <div className="mb-8 flex flex-col items-center text-center lg:hidden">
+              <span className="lux-heading text-[0.52rem] tracking-[0.8em] text-pts-gold opacity-90">VIP Concierge</span>
+              <div className="mt-4 h-px w-12 bg-pts-gold/30" />
+            </div>
+
             <div className="split-image-frame relative z-10 aspect-[16/11] max-h-[40svh] sm:max-h-none sm:aspect-[4/3] w-full overflow-hidden rounded-sm border border-pts-gold/10 lg:ml-auto lg:aspect-auto lg:h-[75vh] lg:w-2/3">
               <div className="absolute inset-0 top-[-15%] h-[130%] w-full">
                 <Image
@@ -127,7 +134,7 @@ export function StickySplitSection() {
             </div>
 
             <div className="split-content-box glass-deep relative z-20 w-[95%] sm:w-full border border-pts-gold/20 p-5 sm:p-8 shadow-lux md:p-14 lg:absolute lg:left-0 lg:top-1/2 lg:w-1/2 lg:-translate-y-1/2 -mt-10 sm:mt-0">
-              <div className="mb-4 sm:mb-6 flex items-center gap-4">
+              <div className="mb-4 sm:mb-6 hidden items-center gap-4 lg:flex">
                 <div className="h-px w-8 bg-pts-gold" />
                 <p className="lux-heading text-[0.45rem] uppercase tracking-[0.6em] text-pts-gold">VIP Concierge</p>
               </div>

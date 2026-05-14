@@ -53,7 +53,7 @@ export function LuxuryNavbar() {
         className={clsx(
           "transition-[background,backdrop-filter,border-color] duration-500",
           scrolled
-            ? "bg-pts-deep/80 backdrop-blur-2xl border-b border-pts-gold/10"
+            ? "bg-pts-deep/95 lg:bg-pts-deep/80 lg:backdrop-blur-2xl border-b border-pts-gold/10"
             : "bg-transparent border-b border-transparent"
         )}
       >
@@ -160,7 +160,7 @@ export function LuxuryNavbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="border-t border-pts-line/15 bg-pts-deep/95 px-8 py-10 backdrop-blur-2xl lg:hidden"
+            className="border-t border-pts-line/15 bg-pts-deep/95 px-8 py-10 backdrop-blur-2xl lg:hidden max-h-[85vh] overflow-y-auto"
           >
             <div className="mx-auto flex max-w-sm flex-col gap-8">
               {navItems.map((item, i) => (

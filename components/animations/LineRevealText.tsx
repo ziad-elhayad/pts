@@ -53,7 +53,7 @@ export function LineRevealText({
               ease: "power2.out",
               scrollTrigger: {
                 trigger: el,
-                start: "top 90%",
+                start: "top 98%",
                 once: true,
               },
             },
@@ -114,7 +114,7 @@ export function LineRevealText({
             ease: "power2.out",
             scrollTrigger: {
               trigger: el,
-              start: "top 90%",
+              start: "top 98%",
               once: true,
             },
           },

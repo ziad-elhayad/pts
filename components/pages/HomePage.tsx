@@ -47,8 +47,6 @@ export function HomePage() {
         <ExpandingItineraries />
       </CinematicSection>
 
-
-
       <CinematicSection id="gallery" mist className="page-section">
         <div className="section-inner">
           <SectionTitle number="05" subtitle="Archive" title="Experiences & Gallery" reveal="lift" />

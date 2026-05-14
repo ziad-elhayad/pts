@@ -29,7 +29,7 @@ interface SectionTitleProps {
 }
 
 const ST = {
-  trigger: { start: "top 88%", end: "top 52%", toggleActions: "play none none none" as const },
+  trigger: { start: "top 98%", end: "top 52%", toggleActions: "play none none none" as const },
   scrub: { start: "top 90%", end: "top 40%", scrub: 0.65 },
 };
 
@@ -56,19 +56,20 @@ export function SectionTitle({
         return;
       }
 
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       const meta = root.querySelectorAll("[data-st-meta]");
       const easeLux = "power4.out";
       const easeSnap = "back.out(1.35)";
 
       gsap.fromTo(
         meta,
-        { opacity: 0, x: align === "center" ? 0 : -28, filter: "blur(6px)" },
+        { opacity: 0, x: align === "center" ? 0 : -28, filter: isTouch ? "none" : "blur(6px)" },
         {
           opacity: 1,
           x: 0,
-          filter: "blur(0px)",
-          duration: 0.95,
-          stagger: 0.12,
+          filter: "none",
+          duration: 0.75,
+          stagger: 0.08,
           ease: easeLux,
           scrollTrigger: { trigger: root, ...ST.trigger, once: true },
         },
@@ -90,13 +91,13 @@ export function SectionTitle({
 
       if (reveal === "word-stagger") {
         const nodes = root.querySelectorAll<HTMLElement>(".st-word-inner");
-        gsap.set(nodes, { yPercent: 118, rotateX: 52, transformOrigin: "50% 0%", opacity: 0.35 });
+        gsap.set(nodes, { yPercent: 118, rotateX: isTouch ? 0 : 52, transformOrigin: "50% 0%", opacity: 0.35 });
         gsap.to(nodes, {
           yPercent: 0,
           rotateX: 0,
           opacity: 1,
-          duration: 1.15,
-          stagger: 0.07,
+          duration: 0.85,
+          stagger: 0.05,
           ease: "expo.out",
           scrollTrigger: { trigger: root, ...ST.trigger, once: true },
         });
@@ -113,8 +114,8 @@ export function SectionTitle({
             clipPath: "inset(0 0% 0 0)",
             x: 0,
             skewX: 0,
-            duration: 1.35,
-            ease: "power3.inOut",
+            duration: 1.05,
+            ease: "power4.inOut",
             scrollTrigger: { trigger: root, ...ST.trigger, once: true },
           },
         );
@@ -130,15 +131,15 @@ export function SectionTitle({
               opacity: 0,
               y: 28,
               rotateZ: i % 2 === 0 ? -6 : 6,
-              filter: "blur(10px)",
+              filter: isTouch ? "none" : "blur(10px)",
             },
             {
               opacity: 1,
               y: 0,
               rotateZ: 0,
-              filter: "blur(0px)",
-              duration: 0.85,
-              delay: Math.abs(i - nodes.length / 2) * 0.018,
+              filter: "none",
+              duration: 0.65,
+              delay: Math.abs(i - nodes.length / 2) * 0.012,
               ease: "power3.out",
               scrollTrigger: { trigger: root, ...ST.trigger, once: true },
             },
@@ -154,9 +155,9 @@ export function SectionTitle({
           el,
           {
             opacity: 0,
-            scale: 0.88,
-            rotateX: 18,
-            letterSpacing: "0.32em",
+            scale: isTouch ? 1 : 0.88,
+            rotateX: isTouch ? 0 : 18,
+            letterSpacing: isTouch ? "0.05em" : "0.32em",
             transformOrigin: "50% 100%",
             y: 40,
           },
@@ -166,7 +167,7 @@ export function SectionTitle({
             rotateX: 0,
             letterSpacing: "0.02em",
             y: 0,
-            duration: 1.45,
+            duration: 1.1,
             ease: "power4.out",
             scrollTrigger: { trigger: root, ...ST.trigger, once: true },
           },
@@ -210,16 +211,16 @@ export function SectionTitle({
         {
           opacity: 0,
           yPercent: 55,
-          rotateX: 42,
+          rotateX: isTouch ? 0 : 42,
           transformOrigin: "50% 100%",
-          z: -120,
+          z: isTouch ? 0 : -120,
         },
         {
           opacity: 1,
           yPercent: 0,
           rotateX: 0,
           z: 0,
-          duration: 1.35,
+          duration: 1.05,
           ease: easeSnap,
           scrollTrigger: { trigger: root, ...ST.trigger, once: true },
         },

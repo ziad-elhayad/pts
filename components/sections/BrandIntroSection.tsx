@@ -49,10 +49,10 @@ export function BrandIntroSection() {
       /* Floating gold glow — skip on mobile (infinite repeat = constant repaints) */
       if (floater && !isTouch) {
         gsap.to(floater, {
-          y: -18,
-          x: 12,
-          rotation: 2,
-          duration: 6.5,
+          y: -22,
+          x: 15,
+          rotation: 3,
+          duration: 4.5,
           yoyo: true,
           repeat: -1,
           ease: "sine.inOut",
@@ -70,10 +70,10 @@ export function BrandIntroSection() {
           {
             opacity: 1,
             y: 0,
-            stagger: 0.06,
-            duration: 0.7,
-            ease: "power2.out",
-            scrollTrigger: { trigger: col, start: "top 88%", once: true },
+            stagger: 0.05,
+            duration: 0.6,
+            ease: "power3.out",
+            scrollTrigger: { trigger: col, start: "top 98%", once: true },
           },
         );
       } else {
@@ -104,8 +104,8 @@ export function BrandIntroSection() {
           { scaleX: 0, transformOrigin: "left center" },
           {
             scaleX: 1,
-            duration: 1.1,
-            ease: "power3.inOut",
+            duration: 0.9,
+            ease: "power4.inOut",
             scrollTrigger: { trigger: col, start: "top 78%", once: true },
           },
         );
@@ -121,8 +121,8 @@ export function BrandIntroSection() {
             {
               opacity: 1,
               y: 0,
-              duration: 0.8,
-              ease: "power2.out",
+              duration: 0.7,
+              ease: "power3.out",
               scrollTrigger: { trigger: copy, start: "top 92%", once: true },
             },
           );
