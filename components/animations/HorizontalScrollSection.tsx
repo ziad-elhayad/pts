@@ -203,7 +203,14 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
   const flatChildren = Children.toArray(children);
 
   return (
-    <div ref={wrapperRef} id={id} className="relative w-full h-[100svh] overflow-hidden bg-pts-bg">
+    <div 
+      ref={wrapperRef} 
+      id={id} 
+      className={clsx(
+        "relative w-full bg-pts-bg transition-colors duration-1000",
+        isTouch ? "h-auto overflow-x-auto scroll-smooth snap-x snap-mandatory" : "h-[100svh] overflow-hidden"
+      )}
+    >
       <div className="flex h-full w-full flex-col [perspective:1400px]">
 
         {/* Atmospheric lighting */}
@@ -248,7 +255,10 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         </div>
 
         {/* ── Gallery Track ──────────────────────────────────────────── */}
-        <div className="relative flex-1 w-full flex items-stretch z-10 overflow-hidden">
+        <div className={clsx(
+          "relative flex-1 w-full flex items-stretch z-10",
+          isTouch ? "overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory h-auto" : "overflow-hidden h-full"
+        )}>
           <div
             ref={trackRef}
             className="flex items-stretch will-change-transform h-full"
@@ -261,7 +271,10 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
             }}
           >
             {flatChildren.map((child, i) => (
-              <div key={i} className="hg-item flex-shrink-0 h-full flex items-stretch">
+              <div key={i} className={clsx(
+                "hg-item flex-shrink-0 flex items-stretch",
+                isTouch ? "snap-center h-[70vh] min-h-[500px]" : "h-full"
+              )}>
                 {child}
               </div>
             ))}
