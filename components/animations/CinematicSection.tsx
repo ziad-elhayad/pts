@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -33,11 +33,6 @@ export function CinematicSection({
 }: CinematicSectionProps) {
   const root = useRef<HTMLDivElement>(null);
   const scrubLineRef = useRef<HTMLDivElement>(null);
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-  }, []);
 
   useGSAP(
     () => {
@@ -86,7 +81,7 @@ export function CinematicSection({
             className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-pts-black/70 via-transparent to-transparent opacity-90"
             aria-hidden
           />
-          {!isTouch && (
+          {!('ontouchstart' in window || navigator.maxTouchPoints > 0) && (
             <>
               <div
                 className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-t from-pts-black/75 via-pts-black/22 to-transparent opacity-90"
