@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, memo } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -48,10 +49,11 @@ const ITEMS = [
   },
 ] as const;
 
-export function HorizontalGallery() {
+export const HorizontalGallery = memo(function HorizontalGallery() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef   = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const { tier, isLowEnd, reducedMotion } = usePerformance();
 
   useGSAP(() => {
     const wrapper  = wrapperRef.current;
@@ -81,7 +83,7 @@ export function HorizontalGallery() {
         trigger: wrapper,
         start: "top top",
         end: "bottom bottom",
-        scrub: 1,
+        scrub: isLowEnd ? 0.2 : 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (progress) progress.style.transform = `scaleX(${self.progress})`;
@@ -90,32 +92,34 @@ export function HorizontalGallery() {
     });
 
     // Velocity-based skew
-    const items = track.querySelectorAll(".hg-parallax-img");
-    const proxy = { skew: 0 };
-    const skewSetter = gsap.quickSetter(items, "skewX", "deg");
-    const clamp = gsap.utils.clamp(-10, 10);
+    if (!isLowEnd && !reducedMotion) {
+      const items = track.querySelectorAll(".hg-parallax-img");
+      const proxy = { skew: 0 };
+      const skewSetter = gsap.quickSetter(items, "skewX", "deg");
+      const clamp = gsap.utils.clamp(-10, 10);
 
-    ScrollTrigger.create({
-      trigger: wrapper,
-      start: "top top",
-      end: "bottom bottom",
-      onUpdate: (self) => {
-        const skew = clamp(self.getVelocity() / -400);
-        if (Math.abs(skew) > Math.abs(proxy.skew)) {
-          proxy.skew = skew;
-          gsap.to(proxy, {
-            skew: 0,
-            duration: 0.8,
-            ease: "power3",
-            overwrite: true,
-            onUpdate: () => skewSetter(proxy.skew),
-          });
-        }
-      },
-    });
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) => {
+          const skew = clamp(self.getVelocity() / -400);
+          if (Math.abs(skew) > Math.abs(proxy.skew)) {
+            proxy.skew = skew;
+            gsap.to(proxy, {
+              skew: 0,
+              duration: 0.8,
+              ease: "power3",
+              overwrite: true,
+              onUpdate: () => skewSetter(proxy.skew),
+            });
+          }
+        },
+      });
+    }
 
     return () => ro.disconnect();
-  });
+  }, { dependencies: [isLowEnd, reducedMotion] });
 
   return (
     <div
@@ -126,10 +130,12 @@ export function HorizontalGallery() {
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden flex flex-col bg-pts-bg">
 
         {/* Atmospheric lighting */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="gold-glow absolute -top-1/4 -right-1/4 w-[60%] h-full opacity-20" />
-          <div className="gold-glow absolute -bottom-1/4 -left-1/4 w-[60%] h-full opacity-15" />
-        </div>
+        {!isLowEnd && (
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className="gold-glow absolute -top-1/4 -right-1/4 w-[60%] h-full opacity-20" />
+            <div className="gold-glow absolute -bottom-1/4 -left-1/4 w-[60%] h-full opacity-15" />
+          </div>
+        )}
 
         {/* Editorial Header */}
         <div className="relative z-20 px-6 sm:px-10 pt-16 sm:pt-20 pb-6 sm:pb-8 bg-pts-bg"
@@ -154,7 +160,7 @@ export function HorizontalGallery() {
         <div className="relative flex-1 flex items-stretch z-10 overflow-hidden">
           <div
             ref={trackRef}
-            className="flex h-full items-stretch will-change-transform"
+            className="flex h-full items-stretch will-change-transform transform-gpu"
             style={{ width: "max-content", paddingLeft: "8vw", paddingRight: "12vw" }}
           >
             {ITEMS.map((item, i) => (
@@ -162,19 +168,20 @@ export function HorizontalGallery() {
                 key={item.id}
                 className="relative flex-shrink-0 group overflow-hidden h-full border-r border-pts-line/8 w-[85vw] sm:w-[60vw] md:w-[42vw]"
               >
-                <div className="hg-parallax-img absolute inset-0 w-[140%] h-full left-[-20%]">
+                <div className="hg-parallax-img absolute inset-0 w-[140%] h-full left-[-20%] transform-gpu">
                   <Image
                     src={item.src}
                     alt={item.title}
                     fill
                     className="object-cover brightness-[0.7] saturate-[0.85] transition-[filter] duration-[3s] ease-out group-hover:brightness-[0.85] group-hover:saturate-[1]"
                     priority
+                    quality={isLowEnd ? 75 : 85}
                   />
                 </div>
 
                 {/* Gradients */}
                 <div className="absolute inset-0 bg-gradient-to-t from-pts-deep via-pts-deep/30 to-transparent opacity-60" />
-                <div className="absolute inset-0 bg-gradient-to-r from-pts-deep/30 via-transparent to-transparent" />
+                {!isLowEnd && <div className="absolute inset-0 bg-gradient-to-r from-pts-deep/30 via-transparent to-transparent" />}
 
                 {/* Content */}
                 <div className="absolute inset-0 p-8 sm:p-12 lg:p-16 flex flex-col justify-between">
@@ -241,10 +248,10 @@ export function HorizontalGallery() {
               <div className="h-px w-14 bg-pts-line/20" />
               <span className="lux-heading text-[0.48rem] text-pts-muted/25 tracking-[0.5em]">05</span>
             </div>
-            <p className="lux-heading text-[0.42rem] text-pts-gold/20 tracking-[1em]">Scroll</p>
+            {!isLowEnd && <p className="lux-heading text-[0.42rem] text-pts-gold/20 tracking-[1em]">Scroll</p>}
           </div>
         </div>
       </div>
     </div>
   );
-}
+});

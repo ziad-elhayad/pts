@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { galleryItems } from "@/lib/gallery";
-import { prefersReducedMotion } from "@/lib/motionPref";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -15,15 +15,16 @@ if (typeof window !== "undefined") {
 /**
  * Perspective stack — asymmetric “deck” choreography: Z-lift + yaw + drift (unique).
  */
-export function PerspectiveStackGallery() {
+export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const { tier, isLowEnd, reducedMotion } = usePerformance();
 
   useGSAP(() => {
     if (!containerRef.current || !trackRef.current) return;
 
-    if (prefersReducedMotion()) {
+    if (reducedMotion) {
       const items = trackRef.current.querySelectorAll(".stack-item");
       gsap.set(items, { opacity: 1, clearProps: "transform" });
       return;
@@ -37,14 +38,20 @@ export function PerspectiveStackGallery() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${totalItems * (isTouch ? 45 : 55)}%`,
+        end: `+=${totalItems * (isLowEnd ? 40 : (isTouch ? 50 : 70))}%`,
         pin: true,
-        scrub: isTouch ? 0.2 : 0.6, 
+        scrub: isLowEnd ? 0.2 : (isTouch ? 0.4 : 0.8), 
         anticipatePin: 1,
+        snap: {
+          snapTo: 1 / (totalItems - 1),
+          duration: { min: 0.2, max: 0.6 },
+          delay: 0,
+          ease: "power2.inOut"
+        }
       },
     });
 
-    if (glowRef.current) {
+    if (glowRef.current && !isLowEnd) {
       gsap.to(glowRef.current, {
         scale: 1.15,
         opacity: 0.35,
@@ -59,82 +66,54 @@ export function PerspectiveStackGallery() {
     }
 
     items.forEach((item, i) => {
-      const dir = i % 2 === 0 ? 1 : -1;
-      
-      // Initial state
-      if (i === 0) {
-        gsap.set(item, { opacity: 1, scale: 1, z: 0, y: 0, rotateY: 0, rotateZ: 0 });
-      } else {
-        gsap.set(item, {
-          opacity: 0,
-          scale: 0.85,
-          y: isTouch ? 60 : 100,
-          rotateY: (isTouch ? 5 : 15) * dir,
-          z: isTouch ? -50 : -200,
-          transformOrigin: "50% 50%",
-        });
-      }
+      // initial stack order: first item on top
+      gsap.set(item, { 
+        zIndex: totalItems - i,
+        opacity: 1, 
+        scale: 1, 
+        x: 0, 
+        y: 0, 
+        rotateY: 0, 
+        rotateZ: 0, 
+        z: -i * 2,
+        backfaceVisibility: "hidden"
+      });
 
-      // Timeline mapping: each item gets roughly 1 unit of the scroll duration
-      // Item 0: Stays for 0-1, exits 1-2
-      if (i === 0) {
+      // Exit animations: Only for items that are NOT the last one
+      if (i < totalItems - 1) {
         tl.to(item, {
+          z: isLowEnd ? 50 : 150, 
+          x: (isTouch || isLowEnd) ? "105%" : "120%", 
+          rotateZ: isLowEnd ? 0 : 8,
+          rotateY: isLowEnd ? 0 : 15,
           opacity: 0,
-          y: -150,
-          scale: 1.1,
-          rotateY: -10 * dir,
-          z: 100,
-          duration: 1,
+          duration: 1.5,
           ease: "power2.inOut"
-        }, 0.45); // Start first exit much sooner
-      } 
-      // Middle items: enter, stay, exit
-      else {
-        // Enter transition
-        tl.to(item, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotateY: 0,
-          z: 0,
-          duration: 1,
-          ease: "power2.out"
-        }, i * 0.45);
-
-        // Exit transition (except for the last one)
-        if (i < totalItems - 1) {
-          tl.to(item, {
-            opacity: 0,
-            y: -150,
-            scale: 1.1,
-            rotateY: -10 * dir,
-            z: 100,
-            duration: 1,
-            ease: "power2.inOut"
-          }, (i + 1) * 0.45);
-        }
+        }, i * 1.5);
       }
     });
-  }, { scope: containerRef });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion] });
 
   return (
     <section
       ref={containerRef}
       className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-pts-bg [perspective:1600px]"
     >
-      <div
-        ref={glowRef}
-        className="pointer-events-none absolute inset-0 origin-center bg-[radial-gradient(circle_at_center,rgba(168,143,100,0.12),transparent_62%)] opacity-25 will-change-transform"
-      />
+      {!isLowEnd && (
+        <div
+          ref={glowRef}
+          className="pointer-events-none absolute inset-0 origin-center bg-[radial-gradient(circle_at_center,rgba(168,143,100,0.12),transparent_62%)] opacity-25 will-change-transform"
+        />
+      )}
 
       <div
         ref={trackRef}
-        className="relative mx-auto flex h-[min(68vh,640px)] w-[min(90vw,1020px)] max-w-[1020px] transform-gpu items-center justify-center [transform-style:preserve-3d] sm:h-[min(70vh,680px)]"
+        className="relative mx-auto h-[min(68vh,640px)] w-[min(90vw,1020px)] max-w-[1020px] transform-gpu [transform-style:preserve-3d] sm:h-[min(70vh,680px)]"
       >
         {galleryItems.slice(0, 6).map((img, i) => (
           <div
             key={i}
-            className="stack-item absolute inset-0 will-change-transform transform-gpu [transform-style:preserve-3d]"
+            className="stack-item absolute left-0 top-0 h-full w-full will-change-transform transform-gpu [transform-style:preserve-3d]"
           >
             <div className="relative h-full w-full overflow-hidden rounded-xl border border-pts-gold/20 bg-pts-black shadow-[0_28px_90px_-20px_rgba(0,0,0,0.85)] ring-1 ring-white/[0.04]">
               <Image
@@ -143,7 +122,7 @@ export function PerspectiveStackGallery() {
                 fill
                 className="object-cover object-center brightness-[1] transition-all duration-700 hover:brightness-110"
                 sizes="(max-width: 640px) 90vw, 1020px"
-                quality={92}
+                quality={isLowEnd ? 75 : 92}
                 priority={i < 2}
                 loading={i < 2 ? "eager" : "lazy"}
               />
@@ -175,4 +154,4 @@ export function PerspectiveStackGallery() {
       </div>
     </section>
   );
-}
+});

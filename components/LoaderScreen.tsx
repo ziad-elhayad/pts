@@ -3,12 +3,14 @@
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 const SESSION_KEY = "pts-loader-seen";
 
 export function LoaderScreen() {
   const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
+  const { isLowEnd } = usePerformance();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -31,6 +33,9 @@ export function LoaderScreen() {
     // Prevent scroll during loader
     document.documentElement.style.overflow = "hidden";
 
+    // Durations for performance tiers
+    const d = isLowEnd ? 0.4 : 1.0;
+
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
       onComplete: () => {
@@ -40,40 +45,35 @@ export function LoaderScreen() {
       },
     });
 
-    // Animate counter from 0 to 100
     const counterObj = { val: 0 };
 
     tl.set(root, { autoAlpha: 1 })
-      // Lines slide in
-      .fromTo(topLine, { scaleX: 0 }, { scaleX: 1, duration: 0.8 }, 0)
-      .fromTo(botLine, { scaleX: 0 }, { scaleX: 1, duration: 0.8 }, 0)
-      // Label reveals
+      .fromTo(topLine, { scaleX: 0 }, { scaleX: 1, duration: 0.8 * d }, 0)
+      .fromTo(botLine, { scaleX: 0 }, { scaleX: 1, duration: 0.8 * d }, 0)
       .fromTo(label, { autoAlpha: 0, y: 24, letterSpacing: "1em" },
-        { autoAlpha: 1, y: 0, letterSpacing: "0.55em", duration: 1.1 }, 0.2)
+        { autoAlpha: 1, y: 0, letterSpacing: "0.55em", duration: 1.1 * d }, 0.2 * d)
       .fromTo(sub,   { autoAlpha: 0, y: 14 },
-        { autoAlpha: 1, y: 0, duration: 0.9 }, 0.5)
-      // Counter
+        { autoAlpha: 1, y: 0, duration: 0.9 * d }, 0.5 * d)
       .to(counterObj, {
         val: 100,
-        duration: 1.2,
+        duration: 1.2 * d,
         ease: "power2.inOut",
         onUpdate: () => {
-          if (counter) counter.textContent = Math.round(counterObj.val).toString().padStart(3, "0");
+          if (counter && !isLowEnd) counter.textContent = Math.round(counterObj.val).toString().padStart(3, "0");
+          else if (counter && isLowEnd) counter.textContent = "100";
         },
-      }, 0.3)
-      // Progress bar
-      .fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, 0.3)
-      // Cinematic exit — overlay slides up
+      }, 0.3 * d)
+      .fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: 1.2 * d, ease: "power2.inOut" }, 0.3 * d)
       .fromTo(overlay,
         { yPercent: 100 },
-        { yPercent: 0, duration: 0.65, ease: "power4.inOut" }, "+=0.1")
+        { yPercent: 0, duration: 0.65 * d, ease: "power4.inOut" }, "+=0.1")
       .to(root, { autoAlpha: 0, duration: 0.01 });
 
     return () => {
       tl.kill();
       document.documentElement.style.overflow = "";
     };
-  }, []);
+  }, [isLowEnd]);
 
   if (!visible) return null;
 
@@ -84,31 +84,21 @@ export function LoaderScreen() {
       style={{ visibility: "visible" }}
       aria-hidden
     >
-      {/* Top decorative line */}
       <div
         data-loader-top-line
         className="absolute top-12 left-16 right-16 h-px origin-left"
         style={{ background: "linear-gradient(90deg, var(--pts-gold), transparent)" }}
       />
 
-      {/* Central content */}
       <div className="relative flex flex-col items-center gap-8">
-        {/* Brand mark */}
-        <div
-          data-loader-label
-          className="flex flex-col items-center gap-6"
-        >
+        <div data-loader-label className="flex flex-col items-center gap-6">
           <BrandLogo size={64} className="text-pts-gold" />
         </div>
 
-        <p
-          data-loader-sub
-          className="text-center text-[0.62rem] uppercase tracking-[0.5em] text-pts-muted"
-        >
+        <p data-loader-sub className="text-center text-[0.62rem] uppercase tracking-[0.5em] text-pts-muted">
           Private Travel Services
         </p>
 
-        {/* Progress bar */}
         <div className="w-48 h-px bg-pts-line/30 overflow-hidden mt-6">
           <div
             data-loader-bar
@@ -121,7 +111,6 @@ export function LoaderScreen() {
         </div>
       </div>
 
-      {/* Counter */}
       <div className="absolute bottom-16 right-16">
         <span
           data-loader-counter
@@ -131,14 +120,12 @@ export function LoaderScreen() {
         </span>
       </div>
 
-      {/* Bottom decorative line */}
       <div
         data-loader-bot-line
         className="absolute bottom-12 left-16 right-16 h-px origin-right"
         style={{ background: "linear-gradient(90deg, transparent, var(--pts-gold))" }}
       />
 
-      {/* Cinematic exit overlay */}
       <div
         data-loader-overlay
         className="absolute inset-0 bg-pts-bg"

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, Children } from "react";
+import { useRef, Children, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -20,7 +21,7 @@ interface HorizontalScrollSectionProps {
   id?: string;
 }
 
-export function HorizontalScrollSection({
+export const HorizontalScrollSection = memo(function HorizontalScrollSection({
   children,
   title,
   kicker,
@@ -37,24 +38,24 @@ export function HorizontalScrollSection({
   const headerInnerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
+  const { tier, isLowEnd, reducedMotion } = usePerformance();
+
   useGSAP(() => {
     const wrapper  = wrapperRef.current;
     const track    = trackRef.current;
     const progress = progressRef.current;
     if (!wrapper || !track) return;
 
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     
     // Performance: Force GPU acceleration on the track
     gsap.set(track, { 
       force3D: true, 
-      willChange: "transform",
       backfaceVisibility: "hidden" 
     });
 
     const getScrollDistance = () => track.scrollWidth - window.innerWidth;
 
-    // Standard GSAP horizontal scroll with pinning
     const slideTween = gsap.to(track, {
       x: () => -getScrollDistance(),
       ease: "none",
@@ -63,21 +64,20 @@ export function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: isTouch ? 0.5 : 0.8, // Optimized for mobile buttery smoothness
-        invalidateOnRefresh: false, // Prevent jump/reposition on mobile address bar toggle
+        scrub: isLowEnd ? 0.1 : (isTouch ? 0.5 : 0.8),
+        invalidateOnRefresh: false,
         fastScrollEnd: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           if (progress) {
-            // Use direct transform for progress bar to avoid layout shifts
             progress.style.transform = `scaleX(${self.progress}) translateZ(0)`;
           }
         },
       },
     });
 
-    // Velocity-based skew effect — Desktop Only
-    if (!isTouch) {
+    // Velocity-based skew effect — Performance Dependent
+    if (!isTouch && !isLowEnd && !reducedMotion) {
       const items = track.querySelectorAll(".hg-item");
       const proxy = { skew: 0 };
       const skewSetter = gsap.quickSetter(items, "skewX", "deg");
@@ -109,7 +109,7 @@ export function HorizontalScrollSection({
         },
       });
 
-      // Internal image parallax — Desktop Only
+      // Internal image parallax — Elite/Standard Only
       track.querySelectorAll(".hg-parallax-img").forEach((img) => {
         gsap.fromTo(
           img,
@@ -129,8 +129,8 @@ export function HorizontalScrollSection({
       });
     }
 
-    // Header perspective — Desktop Only
-    if (!isTouch && headerRef.current && headerInnerRef.current) {
+    // Header perspective — Elite/Standard Only
+    if (!isLowEnd && !reducedMotion && headerRef.current && headerInnerRef.current) {
       gsap.to(headerInnerRef.current, {
         rotateX: -7,
         y: -18,
@@ -143,20 +143,10 @@ export function HorizontalScrollSection({
           scrub: 1.2,
         },
       });
-      gsap.to(headerRef.current, {
-        x: () => getScrollDistance() * 0.06,
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrapper,
-          start: "top top",
-          end: () => `+=${getScrollDistance()}`,
-          scrub: 1.5,
-        },
-      });
     }
 
-    // Ambient glow — Optimized for both but simplified on mobile
-    if (glowRef.current) {
+    // Ambient glow — Optimized for both but simplified on mobile/low-end
+    if (glowRef.current && !isLowEnd) {
       gsap.to(glowRef.current, {
         xPercent: isTouch ? 8 : 18,
         ease: "none",
@@ -169,14 +159,14 @@ export function HorizontalScrollSection({
       });
     }
 
-    // Title words reveal — Immediate on mobile
+    // Title words reveal
     const titleWords = wrapper.querySelectorAll<HTMLElement>(".mice-title-word");
     if (titleWords.length) {
       gsap.fromTo(
         titleWords,
         { 
           yPercent: 118, 
-          rotateX: isTouch ? 0 : 52, 
+          rotateX: (isTouch || isLowEnd) ? 0 : 52, 
           opacity: 0.15, 
           transformOrigin: "50% 0%" 
         },
@@ -184,7 +174,7 @@ export function HorizontalScrollSection({
           yPercent: 0,
           rotateX: 0,
           opacity: 1,
-          duration: isTouch ? 0.8 : 1.25,
+          duration: (isTouch || isLowEnd) ? 0.8 : 1.25,
           stagger: 0.05,
           ease: "power4.out",
           scrollTrigger: {
@@ -195,7 +185,7 @@ export function HorizontalScrollSection({
         },
       );
     }
-  }, { scope: wrapperRef });
+  }, { scope: wrapperRef, dependencies: [tier, reducedMotion] });
 
   const flatChildren = Children.toArray(children);
 
@@ -204,10 +194,12 @@ export function HorizontalScrollSection({
       <div className="flex h-full w-full flex-col [perspective:1400px]">
 
         {/* Atmospheric lighting */}
-        <div ref={glowRef} className="pointer-events-none absolute inset-0 z-0 will-change-transform">
-          <div className="gold-glow absolute -top-1/3 right-0 h-full w-[45%] opacity-[0.2]" />
-          <div className="gold-glow absolute -bottom-1/3 left-0 h-full w-[42%] opacity-[0.12]" />
-        </div>
+        {!isLowEnd && (
+          <div ref={glowRef} className="pointer-events-none absolute inset-0 z-0 will-change-transform">
+            <div className="gold-glow absolute -top-1/3 right-0 h-full w-[45%] opacity-[0.2]" />
+            <div className="gold-glow absolute -bottom-1/3 left-0 h-full w-[42%] opacity-[0.12]" />
+          </div>
+        )}
 
         {/* ── Editorial Header ──────────────────────────────────────── */}
         <div
@@ -247,7 +239,13 @@ export function HorizontalScrollSection({
           <div
             ref={trackRef}
             className="flex items-stretch will-change-transform h-full"
-            style={{ width: "max-content", paddingLeft, paddingRight, gap }}
+            style={{ 
+              width: "max-content", 
+              paddingLeft, 
+              paddingRight, 
+              gap,
+              transform: "translateZ(0)" // Force GPU
+            }}
           >
             {flatChildren.map((child, i) => (
               <div key={i} className="hg-item flex-shrink-0 h-full flex items-stretch">
@@ -262,10 +260,11 @@ export function HorizontalScrollSection({
           {/* Cinematic progress bar */}
           <div
             ref={progressRef}
-            className="h-[2px] origin-left will-change-transform"
+            className="h-[2px] origin-left"
             style={{
               transform: "scaleX(0)",
               background: "linear-gradient(90deg, var(--pts-gold), var(--pts-gold-2), var(--pts-gold))",
+              willChange: "transform"
             }}
           />
 
@@ -283,7 +282,7 @@ export function HorizontalScrollSection({
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="h-1.5 w-1.5 rounded-full bg-pts-gold/30 animate-pulse" />
+              {!isLowEnd && <div className="h-1.5 w-1.5 rounded-full bg-pts-gold/30 animate-pulse" />}
               <p className="lux-heading text-[0.42rem] text-pts-gold/25 tracking-[0.8em]">
                 Drag to Navigate
               </p>
@@ -293,4 +292,4 @@ export function HorizontalScrollSection({
       </div>
     </div>
   );
-}
+});

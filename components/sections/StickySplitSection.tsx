@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { vipServiceMedia } from "@/lib/media";
-import { prefersReducedMotion } from "@/lib/motionPref";
+import { usePerformance } from "@/contexts/PerformanceContext";
+import clsx from "clsx";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -34,28 +35,25 @@ const pillars = [
 
 /**
  * VIP split — overlapping stacked panels.
- * As the user scrolls, each subsequent panel slides up over the previous one.
  */
-export function StickySplitSection() {
+export const StickySplitSection = memo(function StickySplitSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { tier, isLowEnd, reducedMotion } = usePerformance();
 
   useGSAP(() => {
-    if (!containerRef.current) return;
-    if (prefersReducedMotion()) return;
+    if (!containerRef.current || reducedMotion) return;
 
     const stages = containerRef.current.querySelectorAll(".split-stage");
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    // Pin the entire container
-    // We want stages.length * 100vh of scroll
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${stages.length * 40}%`,
+        end: `+=${stages.length * (isLowEnd ? 30 : 40)}%`,
         pin: true,
         anticipatePin: 1,
-        scrub: isTouch ? 0.35 : 0.6, // Snappier scrub
+        scrub: isLowEnd ? 0.15 : (isTouch ? 0.35 : 0.6),
       },
     });
 
@@ -63,7 +61,7 @@ export function StickySplitSection() {
       const img = stage.querySelector(".split-img");
       
       // Image Parallax - keep it synced with the stage duration
-      if (img && !isTouch) {
+      if (img && !isTouch && !isLowEnd) {
         const pStart = idx === 0 ? 0 : idx * 0.45;
         tl.fromTo(img, 
           { yPercent: -8 },
@@ -76,7 +74,6 @@ export function StickySplitSection() {
         // Prepare stage off-screen
         gsap.set(stage, { yPercent: 100 });
         
-        // Use a much tighter multiplier. The first transition starts almost immediately (0.15)
         const startTime = idx * 0.45;
 
         tl.to(stage, {
@@ -87,16 +84,16 @@ export function StickySplitSection() {
         // Push the previous stage back slightly
         const prevStage = stages[idx - 1];
         tl.to(prevStage, {
-          scale: 0.94,
-          opacity: 0.4,
-          yPercent: -8,
-          filter: isTouch ? "none" : "blur(4px)",
+          scale: isLowEnd ? 1 : 0.94,
+          opacity: isLowEnd ? 0.2 : 0.4,
+          yPercent: isLowEnd ? 0 : -8,
+          filter: (isTouch || isLowEnd) ? "none" : "blur(4px)",
           ease: "power2.inOut"
         }, startTime);
       }
     });
 
-  }, { scope: containerRef });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion] });
 
   return (
     <section
@@ -126,14 +123,19 @@ export function StickySplitSection() {
                   src={vipServiceMedia[i].src}
                   alt={vipServiceMedia[i].alt}
                   fill
-                  className="split-img object-cover brightness-[0.95] saturate-[0.9] will-change-transform"
+                  className="split-img object-cover brightness-[0.95] saturate-[0.9] will-change-transform transform-gpu"
+                  style={{ backfaceVisibility: "hidden" }}
                   sizes="(max-width: 1024px) 100vw, 66vw"
+                  quality={isLowEnd ? 75 : 90}
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-pts-black via-transparent to-transparent opacity-20" />
             </div>
 
-            <div className="split-content-box glass-deep relative z-20 w-[95%] sm:w-full border border-pts-gold/20 p-5 sm:p-8 shadow-lux md:p-14 lg:absolute lg:left-0 lg:top-1/2 lg:w-1/2 lg:-translate-y-1/2 -mt-10 sm:mt-0">
+            <div className={clsx(
+              "split-content-box relative z-20 w-[95%] sm:w-full border border-pts-gold/20 p-5 sm:p-8 shadow-lux md:p-14 lg:absolute lg:left-0 lg:top-1/2 lg:w-1/2 lg:-translate-y-1/2 -mt-10 sm:mt-0",
+              isLowEnd ? "bg-pts-black/95" : "glass-deep"
+            )}>
               <div className="mb-4 sm:mb-6 hidden items-center gap-4 lg:flex">
                 <div className="h-px w-8 bg-pts-gold" />
                 <p className="lux-heading text-[0.45rem] uppercase tracking-[0.6em] text-pts-gold">VIP Concierge</p>
@@ -163,4 +165,4 @@ export function StickySplitSection() {
       ))}
     </section>
   );
-}
+});

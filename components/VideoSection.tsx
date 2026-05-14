@@ -2,16 +2,14 @@
 
 import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 type VideoSectionProps = {
   poster: string;
-  /** Primary MP4 (e.g. 1080p). */
   src?: string;
-  /** Optional heavier source for large viewports (first matching `<source media>` wins in supporting browsers). */
   srcLarge?: string;
   className?: string;
   overlayClassName?: string;
-  /** Defer mounting the `<video>` until idle to protect LCP. */
   lazyVideo?: boolean;
 };
 
@@ -23,38 +21,38 @@ export function VideoSection({
   overlayClassName,
   lazyVideo = true,
 }: VideoSectionProps) {
-  const [mountVideo, setMountVideo] = useState(!lazyVideo);
+  const [mountVideo, setMountVideo] = useState(false);
   const [useVideo, setUseVideo] = useState(true);
+  const { isLowEnd, reducedMotion } = usePerformance();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Never load video on touch/mobile — poster is enough, video causes memory crashes
+    // Never load video on touch/mobile or Low-End — poster is enough
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouch) {
+    if (isTouch || isLowEnd || reducedMotion) {
       setUseVideo(false);
       return;
     }
 
-    if (!lazyVideo) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setMountVideo(false);
+    if (!lazyVideo) {
+      setMountVideo(true);
       return;
     }
+
     const ric = (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
       .requestIdleCallback;
     const cancel = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
+    
     if (typeof ric === "function") {
       const id = ric(() => setMountVideo(true), { timeout: 2200 });
       return () => {
-        if (typeof cancel === "function") {
-          cancel(id);
-        }
+        if (typeof cancel === "function") cancel(id);
       };
     }
     const t = window.setTimeout(() => setMountVideo(true), 600);
     return () => window.clearTimeout(t);
-  }, [lazyVideo]);
+  }, [lazyVideo, isLowEnd, reducedMotion]);
 
   const onVideoError = useCallback(() => {
     setUseVideo(false);

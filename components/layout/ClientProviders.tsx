@@ -1,6 +1,7 @@
 "use client";
 
 import { LocaleProvider } from "@/contexts/LocaleContext";
+import { PerformanceProvider, usePerformance } from "@/contexts/PerformanceContext";
 import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
 import { ScrollLayoutSync } from "@/components/layout/ScrollLayoutSync";
 import { LoaderScreen } from "@/components/LoaderScreen";
@@ -15,16 +16,13 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/**
- * All client-only globals live here — never in the server layout.tsx.
- * This prevents SSR hydration mismatches for fixed-position elements.
- */
-export function ClientProviders({ children }: { children: React.ReactNode }) {
+function TunnelEffect() {
+  const { isLowEnd, reducedMotion } = usePerformance();
+  
   useGSAP(() => {
     const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    if (isTouch) return; // Skip velocity tunnel effect on mobile — gsap.to on scroll = jank
+    if (isTouch || isLowEnd || reducedMotion) return;
 
-    // Tunnel Vision Effect based on velocity — desktop only
     const tunnel = document.querySelector(".tunnel-vignette");
     if (!tunnel) return;
 
@@ -34,28 +32,32 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
     ScrollTrigger.create({
       onUpdate: (self) => {
         const velocity = Math.abs(self.getVelocity());
-        const opacity = Math.min(velocity / 3000, 0.45);
-        const scale   = 1 + (velocity / 6000);
+        const opacity = Math.min(velocity / 4000, 0.4);
+        const scale   = 1 + (velocity / 8000);
         setOpacity(opacity);
         setScale(scale);
       }
     });
-  });
+  }, [isLowEnd, reducedMotion]);
 
+  return <div className="tunnel-vignette" aria-hidden="true" />;
+}
+
+export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
-    <LocaleProvider>
-      <div className="tunnel-vignette" aria-hidden="true" />
-      <SmoothScrollProvider>
-        {/* Global overlays — rendered only client-side, no hydration mismatch */}
-        <WebGLBackground />
-        <CustomCursor />
-
-        <Suspense fallback={null}>
-          <ScrollLayoutSync />
-        </Suspense>
-        <LoaderScreen />
-        {children}
-      </SmoothScrollProvider>
-    </LocaleProvider>
+    <PerformanceProvider>
+      <LocaleProvider>
+        <TunnelEffect />
+        <SmoothScrollProvider>
+          <WebGLBackground />
+          <CustomCursor />
+          <Suspense fallback={null}>
+            <ScrollLayoutSync />
+          </Suspense>
+          <LoaderScreen />
+          {children}
+        </SmoothScrollProvider>
+      </LocaleProvider>
+    </PerformanceProvider>
   );
 }

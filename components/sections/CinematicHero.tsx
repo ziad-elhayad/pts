@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, memo } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,13 +11,13 @@ import { heroMedia } from "@/lib/media";
 import { site } from "@/lib/site";
 import { t } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
-import { prefersReducedMotion } from "@/lib/motionPref";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export function CinematicHero() {
+export const CinematicHero = memo(function CinematicHero() {
   const { locale } = useLocale();
   const sectionRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
@@ -30,9 +30,11 @@ export function CinematicHero() {
   const topLineRef = useRef<HTMLDivElement>(null);
   const botLineRef = useRef<HTMLDivElement>(null);
 
+  const { tier, isLowEnd, reducedMotion } = usePerformance();
+
   useEffect(() => {
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouch) return;
+    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    if (isTouch || isLowEnd) return;
 
     const onMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
@@ -43,14 +45,12 @@ export function CinematicHero() {
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [isLowEnd]);
 
   useEffect(() => {
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    // Never run mouse-follow parallax on touch — no mouse exists
-    if (isTouch) return;
+    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    if (isTouch || isLowEnd) return;
 
-    // Use quickSetter for high-frequency updates (better performance than gsap.to in ticker)
     const setL1X = gsap.quickSetter(layer1Ref.current, "x", "px");
     const setL1Y = gsap.quickSetter(layer1Ref.current, "y", "px");
     const setL2X = gsap.quickSetter(layer2Ref.current, "x", "px");
@@ -71,15 +71,13 @@ export function CinematicHero() {
 
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);
-  }, []);
+  }, [isLowEnd]);
 
   const tagline = t(locale, "hero.tagline");
   const words = tagline.split(" ");
 
-  /* Intro + ambient (unique hero signature) */
   useGSAP(
     () => {
-      const reduced = prefersReducedMotion();
       const kicker = sectionRef.current?.querySelector(".hero-kicker");
       const wordInners = sectionRef.current?.querySelectorAll(".hero-word-inner");
       const sub = sectionRef.current?.querySelector(".hero-sub");
@@ -87,7 +85,7 @@ export function CinematicHero() {
       const scrollEl = sectionRef.current?.querySelector(".hero-scroll-hint");
       const coords = sectionRef.current?.querySelector(".hero-coords");
 
-      if (reduced) {
+      if (reducedMotion) {
         gsap.set([kicker, wordInners, sub, ctas, scrollEl, coords, topLineRef.current, botLineRef.current], {
           opacity: 1,
           clearProps: "transform,filter",
@@ -95,61 +93,23 @@ export function CinematicHero() {
         return;
       }
 
-      if (
-        !topLineRef.current ||
-        !botLineRef.current ||
-        !kicker ||
-        !sub ||
-        !ctas ||
-        !scrollEl ||
-        !coords ||
-        !wordInners ||
-        wordInners.length === 0
-      ) {
-        return;
-      }
+      if (!topLineRef.current || !botLineRef.current || !kicker || !sub || !ctas || !scrollEl || !coords || !wordInners) return;
 
       const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
       intro.fromTo(topLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0);
       intro.fromTo(botLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0.12);
-      intro.fromTo(
-        kicker,
-        { opacity: 0, x: -40, filter: "blur(8px)" },
-        { opacity: 1, x: 0, filter: "blur(0px)", duration: 1 },
-        0.2,
-      );
-      intro.fromTo(
-        wordInners,
-        { yPercent: 125, rotateX: 56, opacity: 0.2, transformOrigin: "50% 0%" },
-        { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.25, stagger: 0.09 },
-        0.35,
-      );
-
-      intro.fromTo(
-        sub,
-        { opacity: 0, y: 36, filter: "blur(10px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2 },
-        0.75,
-      );
-      intro.fromTo(
-        ctas,
-        { opacity: 0, y: 28, rotateX: 12, transformOrigin: "50% 100%" },
-        { opacity: 1, y: 0, rotateX: 0, duration: 1.15 },
-        0.95,
-      );
+      intro.fromTo(kicker, { opacity: 0, x: -40, filter: isLowEnd ? "none" : "blur(8px)" }, { opacity: 1, x: 0, filter: "none", duration: 1 }, 0.2);
+      intro.fromTo(wordInners, { yPercent: 125, rotateX: isLowEnd ? 0 : 56, opacity: 0.2 }, { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.25, stagger: 0.09 }, 0.35);
+      intro.fromTo(sub, { opacity: 0, y: 36, filter: isLowEnd ? "none" : "blur(10px)" }, { opacity: 1, y: 0, filter: "none", duration: 1.2 }, 0.75);
+      intro.fromTo(ctas, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 1.15 }, 0.95);
       intro.fromTo(scrollEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.9 }, 1.15);
       intro.fromTo(coords, { opacity: 0, y: 10 }, { opacity: 0.35, y: 0, duration: 1 }, 1.35);
 
-      if (auroraRef.current) {
-        gsap.to(auroraRef.current, {
-          rotate: 360,
-          duration: 48,
-          repeat: -1,
-          ease: "none",
-        });
+      if (auroraRef.current && !isLowEnd) {
+        gsap.to(auroraRef.current, { rotate: 360, duration: 60, repeat: -1, ease: "none" });
       }
     },
-    { scope: sectionRef, dependencies: [locale] },
+    { scope: sectionRef, dependencies: [locale, isLowEnd, reducedMotion] },
   );
 
   useGSAP(
@@ -161,24 +121,22 @@ export function CinematicHero() {
 
       const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-      // Simplified parallax on mobile — no rotateY/scale to save GPU layers
       gsap.to(media, {
-        yPercent: isTouch ? 18 : 32,
-        scale: isTouch ? 1 : 1.12,
-        rotateY: isTouch ? 0 : -4,
+        yPercent: isLowEnd || isTouch ? 15 : 32,
+        scale: isLowEnd || isTouch ? 1 : 1.12,
+        rotateY: isLowEnd || isTouch ? 0 : -4,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: isTouch ? 0.3 : 0,
+          scrub: isLowEnd ? 0.1 : (isTouch ? 0.3 : 0),
         },
       });
 
       gsap.to(content, {
         autoAlpha: 0,
-        yPercent: isTouch ? -12 : -22,
-        rotateX: isTouch ? 0 : 8,
+        yPercent: isLowEnd ? -5 : -22,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -211,7 +169,7 @@ export function CinematicHero() {
         });
       }
     },
-    { scope: sectionRef },
+    { scope: sectionRef, dependencies: [isLowEnd] },
   );
 
   return (
@@ -219,15 +177,17 @@ export function CinematicHero() {
       ref={sectionRef}
       className="relative h-[100svh] min-h-[700px] w-full overflow-hidden bg-pts-deep [perspective:1600px]"
     >
-      <div
-        ref={auroraRef}
-        className="pointer-events-none absolute -left-1/2 top-1/2 z-[1] h-[180%] w-[200%] -translate-y-1/2 opacity-30 will-change-transform"
-        style={{
-          background:
-            "conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(168,143,100,0.06) 60deg, transparent 120deg, rgba(207,186,144,0.04) 200deg, transparent 280deg)",
-        }}
-        aria-hidden
-      />
+      {!isLowEnd && (
+        <div
+          ref={auroraRef}
+          className="pointer-events-none absolute -left-1/2 top-1/2 z-[1] h-[180%] w-[200%] -translate-y-1/2 opacity-30 will-change-transform"
+          style={{
+            background:
+              "conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(168,143,100,0.06) 60deg, transparent 120deg, rgba(207,186,144,0.04) 200deg, transparent 280deg)",
+          }}
+          aria-hidden
+        />
+      )}
 
       <div
         ref={mediaRef}
@@ -244,22 +204,26 @@ export function CinematicHero() {
         />
       </div>
 
-      <div
-        ref={layer1Ref}
-        className="pointer-events-none absolute inset-[-5%] z-[2] will-change-transform"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 50% at 30% 40%, rgba(168,143,100,0.08) 0%, transparent 60%)",
-        }}
-      />
-      <div
-        ref={layer2Ref}
-        className="pointer-events-none absolute inset-[-5%] z-[3] will-change-transform"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 70% 60%, rgba(13,13,15,0.25) 0%, transparent 60%)",
-        }}
-      />
+      {!isLowEnd && (
+        <>
+          <div
+            ref={layer1Ref}
+            className="pointer-events-none absolute inset-[-5%] z-[2] will-change-transform"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 50% at 30% 40%, rgba(168,143,100,0.08) 0%, transparent 60%)",
+            }}
+          />
+          <div
+            ref={layer2Ref}
+            className="pointer-events-none absolute inset-[-5%] z-[3] will-change-transform"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 60% at 70% 60%, rgba(13,13,15,0.25) 0%, transparent 60%)",
+            }}
+          />
+        </>
+      )}
 
       <div
         ref={overlayRef}
@@ -337,4 +301,4 @@ export function CinematicHero() {
       </div>
     </section>
   );
-}
+});
