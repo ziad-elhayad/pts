@@ -27,8 +27,7 @@ export function SmoothScrollProvider({
       // Normalize scroll for mobile - this fixes the address bar resize / pinning jump issues
       ScrollTrigger.normalizeScroll({ 
         allowNestedScroll: true,
-        lockAxis: true,
-        momentum: true 
+        lockAxis: true
       });
       
       const timer = setTimeout(() => {
