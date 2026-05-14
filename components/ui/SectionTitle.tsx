@@ -263,7 +263,7 @@ export function SectionTitle({
   );
 
   const titleBase = clsx(
-    "font-heading text-4xl uppercase leading-none tracking-[0.02em] text-pts-parchment md:text-7xl",
+    "font-heading text-[clamp(1.75rem,7vw,2.5rem)] uppercase leading-tight tracking-[0.02em] text-pts-parchment md:text-7xl md:leading-none",
     isCenter && "text-center",
   );
 

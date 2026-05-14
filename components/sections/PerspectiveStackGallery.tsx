@@ -97,7 +97,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
   return (
     <section
       ref={containerRef}
-      className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-pts-bg [perspective:1600px]"
+      className="relative flex h-[100svh] w-full items-center justify-center overflow-hidden bg-pts-bg [perspective:1600px]"
     >
       {!isLowEnd && (
         <div

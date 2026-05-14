@@ -113,7 +113,7 @@ export function LuxuryGalleryGrid() {
       className="relative h-[300vh] w-full bg-pts-black overflow-visible"
     >
       {/* Sticky viewport wrapper */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden flex items-center justify-center">
         {/* Decorative Text behind the lens */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none">
           <h2 className="lux-heading text-[15vw] tracking-tighter text-pts-gold uppercase font-bold ambient-orb">

@@ -157,7 +157,7 @@ export function ExpandingItineraries() {
         aria-hidden
       />
 
-      <div className="relative flex flex-col sm:flex-row h-[140vh] sm:h-[90vh] min-h-[750px] sm:min-h-[600px] w-full items-stretch">
+      <div className="relative flex flex-col sm:flex-row h-auto min-h-[120svh] sm:h-[90vh] sm:min-h-[600px] w-full items-stretch">
         {EXPERIENCES.map((item, index) => {
           const isActive = activeIndex === index;
           return (

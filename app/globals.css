@@ -31,6 +31,8 @@
 html {
   background: var(--pts-bg);
   scroll-behavior: auto;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 body {
@@ -40,6 +42,7 @@ body {
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overscroll-behavior-y: none; /* Prevents pull-to-refresh interfering with GSAP pinning on some mobile browsers */
   cursor: default; /* Fallback */
 }
 
