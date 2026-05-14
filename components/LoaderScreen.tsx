@@ -3,14 +3,20 @@
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/ui/BrandLogo";
-import { usePerformance } from "@/contexts/PerformanceContext";
 
 const SESSION_KEY = "pts-loader-seen";
+
+function detectLowEndDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+  const cores = navigator.hardwareConcurrency ?? 4;
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return memory <= 4 || cores <= 4 || (isMobile && memory <= 4);
+}
 
 export function LoaderScreen() {
   const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
-  const { isLowEnd } = usePerformance();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -42,7 +48,9 @@ export function LoaderScreen() {
     // Prevent scroll during loader
     document.documentElement.style.overflow = "hidden";
 
-    // Durations for performance tiers
+    // Durations for performance tiers (inline detect — avoids re-running this effect when
+    // PerformanceContext tier updates after mount, which could kill GSAP mid-timeline on Vercel/mobile)
+    const isLowEnd = detectLowEndDevice();
     const d = isLowEnd ? 0.4 : 1.0;
 
     const tl = gsap.timeline({
@@ -96,7 +104,7 @@ export function LoaderScreen() {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
-  }, [isLowEnd]);
+  }, []);
 
   if (!visible) return null;
 
