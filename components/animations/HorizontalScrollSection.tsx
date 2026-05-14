@@ -212,7 +212,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
       id={id} 
       className={clsx(
         "relative w-full bg-pts-bg transition-colors duration-1000",
-        isTouch ? "h-auto overflow-x-auto scroll-smooth snap-x snap-mandatory" : "h-[100svh] overflow-hidden"
+        isTouch ? "h-auto overflow-hidden" : "h-[100svh] overflow-hidden"
       )}
     >
       <div className="flex h-full w-full flex-col [perspective:1400px]">
@@ -228,7 +228,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         {/* ── Editorial Header ──────────────────────────────────────── */}
         <div
           ref={headerRef}
-          className="relative z-30 origin-top border-b border-pts-gold/[0.08] px-[clamp(1.25rem,3vw,2.5rem)] pb-8 pt-16 will-change-transform [transform-style:preserve-3d] md:px-[clamp(1.25rem,4vw,2.5rem)]"
+          className="relative z-30 origin-top border-b border-pts-gold/[0.08] px-[clamp(1.25rem,3vw,2.5rem)] pb-8 pt-12 will-change-transform [transform-style:preserve-3d] md:px-[clamp(1.25rem,4vw,2.5rem)] md:pt-16"
         >
           <div
             ref={headerInnerRef}
@@ -237,9 +237,9 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
             <div className="flex-1">
               <div className="mb-4 flex items-center gap-4">
                 <div className="h-px w-6 bg-pts-gold/50" />
-                <p className="lux-heading text-[0.5rem] tracking-[0.6em] text-pts-gold opacity-55">{kicker}</p>
+                <p className="lux-heading text-[0.5rem] tracking-[0.4em] text-pts-gold opacity-55 sm:tracking-[0.6em]">{kicker}</p>
               </div>
-              <h2 className="mice-title-strip font-heading text-[clamp(1.4rem,2.65vw,2.35rem)] font-light uppercase leading-[1.06] tracking-[0.13em] text-pts-gold-2">
+              <h2 className="mice-title-strip font-heading text-[clamp(1.3rem,6vw,2.35rem)] font-light uppercase leading-[1.1] tracking-[0.1em] text-pts-gold-2 sm:text-[clamp(1.4rem,2.65vw,2.35rem)] sm:leading-[1.06] sm:tracking-[0.13em]">
                 {title.split(" ").map((w, i) => (
                   <span key={i} className="mr-[0.28em] inline-block overflow-hidden align-baseline">
                     <span className="mice-title-word inline-block will-change-transform">{w}</span>
@@ -250,7 +250,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
 
             {description && (
               <div className="max-w-sm">
-                <p className="text-[0.56rem] uppercase tracking-[0.26em] leading-[1.95] text-pts-gold-2/35 border-l-2 border-pts-gold/15 pl-8">
+                <p className="text-[0.52rem] uppercase tracking-[0.22em] leading-[1.8] text-pts-gold-2/35 border-l border-pts-gold/15 pl-6 sm:text-[0.56rem] sm:tracking-[0.26em] sm:leading-[1.95] sm:border-l-2 sm:pl-8">
                   {description}
                 </p>
               </div>
@@ -261,23 +261,23 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         {/* ── Gallery Track ──────────────────────────────────────────── */}
         <div className={clsx(
           "relative flex-1 w-full flex items-stretch z-10",
-          isTouch ? "overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory h-auto" : "overflow-hidden h-full"
+          isTouch ? "overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory py-10" : "overflow-hidden h-full"
         )}>
           <div
             ref={trackRef}
             className="flex items-stretch will-change-transform h-full"
             style={{ 
               width: "max-content", 
-              paddingLeft, 
-              paddingRight, 
-              gap,
+              paddingLeft: isTouch ? "1.5rem" : paddingLeft, 
+              paddingRight: isTouch ? "1.5rem" : paddingRight, 
+              gap: isTouch ? "1.25rem" : gap,
               transform: "translateZ(0)" // Force GPU
             }}
           >
             {flatChildren.map((child, i) => (
               <div key={i} className={clsx(
                 "hg-item flex-shrink-0 flex items-stretch",
-                isTouch ? "snap-center h-[70vh] min-h-[500px]" : "h-full"
+                isTouch ? "snap-center h-[55vh] min-h-[420px] w-[80vw]" : "h-full"
               )}>
                 {child}
               </div>
@@ -286,17 +286,22 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         </div>
 
         {/* ── Progress System ────────────────────────────────────────── */}
-        <div className="absolute bottom-0 left-0 right-0 z-30">
+        <div className={clsx(
+          "relative z-30",
+          isTouch ? "mt-4" : "absolute bottom-0 left-0 right-0"
+        )}>
           {/* Cinematic progress bar */}
-          <div
-            ref={progressRef}
-            className="h-[2px] origin-left"
-            style={{
-              transform: "scaleX(0)",
-              background: "linear-gradient(90deg, var(--pts-gold), var(--pts-gold-2), var(--pts-gold))",
-              willChange: "transform"
-            }}
-          />
+          {!isTouch && (
+            <div
+              ref={progressRef}
+              className="h-[2px] origin-left"
+              style={{
+                transform: "scaleX(0)",
+                background: "linear-gradient(90deg, var(--pts-gold), var(--pts-gold-2), var(--pts-gold))",
+                willChange: "transform"
+              }}
+            />
+          )}
 
           {/* Footer info strip */}
           <div
@@ -305,16 +310,16 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
           >
             <div className="flex items-center gap-5">
               <span className="lux-heading text-[0.48rem] text-pts-gold tracking-[0.5em]">01</span>
-              <div className="h-px w-16 bg-pts-line/20" />
+              <div className="h-px w-10 bg-pts-line/20 sm:w-16" />
               <span className="lux-heading text-[0.48rem] text-pts-muted/25 tracking-[0.5em]">
                 {flatChildren.length.toString().padStart(2, "0")}
               </span>
             </div>
 
             <div className="flex items-center gap-3">
-              {!isLowEnd && <div className="h-1.5 w-1.5 rounded-full bg-pts-gold/30 animate-pulse" />}
-              <p className="lux-heading text-[0.42rem] text-pts-gold/25 tracking-[0.4em] sm:tracking-[0.8em]">
-                Drag to Navigate
+              {!isLowEnd && <div className="h-1 w-1 rounded-full bg-pts-gold/30 animate-pulse sm:h-1.5 sm:w-1.5" />}
+              <p className="lux-heading text-[0.4rem] text-pts-gold/25 tracking-[0.3em] sm:text-[0.42rem] sm:tracking-[0.8em]">
+                {isTouch ? "Swipe to Explore" : "Drag to Navigate"}
               </p>
             </div>
           </div>

@@ -255,19 +255,19 @@ export const CinematicHero = memo(function CinematicHero() {
 
       <div
         ref={contentRef}
-        className="hero-content relative z-10 flex h-full transform-gpu flex-col justify-end px-6 pb-24 pt-40 [transform-style:preserve-3d] sm:px-10 lg:px-20"
+        className="hero-content relative z-10 flex h-full transform-gpu flex-col justify-end px-6 pb-20 pt-32 [transform-style:preserve-3d] sm:px-10 sm:pb-24 sm:pt-40 lg:px-20"
       >
         <div className="mx-auto w-full max-w-6xl">
-          <div className="hero-kicker mb-8 flex items-center gap-5">
-            <div className="h-px w-12 bg-pts-gold" />
-            <p className="lux-heading text-[0.52rem] tracking-[0.55em] text-pts-gold">
+          <div className="hero-kicker mb-6 flex items-center gap-4 sm:mb-8 sm:gap-5">
+            <div className="h-px w-8 bg-pts-gold sm:w-12" />
+            <p className="lux-heading text-[0.5rem] sm:text-[0.52rem] tracking-[0.4em] sm:tracking-[0.55em] text-pts-gold">
               {t(locale, "hero.kicker")}
             </p>
           </div>
 
-          <h1 className="max-w-5xl font-heading text-[clamp(1.85rem,4.5vw,4rem)] font-bold uppercase leading-[1.04] tracking-[0.06em] text-pts-parchment [perspective:1200px] drop-shadow-[0_8px_40px_rgba(0,0,0,1)]">
+          <h1 className="max-w-5xl font-heading text-[clamp(1.6rem,6vw,4rem)] font-bold uppercase leading-[1.08] tracking-[0.04em] text-pts-parchment [perspective:1200px] drop-shadow-[0_8px_40px_rgba(0,0,0,1)] sm:leading-[1.04] sm:tracking-[0.06em]">
             {words.map((word, wi) => (
-              <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-2 align-top">
+              <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-1 align-top sm:py-2">
                 <span className="hero-word-inner relative inline-block will-change-transform">
                   {word}
                 </span>
@@ -275,30 +275,32 @@ export const CinematicHero = memo(function CinematicHero() {
             ))}
           </h1>
 
-          <p className="hero-sub mt-10 max-w-xl text-[0.75rem] sm:text-[0.85rem] font-bold uppercase leading-[2.15] tracking-[0.18em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] opacity-0">
+          <p className="hero-sub mt-8 max-w-xl text-[0.68rem] sm:mt-10 sm:text-[0.85rem] font-bold uppercase leading-[1.8] tracking-[0.12em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] opacity-0 sm:leading-[2.15] sm:tracking-[0.18em]">
             {site.description}
           </p>
 
-          <div className="hero-cta mt-12 sm:mt-16 flex flex-col sm:flex-row flex-wrap items-center gap-4 sm:gap-8 opacity-0">
-            <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold w-full sm:w-auto px-12 py-5 text-[0.7rem] font-bold text-pts-black">
+          <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 opacity-0 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">
+            <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto">
               Inquire
             </MagneticButton>
             <MagneticButton
               href="/mice"
-              className="border-pts-parchment bg-pts-black/80 w-full sm:w-auto px-12 py-5 text-[0.7rem] font-bold text-pts-parchment hover:bg-pts-black"
+              className="border-pts-parchment bg-pts-black/80 px-12 py-4 text-[0.65rem] font-bold text-pts-parchment hover:bg-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto"
             >
               Begin Your Experience
             </MagneticButton>
           </div>
 
-          <div className="hero-scroll-hint mt-14 opacity-0">
-            <FloatingScrollIndicator />
+          <div className="hero-scroll-hint mt-10 sm:mt-14 opacity-0">
+            <div className="hidden sm:block">
+              <FloatingScrollIndicator />
+            </div>
           </div>
         </div>
 
-        <div className="hero-coords absolute bottom-8 right-10 text-right opacity-0">
-          <p className="lux-heading text-[0.45rem] tracking-[0.5em] text-pts-gold">21°N 39°E</p>
-          <p className="lux-heading mt-1 text-[0.4rem] tracking-[0.4em] text-pts-gold/60">JEDDAH · GLOBAL</p>
+        <div className="hero-coords absolute bottom-6 right-6 text-right opacity-0 sm:bottom-8 sm:right-10">
+          <p className="lux-heading text-[0.4rem] tracking-[0.4em] text-pts-gold sm:text-[0.45rem] sm:tracking-[0.5em]">21°N 39°E</p>
+          <p className="lux-heading mt-1 text-[0.35rem] tracking-[0.3em] text-pts-gold/60 sm:text-[0.4rem] sm:tracking-[0.4em]">JEDDAH · GLOBAL</p>
         </div>
       </div>
     </section>

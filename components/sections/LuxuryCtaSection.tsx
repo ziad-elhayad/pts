@@ -143,34 +143,34 @@ export function LuxuryCtaSection() {
 
       <div
         ref={textRef}
-        className="relative z-10 mx-auto w-full max-w-[92rem] transform-gpu px-[clamp(1.25rem,3vw,2.5rem)] py-20 sm:py-28 text-center [transform-style:preserve-3d] sm:px-[clamp(1.25rem,4vw,2.5rem)]"
+        className="relative z-10 mx-auto w-full max-w-[92rem] transform-gpu px-6 py-20 text-center [transform-style:preserve-3d] sm:px-[clamp(1.25rem,4vw,2.5rem)] sm:py-28"
       >
-        <div data-cta-reveal className="mb-14 flex items-center justify-center gap-5">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-pts-gold/50" />
-          <p className="lux-heading text-[0.54rem] tracking-[0.8em] text-pts-gold">Inquiry</p>
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-pts-gold/50" />
+        <div data-cta-reveal className="mb-10 flex items-center justify-center gap-4 sm:mb-14 sm:gap-5">
+          <div className="h-px w-10 bg-gradient-to-r from-transparent to-pts-gold/50 sm:w-16" />
+          <p className="lux-heading text-[0.5rem] tracking-[0.5em] text-pts-gold sm:text-[0.54rem] sm:tracking-[0.8em]">Inquiry</p>
+          <div className="h-px w-10 bg-gradient-to-l from-transparent to-pts-gold/50 sm:w-16" />
         </div>
 
         <h2
           data-cta-reveal
-          className="font-heading text-[clamp(1.6rem,3.6vw,3.15rem)] uppercase leading-[1.06] tracking-[0.1em] text-pts-parchment"
+          className="font-heading text-[clamp(1.3rem,6vw,3.15rem)] uppercase leading-[1.1] tracking-[0.06em] text-pts-parchment sm:text-[clamp(1.6rem,3.6vw,3.15rem)] sm:leading-[1.06] sm:tracking-[0.1em]"
         >
           {t(locale, "lux.cta.title")}
         </h2>
 
         <div
           ref={dividerRef}
-          className="mx-auto mt-14 h-px w-20 origin-center scale-x-0 bg-pts-gold/35 will-change-transform"
+          className="mx-auto mt-10 h-px w-16 origin-center scale-x-0 bg-pts-gold/35 will-change-transform sm:mt-14 sm:w-20"
         />
 
         <p
           data-cta-reveal
-          className="mx-auto mt-12 max-w-2xl text-[0.6rem] uppercase leading-[2.35] tracking-[0.2em] text-pts-gold-2"
+          className="mx-auto mt-10 max-w-2xl text-[0.56rem] uppercase leading-[2.1] tracking-[0.15em] text-pts-gold-2 sm:mt-12 sm:text-[0.6rem] sm:leading-[2.35] sm:tracking-[0.2em]"
         >
           {t(locale, "lux.cta.body")}
         </p>
 
-        <div data-cta-reveal className="mt-12 sm:mt-16 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <div data-cta-reveal className="mt-10 flex flex-col items-center justify-center gap-4 sm:mt-16 sm:flex-row sm:gap-6">
           <MagneticButton href="/contact" className="btn-gold-glow w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 text-[0.65rem] sm:text-[0.68rem]">
             {t(locale, "cta.begin")}
           </MagneticButton>
@@ -182,7 +182,7 @@ export function LuxuryCtaSection() {
           </MagneticButton>
         </div>
 
-        <p data-cta-reveal className="mt-20 lux-heading text-[0.42rem] tracking-[0.8em] text-pts-gold">
+        <p data-cta-reveal className="mt-16 lux-heading text-[0.38rem] tracking-[0.5em] text-pts-gold sm:mt-20 sm:text-[0.42rem] sm:tracking-[0.8em]">
           PTS · JEDDAH · GLOBAL OPERATIONS · EST. 2010
         </p>
       </div>

@@ -117,13 +117,13 @@ export const StickySplitSection = memo(function StickySplitSection() {
               <div className="mt-4 h-px w-12 bg-pts-gold/30" />
             </div>
 
-            <div className="split-image-frame relative z-10 aspect-[16/11] max-h-[40svh] sm:max-h-none sm:aspect-[4/3] w-full overflow-hidden rounded-sm border border-pts-gold/10 lg:ml-auto lg:aspect-auto lg:h-[75vh] lg:w-2/3">
+            <div className="split-image-frame relative z-10 aspect-[4/3] max-h-[35svh] w-full overflow-hidden rounded-sm border border-pts-gold/10 sm:max-h-none sm:aspect-[4/3] lg:ml-auto lg:aspect-auto lg:h-[75vh] lg:w-2/3">
               <div className="absolute inset-0 top-[-15%] h-[130%] w-full">
                 <Image
                   src={vipServiceMedia[i].src}
                   alt={vipServiceMedia[i].alt}
                   fill
-                  className="split-img object-cover brightness-[0.95] saturate-[0.9] will-change-transform transform-gpu"
+                  className="split-img object-cover brightness-[0.8] saturate-[0.9] will-change-transform transform-gpu sm:brightness-[0.95]"
                   style={{ backfaceVisibility: "hidden" }}
                   sizes="(max-width: 1024px) 100vw, 66vw"
                   quality={isLowEnd ? 75 : 90}
@@ -133,7 +133,7 @@ export const StickySplitSection = memo(function StickySplitSection() {
             </div>
 
             <div className={clsx(
-              "split-content-box relative z-20 w-[95%] sm:w-full border border-pts-gold/20 p-5 sm:p-8 shadow-lux md:p-14 lg:absolute lg:left-0 lg:top-1/2 lg:w-1/2 lg:-translate-y-1/2 -mt-10 sm:mt-0",
+              "split-content-box relative z-20 w-[92%] sm:w-full border border-pts-gold/20 p-6 sm:p-8 shadow-lux md:p-14 lg:absolute lg:left-0 lg:top-1/2 lg:w-1/2 lg:-translate-y-1/2 -mt-12 sm:mt-0",
               isLowEnd ? "bg-pts-black/95" : "glass-deep"
             )}>
               <div className="mb-4 sm:mb-6 hidden items-center gap-4 lg:flex">
@@ -141,21 +141,21 @@ export const StickySplitSection = memo(function StickySplitSection() {
                 <p className="lux-heading text-[0.45rem] uppercase tracking-[0.6em] text-pts-gold">VIP Concierge</p>
               </div>
 
-              <h3 className="mb-4 sm:mb-8 font-heading text-xl sm:text-2xl uppercase leading-[1.12] tracking-[0.05em] text-pts-parchment md:text-5xl">
+              <h3 className="mb-4 sm:mb-8 font-heading text-lg sm:text-2xl uppercase leading-[1.1] tracking-[0.04em] text-pts-parchment md:text-5xl sm:leading-[1.12] sm:tracking-[0.05em]">
                 {item.title}
               </h3>
 
-              <p className="mb-6 sm:mb-12 max-w-sm text-[0.6rem] sm:text-[0.68rem] uppercase leading-[2.1] sm:leading-[2.35] tracking-[0.2em] text-pts-muted/70">
+              <p className="mb-6 sm:mb-12 max-w-sm text-[0.58rem] sm:text-[0.68rem] uppercase leading-[2] sm:leading-[2.35] tracking-[0.15em] sm:tracking-[0.2em] text-pts-muted/70">
                 {item.description}
               </p>
 
               {i === pillars.length - 1 ? (
-                <MagneticButton href="/vip-concierge" className="btn-gold-glow w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 text-[0.65rem]">
+                <MagneticButton href="/vip-concierge" className="btn-gold-glow w-full sm:w-auto px-10 sm:px-12 py-3.5 sm:py-5 text-[0.6rem] sm:text-[0.65rem]">
                   Explore VIP
                 </MagneticButton>
               ) : (
                 <div className="flex items-center gap-3 text-pts-gold/40">
-                  <span className="lux-heading text-[0.5rem] uppercase tracking-[0.4em]">Scroll to uncover</span>
+                  <span className="lux-heading text-[0.45rem] uppercase tracking-[0.3em] sm:text-[0.5rem] sm:tracking-[0.4em]">Scroll to uncover</span>
                   <div className="vip-scroll-line h-px w-6 bg-pts-gold/40" />
                 </div>
               )}

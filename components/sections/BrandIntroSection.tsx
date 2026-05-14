@@ -179,7 +179,7 @@ export function BrandIntroSection() {
   return (
     <section
       ref={sectionRef}
-      className="section-transition relative overflow-hidden border-t border-pts-line/20 h-[100svh] min-h-[500px] sm:min-h-[700px] w-full"
+      className="section-transition relative overflow-hidden border-t border-pts-line/20 min-h-[100svh] w-full flex flex-col justify-center py-20 sm:h-[100svh] sm:min-h-[700px] sm:py-0"
     >
       {/* Background Image Layer */}
       <div className="absolute inset-0 z-0">
@@ -195,8 +195,8 @@ export function BrandIntroSection() {
       </div>
 
       {/* Dark Overlay for Text Readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-r from-pts-black via-pts-black/80 to-transparent opacity-100" />
-      <div className="absolute inset-0 z-10 bg-pts-black/40" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-pts-black via-pts-black/80 to-transparent opacity-100 sm:from-pts-black sm:via-pts-black/80" />
+      <div className="absolute inset-0 z-10 bg-pts-black/50 sm:bg-pts-black/40" />
       
       {/* Glow Effects */}
       <div
@@ -205,37 +205,35 @@ export function BrandIntroSection() {
         aria-hidden
       />
 
-      <div className="relative z-20 mx-auto flex h-full w-full max-w-[92rem] flex-col justify-center px-[clamp(1.25rem,3vw,2.5rem)] sm:px-[clamp(1.25rem,4vw,2.5rem)]">
+      <div className="relative z-20 mx-auto flex w-full max-w-[92rem] flex-col justify-center px-6 sm:px-[clamp(1.25rem,4vw,2.5rem)]">
         <div
           ref={colRef}
           className="max-w-4xl [transform-style:preserve-3d]"
         >
           <div className="mb-4">
-            <div className="mb-10 flex items-center gap-4">
+            <div className="mb-8 flex items-center gap-4 sm:mb-10">
               <div className="h-px w-8 bg-pts-gold" />
-              <p className="lux-heading text-[0.55rem] tracking-[0.6em] text-pts-gold">
+              <p className="lux-heading text-[0.5rem] tracking-[0.4em] text-pts-gold sm:text-[0.55rem] sm:tracking-[0.6em]">
                 {t(locale, "brand.kicker")}
               </p>
             </div>
-            <h2 className="font-heading text-[clamp(1.5rem,5vw,2.4rem)] sm:text-[clamp(1.85rem,4vw,3.2rem)] font-bold uppercase leading-[1.12] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)]">
+            <h2 className="font-heading text-[clamp(1.4rem,6vw,2.4rem)] font-bold uppercase leading-[1.2] tracking-[0.08em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]">
               {titleWords.map((w, i) => (
                 <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
                   <span className="biw inline-block will-change-transform">{w}</span>
                 </span>
               ))}
             </h2>
-            <div className="bi-accent mt-8 h-[2px] w-24 scale-x-0 bg-pts-gold will-change-transform" />
+            <div className="bi-accent mt-6 h-[2px] w-16 scale-x-0 bg-pts-gold will-change-transform sm:mt-8 sm:w-24" />
           </div>
 
-          <div className="bi-copy mt-10 max-w-2xl [transform-style:preserve-3d]">
+          <div className="bi-copy mt-8 max-w-2xl [transform-style:preserve-3d] sm:mt-10">
             <LineRevealText
               text={t(locale, "brand.body")}
               mode="cascade"
-              className="text-[0.8rem] sm:text-[0.95rem] font-bold uppercase leading-[2.2] tracking-[0.18em] text-pts-parchment drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
+              className="text-[0.7rem] font-bold uppercase leading-[2] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-[0.95rem] sm:leading-[2.2] sm:tracking-[0.18em]"
             />
           </div>
-
-
         </div>
       </div>
     </section>

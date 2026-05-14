@@ -113,16 +113,16 @@ export function TestimonialsSection() {
           {quotes.map((item) => (
             <blockquote
               key={item.index}
-              className="testimonial-card relative border border-pts-gold/10 bg-pts-black/40 p-8 sm:p-10 transition-all duration-500 hover:border-pts-gold/30 hover:bg-pts-black/60 shadow-lux backdrop-blur-sm"
+              className="testimonial-card relative border border-pts-gold/10 bg-pts-black/40 p-7 sm:p-10 transition-all duration-500 hover:border-pts-gold/30 hover:bg-pts-black/60 shadow-lux backdrop-blur-sm"
             >
-              <div className="mb-6 flex items-center justify-between">
-                <span className="lux-heading text-[0.44rem] tracking-[0.5em] text-pts-gold">{item.index}</span>
-                <item.Icon size={24} className="text-pts-gold" strokeWidth={1} />
+              <div className="mb-5 flex items-center justify-between sm:mb-6">
+                <span className="lux-heading text-[0.4rem] tracking-[0.4em] text-pts-gold sm:text-[0.44rem] sm:tracking-[0.5em]">{item.index}</span>
+                <item.Icon size={20} className="text-pts-gold sm:size-24" strokeWidth={1} />
               </div>
 
-              <div className="mb-8 h-px w-12 bg-pts-gold/30" />
+              <div className="mb-6 h-px w-10 bg-pts-gold/30 sm:mb-8 sm:w-12" />
 
-              <div className="text-[1rem] sm:text-[1.1rem] leading-[1.8] text-pts-parchment/95 font-light">
+              <div className="text-[0.85rem] leading-[1.7] text-pts-parchment/95 font-light sm:text-[1.1rem] sm:leading-[1.8]">
                 <LineRevealText 
                   text={item.quote} 
                   mode="cascade" 
@@ -131,9 +131,9 @@ export function TestimonialsSection() {
                 />
               </div>
 
-              <footer className="mt-10 sm:mt-12 border-t border-pts-line/20 pt-6 sm:pt-8 flex flex-col gap-1">
-                <p className="lux-heading text-[0.55rem] tracking-[0.3em] text-pts-gold">{item.role}</p>
-                <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-gold-2">{item.org}</p>
+              <footer className="mt-8 border-t border-pts-line/20 pt-6 flex flex-col gap-1 sm:mt-12 sm:pt-8">
+                <p className="lux-heading text-[0.5rem] tracking-[0.25em] text-pts-gold sm:text-[0.55rem] sm:tracking-[0.3em]">{item.role}</p>
+                <cite className="text-[0.6rem] not-italic uppercase tracking-[0.15em] text-pts-gold-2 sm:text-[0.65rem] sm:tracking-[0.2em]">{item.org}</cite>
               </footer>
             </blockquote>
           ))}

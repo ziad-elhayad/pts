@@ -157,7 +157,7 @@ export function ExpandingItineraries() {
         aria-hidden
       />
 
-      <div className="relative flex flex-col sm:flex-row h-auto min-h-[120svh] sm:h-[90vh] sm:min-h-[600px] w-full items-stretch">
+      <div className="relative flex flex-col sm:flex-row h-auto min-h-[140svh] sm:h-[90vh] sm:min-h-[600px] w-full items-stretch">
         {EXPERIENCES.map((item, index) => {
           const isActive = activeIndex === index;
           return (
@@ -168,14 +168,14 @@ export function ExpandingItineraries() {
               }}
               role="button"
               tabIndex={0}
-              onMouseEnter={() => setActiveIndex(index)}
+              onMouseEnter={() => (!('ontouchstart' in window) ? setActiveIndex(index) : undefined)}
               onClick={() => setActiveIndex(index)}
               onFocus={() => setActiveIndex(index)}
               className={clsx(
-                "exp-it-panel relative h-full cursor-pointer overflow-hidden transition-[flex,filter] duration-[1600ms] ease-[cubic-bezier(0.25,1,0.5,1)] [transform-style:preserve-3d]",
+                "exp-it-panel relative cursor-pointer overflow-hidden transition-[flex,filter] duration-[1600ms] ease-[cubic-bezier(0.25,1,0.5,1)] [transform-style:preserve-3d]",
                 isActive 
-                  ? "flex-[5] sm:flex-[4.5] z-10" 
-                  : "flex-[1.2] sm:flex-[1] z-0 brightness-[0.6] hover:brightness-[0.8]",
+                  ? "flex-[8] sm:flex-[4.5] z-10 min-h-[450px]" 
+                  : "flex-[1] sm:flex-[1] z-0 brightness-[0.5] hover:brightness-[0.8] min-h-[80px] sm:min-h-0",
               )}
             >
               <div className="absolute inset-0 will-change-transform">
@@ -186,13 +186,13 @@ export function ExpandingItineraries() {
                   sizes="(max-width: 768px) 100vw, 25vw"
                   className={clsx(
                     "object-cover object-center transition-[filter] duration-[1.4s] ease-out",
-                    isActive ? "saturate-100 brightness-100" : "saturate-[0.2] brightness-[0.4]",
+                    isActive ? "saturate-100 brightness-[0.7] sm:brightness-100" : "saturate-[0.2] brightness-[0.4]",
                   )}
                   priority={index === 0}
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-pts-black/80" />
+              <div className="absolute inset-0 bg-gradient-to-b from-pts-black/40 via-transparent to-pts-black/90" />
               <div
                 className={clsx(
                   "absolute inset-0 bg-pts-deep/40 transition-opacity duration-700",
@@ -202,45 +202,45 @@ export function ExpandingItineraries() {
 
               <div
                 className={clsx(
-                  "absolute left-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-pts-gold/35 to-transparent transition-opacity duration-700",
+                  "absolute left-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-pts-gold/35 to-transparent transition-opacity duration-700 sm:w-[1.5px]",
                   isActive ? "opacity-100" : "opacity-25",
                 )}
               />
 
-              <div className="absolute inset-0 flex flex-col justify-between overflow-hidden p-5 sm:p-10 lg:p-14">
-                <div className="exp-tag lux-heading text-[0.48rem] tracking-[0.5em] text-pts-gold opacity-0">
+              <div className="absolute inset-0 flex flex-col justify-between overflow-hidden p-6 sm:p-10 lg:p-14">
+                <div className="exp-tag lux-heading text-[0.45rem] tracking-[0.4em] text-pts-gold opacity-0 sm:text-[0.48rem] sm:tracking-[0.5em]">
                   {item.tag}
                 </div>
 
                 <div>
-                  <div className="relative h-20 flex items-center">
+                  <div className="relative h-16 sm:h-20 flex items-center">
                     <h3
                       className={clsx(
-                        "font-heading font-light uppercase leading-[1.1] text-pts-gold-2 transition-all duration-[1600ms] whitespace-nowrap origin-center",
+                        "font-heading font-light uppercase leading-[1.1] text-pts-gold-2 transition-all duration-[1600ms] origin-left sm:origin-center",
                         isActive
-                          ? "rotate-0 text-[clamp(1.2rem,5vw,2.35rem)] opacity-100"
-                          : "rotate-0 sm:-rotate-90 text-[0.75rem] sm:text-lg opacity-60",
+                          ? "rotate-0 text-[clamp(1.1rem,5vw,2.35rem)] opacity-100"
+                          : "rotate-0 sm:-rotate-90 text-[0.65rem] sm:text-lg opacity-60 whitespace-nowrap",
                       )}
                     >
                       {item.title}
                     </h3>
                   </div>
 
-                  <div className={clsx("exp-detail pt-8", !isActive && "pointer-events-none invisible max-h-0 opacity-0")}>
-                    <div className="pt-8">
-                      <div className="mb-6 flex items-center gap-4">
-                        <div className="h-px w-8 bg-pts-gold/50" />
-                        <span className="lux-heading text-[0.48rem] tracking-[0.4em] text-pts-gold opacity-60">
+                  <div className={clsx("exp-detail", !isActive && "pointer-events-none invisible max-h-0 opacity-0")}>
+                    <div className="pt-4 sm:pt-8">
+                      <div className="mb-4 flex items-center gap-4 sm:mb-6">
+                        <div className="h-px w-6 bg-pts-gold/50 sm:w-8" />
+                        <span className="lux-heading text-[0.45rem] tracking-[0.4em] text-pts-gold opacity-60 sm:text-[0.48rem]">
                           {item.category}
                         </span>
                       </div>
-                      <div className="glass-deep max-w-md border border-pts-gold/15 p-8">
-                        <p className="text-[0.55rem] sm:text-[0.58rem] uppercase leading-[2.15] tracking-[0.18em] sm:tracking-[0.2em] text-pts-gold-2/80">
+                      <div className="glass-deep max-w-md border border-pts-gold/15 p-6 sm:p-8">
+                        <p className="text-[0.52rem] uppercase leading-[2] tracking-[0.15em] text-pts-gold-2/80 sm:text-[0.58rem] sm:leading-[2.15] sm:tracking-[0.2em]">
                           {item.description}
                         </p>
-                        <div className="mt-8 flex items-center gap-4">
-                          <span className="lux-heading text-[0.48rem] tracking-[0.5em] text-pts-gold">Inquire</span>
-                          <div className="h-px max-w-[60px] flex-1 bg-pts-gold/30" />
+                        <div className="mt-6 flex items-center gap-4 sm:mt-8">
+                          <span className="lux-heading text-[0.45rem] tracking-[0.4em] text-pts-gold sm:text-[0.48rem] sm:tracking-[0.5em]">Inquire</span>
+                          <div className="h-px max-w-[40px] flex-1 bg-pts-gold/30" />
                         </div>
                       </div>
                     </div>
@@ -248,7 +248,7 @@ export function ExpandingItineraries() {
                 </div>
               </div>
 
-              <div className="pointer-events-none absolute right-6 sm:right-8 top-6 sm:top-10 lux-heading text-[0.42rem] tracking-[0.4em] text-pts-gold/30">
+              <div className="pointer-events-none absolute right-6 top-6 lux-heading text-[0.4rem] tracking-[0.3em] text-pts-gold/30 sm:right-8 sm:top-10 sm:text-[0.42rem] sm:tracking-[0.4em]">
                 0{index + 1}
               </div>
             </div>

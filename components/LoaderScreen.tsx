@@ -100,20 +100,20 @@ export function LoaderScreen() {
     >
       <div
         data-loader-top-line
-        className="absolute top-12 left-16 right-16 h-px origin-left"
+        className="absolute top-8 left-6 right-6 h-px origin-left sm:top-12 sm:left-16 sm:right-16"
         style={{ background: "linear-gradient(90deg, var(--pts-gold), transparent)" }}
       />
 
       <div className="relative flex flex-col items-center gap-8">
         <div data-loader-label className="flex flex-col items-center gap-6">
-          <BrandLogo size={64} className="text-pts-gold" />
+          <BrandLogo size={54} className="text-pts-gold sm:size-64" />
         </div>
 
-        <p data-loader-sub className="text-center text-[0.62rem] uppercase tracking-[0.5em] text-pts-muted">
+        <p data-loader-sub className="text-center text-[0.55rem] uppercase tracking-[0.4em] text-pts-muted sm:text-[0.62rem] sm:tracking-[0.5em]">
           Private Travel Services
         </p>
 
-        <div className="w-48 h-px bg-pts-line/30 overflow-hidden mt-6">
+        <div className="w-40 h-px bg-pts-line/30 overflow-hidden mt-6 sm:w-48">
           <div
             data-loader-bar
             className="h-full origin-left"
@@ -125,10 +125,10 @@ export function LoaderScreen() {
         </div>
       </div>
 
-      <div className="absolute bottom-16 right-16">
+      <div className="absolute bottom-10 right-8 sm:bottom-16 sm:right-16">
         <span
           data-loader-counter
-          className="lux-heading text-[0.6rem] text-pts-gold/40 tracking-[0.4em] stat-number"
+          className="lux-heading text-[0.55rem] text-pts-gold/40 tracking-[0.3em] stat-number sm:text-[0.6rem] sm:tracking-[0.4em]"
         >
           000
         </span>
@@ -136,7 +136,7 @@ export function LoaderScreen() {
 
       <div
         data-loader-bot-line
-        className="absolute bottom-12 left-16 right-16 h-px origin-right"
+        className="absolute bottom-8 left-6 right-6 h-px origin-right sm:bottom-12 sm:left-16 sm:right-16"
         style={{ background: "linear-gradient(90deg, transparent, var(--pts-gold))" }}
       />
 

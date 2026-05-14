@@ -108,7 +108,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
 
       <div
         ref={trackRef}
-        className="relative mx-auto h-[min(68vh,640px)] w-[min(90vw,1020px)] max-w-[1020px] transform-gpu [transform-style:preserve-3d] sm:h-[min(70vh,680px)]"
+        className="relative mx-auto h-[50vh] min-h-[380px] w-[88vw] max-w-[1020px] transform-gpu [transform-style:preserve-3d] sm:h-[min(70vh,680px)] sm:w-[min(90vw,1020px)]"
       >
         {galleryItems.slice(0, 6).map((img, i) => (
           <div
@@ -127,18 +127,18 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
                 loading={i < 2 ? "eager" : "lazy"}
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex flex-col sm:flex-row items-start sm:items-end justify-between bg-gradient-to-t from-pts-black via-pts-black/80 to-transparent p-6 sm:p-10 gap-4 sm:gap-0">
-                <div className="flex flex-col gap-2">
-                  <span className="lux-heading text-[0.5rem] uppercase tracking-[0.6em] text-pts-gold">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col items-start justify-between bg-gradient-to-t from-pts-black via-pts-black/90 to-transparent p-6 gap-3 sm:flex-row sm:items-end sm:p-10 sm:gap-0 sm:via-pts-black/80">
+                <div className="flex flex-col gap-1.5 sm:gap-2">
+                  <span className="lux-heading text-[0.45rem] uppercase tracking-[0.4em] text-pts-gold sm:text-[0.5rem] sm:tracking-[0.6em]">
                     Perspective Archive
                   </span>
-                  <span className="font-heading text-lg uppercase tracking-[0.15em] text-pts-parchment md:text-2xl">
+                  <span className="font-heading text-base uppercase tracking-[0.1em] text-pts-parchment sm:text-lg sm:tracking-[0.15em] md:text-2xl">
                     {img.caption}
                   </span>
                 </div>
-                <div className="flex items-baseline gap-3">
-                  <span className="lux-heading text-[1rem] text-pts-gold">0{i + 1}</span>
-                  <span className="text-[0.6rem] tracking-tighter text-pts-muted/50">/ 06</span>
+                <div className="flex items-baseline gap-2 sm:gap-3">
+                  <span className="lux-heading text-[0.8rem] text-pts-gold sm:text-[1rem]">0{i + 1}</span>
+                  <span className="text-[0.5rem] tracking-tighter text-pts-muted/50 sm:text-[0.6rem]">/ 06</span>
                 </div>
               </div>
             </div>
