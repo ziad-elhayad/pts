@@ -64,10 +64,11 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: isLowEnd ? 0.1 : (isTouch ? 0.5 : 0.8),
-        invalidateOnRefresh: false,
+        scrub: isLowEnd ? 0.1 : (isTouch ? 0.4 : 0.8),
+        invalidateOnRefresh: true, // Crucial for mobile orientation/address bar changes
+        pinType: isTouch ? "fixed" : "transform", // Fixed is more stable on real mobile
         fastScrollEnd: true,
-        anticipatePin: 1,
+        anticipatePin: isTouch ? 1.5 : 1, // More anticipation for touch devices
         onUpdate: (self) => {
           if (progress) {
             progress.style.transform = `scaleX(${self.progress}) translateZ(0)`;
@@ -185,6 +186,13 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         },
       );
     }
+    // Refresh on content changes (images loading, etc.)
+    const ro = new ResizeObserver(() => {
+      ScrollTrigger.refresh();
+    });
+    ro.observe(track);
+
+    return () => ro.disconnect();
   }, { scope: wrapperRef, dependencies: [tier, reducedMotion] });
 
   const flatChildren = Children.toArray(children);

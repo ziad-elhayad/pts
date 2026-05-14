@@ -164,7 +164,9 @@ export const CinematicHero = memo(function CinematicHero() {
             trigger: sectionRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: true,
+            pin: true,
+            scrub: isTouch ? 0.35 : true,
+            pinType: isTouch ? "fixed" : "transform",
           },
         });
       }

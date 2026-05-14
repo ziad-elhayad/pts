@@ -32,7 +32,7 @@ html {
   background: var(--pts-bg);
   scroll-behavior: auto;
   overflow-x: hidden;
-  height: 100%;
+  /* Removed height: 100% to fix mobile ScrollTrigger calculations */
 }
 
 body {
@@ -42,7 +42,7 @@ body {
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  overscroll-behavior-y: none; /* Prevents pull-to-refresh interfering with GSAP pinning on some mobile browsers */
+  /* Removed overscroll-behavior-y to allow natural mobile scrolling */
   cursor: default; /* Fallback */
 }
 
@@ -362,6 +362,7 @@ html.lenis, html.lenis body {
 .section-bridge {
   position: relative;
   scroll-margin-top: 5.5rem;
+  transform: translateZ(0); /* Force GPU layer for stacking stability */
 }
 
 .page-section {

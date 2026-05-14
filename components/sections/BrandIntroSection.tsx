@@ -66,18 +66,17 @@ export function BrandIntroSection() {
         // Mobile: simple staggered fade-in
         gsap.fromTo(
           titleWords,
-          { opacity: 0, y: 20 },
+          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
-            stagger: 0.05,
-            duration: 0.6,
+            stagger: 0.04,
+            duration: 0.8,
             ease: "power3.out",
             scrollTrigger: { 
               trigger: col, 
-              start: "top 98%", 
-              end: "top 60%", 
-              scrub: 0.5 
+              start: "top 92%", 
+              once: true, // Fire once on mobile to prevent "stuck" states during scroll
             },
           },
         );

@@ -24,10 +24,18 @@ export function SmoothScrollProvider({
 
     // Mobile: skip Lenis entirely, rely on native scroll
     if (isTouch) {
-      ScrollTrigger.config({ ignoreMobileResize: true });
-      // Just refresh ST once after mount
-      requestAnimationFrame(() => ScrollTrigger.refresh());
-      return;
+      // Normalize scroll prevents the address bar from interfering with GSAP pinning
+      ScrollTrigger.normalizeScroll(true);
+      
+      // Safety refresh after a short delay
+      const timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 500);
+
+      return () => {
+        clearTimeout(timer);
+        ScrollTrigger.normalizeScroll(false);
+      };
     }
 
     // Desktop: full Lenis experience
