@@ -39,7 +39,11 @@ export function LoaderScreen() {
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
       onComplete: () => {
-        sessionStorage.setItem(SESSION_KEY, "1");
+        try {
+          sessionStorage.setItem(SESSION_KEY, "1");
+        } catch (e) {
+          console.warn("Session storage not available");
+        }
         document.documentElement.style.overflow = "";
         document.body.style.overflow = ""; // Safety for some mobile browsers
         setVisible(false);

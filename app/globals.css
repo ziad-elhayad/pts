@@ -452,3 +452,14 @@ html.lenis, html.lenis body {
   will-change: transform;
 }
 
+/* Component specific variables */
+:root {
+  --card-z: 30px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-z: 8px;
+  }
+}
+
