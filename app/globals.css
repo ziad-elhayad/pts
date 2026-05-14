@@ -391,3 +391,61 @@ html.lenis, html.lenis body {
 .float-gentle {
   animation: float-gentle 10s ease-in-out infinite;
 }
+
+/* ─── MOBILE PERFORMANCE: Kill expensive animations on touch devices ──── */
+@media (pointer: coarse), (max-width: 768px) {
+  /* Kill all CSS animations that hammer the GPU/CPU */
+  .grain-overlay {
+    animation: none !important;
+    display: none !important;
+  }
+
+  .mist-drift,
+  .mist-drift-slow {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  .gold-shimmer {
+    animation: none !important;
+    background: transparent !important;
+  }
+
+  .float-slow,
+  .float-gentle,
+  .ambient-orb,
+  .gold-pulse {
+    animation: none !important;
+  }
+
+  /* Disable backdrop-filter blur — extremely expensive on mobile */
+  .glass-panel,
+  .glass-deep {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(13, 13, 15, 0.92) !important;
+  }
+
+  /* Disable tunnel vignette will-change to free GPU memory */
+  .tunnel-vignette {
+    will-change: auto !important;
+  }
+
+  /* Simplify section transition pseudo-element */
+  .section-transition::before {
+    display: none;
+  }
+
+  /* Remove 3D perspective on mobile — saves a GPU layer */
+  [perspective],
+  [class*="perspective"] {
+    perspective: none !important;
+  }
+
+  /* Disable will-change on decorative elements */
+  .ambient-orb,
+  .mist-drift,
+  .mist-drift-slow {
+    will-change: auto !important;
+  }
+}

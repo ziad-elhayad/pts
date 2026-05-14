@@ -46,7 +46,9 @@ export function CinematicHero() {
   }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    // Never run mouse-follow parallax on touch — no mouse exists
+    if (isTouch) return;
 
     // Use quickSetter for high-frequency updates (better performance than gsap.to in ticker)
     const setL1X = gsap.quickSetter(layer1Ref.current, "x", "px");
@@ -59,11 +61,8 @@ export function CinematicHero() {
 
     const tick = () => {
       const { x, y } = mouseRef.current;
-      
-      // Smooth lerp for the mouse values
       xLerp += (x - xLerp) * 0.08;
       yLerp += (y - yLerp) * 0.08;
-
       setL1X(xLerp * -22);
       setL1Y(yLerp * -12);
       setL2X(xLerp * 14);
@@ -160,23 +159,26 @@ export function CinematicHero() {
       const overlay = overlayRef.current;
       if (!media || !content) return;
 
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      // Simplified parallax on mobile — no rotateY/scale to save GPU layers
       gsap.to(media, {
-        yPercent: 32,
-        scale: 1.12,
-        rotateY: -4,
+        yPercent: isTouch ? 18 : 32,
+        scale: isTouch ? 1 : 1.12,
+        rotateY: isTouch ? 0 : -4,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 0,
+          scrub: isTouch ? 0.3 : 0,
         },
       });
 
       gsap.to(content, {
         autoAlpha: 0,
-        yPercent: -22,
-        rotateX: 8,
+        yPercent: isTouch ? -12 : -22,
+        rotateX: isTouch ? 0 : 8,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -193,6 +195,7 @@ export function CinematicHero() {
         pin: true,
         pinSpacing: false,
         scrub: true,
+        anticipatePin: 1,
       });
 
       if (overlay) {

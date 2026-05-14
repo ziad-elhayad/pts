@@ -70,7 +70,9 @@ export function ExpandingItineraries() {
       const scan = scanRef.current;
       if (!root || prefersReducedMotion()) return;
 
-      if (scan) {
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      if (scan && !isTouch) {
         gsap.fromTo(
           scan,
           { yPercent: -80 },
@@ -87,27 +89,30 @@ export function ExpandingItineraries() {
         );
       }
 
-      const panels = root.querySelectorAll<HTMLElement>(".exp-it-panel");
-      panels.forEach((panel) => {
-        const img = panel.querySelector("img");
-        if (!img) return;
-        gsap.fromTo(
-          img,
-          { scale: 1.14, yPercent: -6, rotate: 0.5 },
-          {
-            scale: 1.22,
-            yPercent: 6,
-            rotate: -0.5,
-            ease: "none",
-            scrollTrigger: {
-              trigger: panel,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
+      // Skip image parallax on mobile — causes 4 simultaneous scrubbing tweens
+      if (!isTouch) {
+        const panels = root.querySelectorAll<HTMLElement>(".exp-it-panel");
+        panels.forEach((panel) => {
+          const img = panel.querySelector("img");
+          if (!img) return;
+          gsap.fromTo(
+            img,
+            { scale: 1.14, yPercent: -6, rotate: 0.5 },
+            {
+              scale: 1.22,
+              yPercent: 6,
+              rotate: -0.5,
+              ease: "none",
+              scrollTrigger: {
+                trigger: panel,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
             },
-          },
-        );
-      });
+          );
+        });
+      }
     },
     { scope: sectionRef },
   );
@@ -178,11 +183,12 @@ export function ExpandingItineraries() {
                   src={item.image}
                   alt={item.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 25vw"
                   className={clsx(
-                    "object-cover object-center transition-[transform,filter] duration-[2.8s] ease-out",
-                    isActive ? "scale-100 saturate-100 brightness-100" : "scale-[1.15] saturate-[0.2] brightness-[0.4]",
+                    "object-cover object-center transition-[filter] duration-[1.4s] ease-out",
+                    isActive ? "saturate-100 brightness-100" : "saturate-[0.2] brightness-[0.4]",
                   )}
-                  priority={index === 0 || index === 3}
+                  priority={index === 0}
                 />
               </div>
 

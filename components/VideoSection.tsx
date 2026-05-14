@@ -27,8 +27,16 @@ export function VideoSection({
   const [useVideo, setUseVideo] = useState(true);
 
   useEffect(() => {
-    if (!lazyVideo) return;
     if (typeof window === "undefined") return;
+
+    // Never load video on touch/mobile — poster is enough, video causes memory crashes
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) {
+      setUseVideo(false);
+      return;
+    }
+
+    if (!lazyVideo) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setMountVideo(false);
       return;

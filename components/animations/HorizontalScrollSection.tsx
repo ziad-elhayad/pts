@@ -111,26 +111,28 @@ export function HorizontalScrollSection({
       },
     });
 
-    // Internal image parallax (White Desert signature move)
-    track.querySelectorAll(".hg-parallax-img").forEach((img) => {
-      gsap.fromTo(
-        img,
-        { x: "-18%" },
-        {
-          x: "18%",
-          ease: "none",
-          scrollTrigger: {
-            trigger: img,
-            containerAnimation: slideTween,
-            start: "left right",
-            end: "right left",
-            scrub: true,
-          },
-        }
-      );
-    });
+    // Internal image parallax — desktop only (each card = 1 scrubbing ST)
+    if (!isTouch) {
+      track.querySelectorAll(".hg-parallax-img").forEach((img) => {
+        gsap.fromTo(
+          img,
+          { x: "-18%" },
+          {
+            x: "18%",
+            ease: "none",
+            scrollTrigger: {
+              trigger: img,
+              containerAnimation: slideTween,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          }
+        );
+      });
+    }
 
-    if (headerRef.current && headerInnerRef.current) {
+    if (!isTouch && headerRef.current && headerInnerRef.current) {
       gsap.to(headerInnerRef.current, {
         rotateX: -7,
         y: -18,
