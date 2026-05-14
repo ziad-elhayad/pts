@@ -59,25 +59,43 @@ export function BrandIntroSection() {
         });
       }
 
-      /* Title: line mask + skew scrub */
+      /* Title words */
       const titleWords = col.querySelectorAll<HTMLElement>(".biw");
-      gsap.fromTo(
-        titleWords,
-        { yPercent: 120, skewY: 6, opacity: 0.15 },
-        {
-          yPercent: 0,
-          skewY: 0,
-          opacity: 1,
-          ease: "none",
-          stagger: 0.08,
-          scrollTrigger: {
-            trigger: col,
-            start: "top 88%",
-            end: "top 42%",
-            scrub: 0.45,
+
+      if (isTouch) {
+        // Mobile: simple staggered fade-in
+        gsap.fromTo(
+          titleWords,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.06,
+            duration: 0.7,
+            ease: "power2.out",
+            scrollTrigger: { trigger: col, start: "top 88%", once: true },
           },
-        },
-      );
+        );
+      } else {
+        // Desktop: scrub with skew
+        gsap.fromTo(
+          titleWords,
+          { yPercent: 120, skewY: 6, opacity: 0.15 },
+          {
+            yPercent: 0,
+            skewY: 0,
+            opacity: 1,
+            ease: "none",
+            stagger: 0.08,
+            scrollTrigger: {
+              trigger: col,
+              start: "top 88%",
+              end: "top 42%",
+              scrub: 0.45,
+            },
+          },
+        );
+      }
 
       const accent = col.querySelector<HTMLElement>(".bi-accent");
       if (accent) {
@@ -93,25 +111,39 @@ export function BrandIntroSection() {
         );
       }
 
-      /* Copy block: depth + slight rotate scrub */
+      /* Copy block */
       const copy = col.querySelector<HTMLElement>(".bi-copy");
       if (copy) {
-        gsap.fromTo(
-          copy,
-          { rotateX: 12, y: 40, transformOrigin: "50% 0%", opacity: 0.2 },
-          {
-            rotateX: 0,
-            y: 0,
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: copy,
-              start: "top 92%",
-              end: "top 55%",
-              scrub: 0.6,
+        if (isTouch) {
+          gsap.fromTo(
+            copy,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              scrollTrigger: { trigger: copy, start: "top 92%", once: true },
             },
-          },
-        );
+          );
+        } else {
+          gsap.fromTo(
+            copy,
+            { rotateX: 12, y: 40, transformOrigin: "50% 0%", opacity: 0.2 },
+            {
+              rotateX: 0,
+              y: 0,
+              opacity: 1,
+              ease: "none",
+              scrollTrigger: {
+                trigger: copy,
+                start: "top 92%",
+                end: "top 55%",
+                scrub: 0.6,
+              },
+            },
+          );
+        }
       }
 
       /* Image shell: iris reveal — desktop only (clip-path is GPU-heavy on mobile) */

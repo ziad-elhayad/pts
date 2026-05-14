@@ -35,8 +35,33 @@ export function LineRevealText({
       const el = containerRef.current;
       if (!el || prefersReducedMotion()) return;
 
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
       if (mode === "cascade") {
         const nodes = el.querySelectorAll<HTMLElement>(".reveal-cascade");
+
+        if (isTouch) {
+          // Mobile: simple staggered fade-in, no scrub
+          gsap.fromTo(
+            nodes,
+            { opacity: 0, y: 16 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              stagger: 0.03,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                once: true,
+              },
+            },
+          );
+          return;
+        }
+
+        // Desktop: full scrub cascade
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: el,
@@ -72,9 +97,32 @@ export function LineRevealText({
         return;
       }
 
+      // "line" mode
       const wordsEls = el.querySelectorAll<HTMLElement>(".reveal-word");
       const linesEls = el.querySelectorAll<HTMLElement>(".reveal-line");
 
+      if (isTouch) {
+        // Mobile: simple staggered fade-in, no scrub, no blur
+        gsap.fromTo(
+          wordsEls,
+          { opacity: 0, y: 14 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.04,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 90%",
+              once: true,
+            },
+          },
+        );
+        return;
+      }
+
+      // Desktop: full scrub with underline paint
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,

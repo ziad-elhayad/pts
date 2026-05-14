@@ -46,21 +46,35 @@ export function HorizontalScrollSection({
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     const getScrollDistance = () => {
-      const dist = track.scrollWidth - window.innerWidth;
-      return dist > 0 ? dist : 0;
+      let dist = track.scrollWidth - window.innerWidth;
+      if (isTouch) {
+        dist *= 1.5; // Make the horizontal scroll longer/slower on mobile
+      }
+      return dist > 0 ? dist : window.innerWidth; // Fallback
     };
 
-    // Use ScrollTrigger pin instead of manual height + sticky
+    const updateHeight = () => {
+      const distance = getScrollDistance();
+      wrapper.style.height = `${window.innerHeight + distance}px`;
+      ScrollTrigger.refresh();
+    };
+
+    // Update height on mount and when resizing
+    updateHeight();
+    const ro = new ResizeObserver(updateHeight);
+    ro.observe(track);
+    // Extra safety update after images potentially load
+    setTimeout(updateHeight, 300);
+
+    // Main horizontal tween
     const slideTween = gsap.to(track, {
-      x: () => -getScrollDistance(),
+      x: () => -(track.scrollWidth - window.innerWidth),
       ease: "none",
       scrollTrigger: {
         trigger: wrapper,
         start: "top top",
-        end: () => `+=${getScrollDistance()}`,
-        pin: true,
-        anticipatePin: 1,
-        scrub: isTouch ? 0.5 : 1,
+        end: "bottom bottom",
+        scrub: isTouch ? 0.3 : 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (progress) {
@@ -187,13 +201,14 @@ export function HorizontalScrollSection({
       );
     }
 
+    return () => ro.disconnect();
   });
 
   const flatChildren = Children.toArray(children);
 
   return (
     <div ref={wrapperRef} id={id} className="relative w-full overflow-hidden scroll-mt-20">
-      <div className="flex h-[100svh] w-full flex-col overflow-hidden bg-pts-bg">
+      <div className="sticky top-0 flex h-[100svh] w-full flex-col overflow-hidden bg-pts-bg [perspective:1400px]">
 
         {/* Atmospheric lighting */}
         <div ref={glowRef} className="pointer-events-none absolute inset-0 z-0 will-change-transform">
