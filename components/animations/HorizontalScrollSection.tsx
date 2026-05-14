@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, Children, memo } from "react";
+import { useRef, Children, memo, useState, useEffect } from "react";
+import clsx from "clsx";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -38,6 +39,11 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
   const headerInnerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
   useGSAP(() => {
@@ -46,8 +52,6 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
     const progress = progressRef.current;
     if (!wrapper || !track) return;
 
-    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    
     // Performance: Force GPU acceleration on the track
     gsap.set(track, { 
       force3D: true, 
