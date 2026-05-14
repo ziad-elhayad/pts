@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ParallaxImage } from "@/components/animations/ParallaxImage";
 import { LineRevealText } from "@/components/animations/LineRevealText";
-import { brandMedia } from "@/lib/media";
+import { heroMedia } from "@/lib/media";
 import { t } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { prefersReducedMotion } from "@/lib/motionPref";
@@ -28,7 +28,7 @@ const STATS = [
 export function BrandIntroSection() {
   const { locale } = useLocale();
   const sectionRef = useRef<HTMLElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
+
   const colRef = useRef<HTMLDivElement>(null);
   const imageShellRef = useRef<HTMLDivElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
@@ -36,11 +36,11 @@ export function BrandIntroSection() {
   useGSAP(
     () => {
       const root = sectionRef.current;
-      const stats = statsRef.current;
+
       const col = colRef.current;
       const shell = imageShellRef.current;
       const floater = floatRef.current;
-      if (!root || !stats || !col || !shell) return;
+      if (!root || !col || !shell) return;
 
       if (prefersReducedMotion()) return;
 
@@ -129,42 +129,7 @@ export function BrandIntroSection() {
         },
       );
 
-      const counters = stats.querySelectorAll<HTMLElement>("[data-stat-val]");
-      counters.forEach((el) => {
-        const target = parseInt(el.dataset.statVal ?? "0", 10);
-        const obj = { val: 0 };
-        gsap.to(obj, {
-          val: target,
-          duration: 2.4,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 86%",
-            once: true,
-          },
-          onUpdate: () => {
-            el.textContent = Math.round(obj.val).toString();
-          },
-        });
-      });
 
-      gsap.fromTo(
-        stats.querySelectorAll(".stat-card"),
-        { rotateX: -55, z: -140, opacity: 0, transformOrigin: "50% 100%" },
-        {
-          rotateX: 0,
-          z: 0,
-          opacity: 1,
-          duration: 1.25,
-          stagger: 0.12,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: stats,
-            start: "top 82%",
-            once: true,
-          },
-        },
-      );
     },
     { scope: sectionRef },
   );
@@ -175,83 +140,63 @@ export function BrandIntroSection() {
   return (
     <section
       ref={sectionRef}
-      className="section-transition relative overflow-hidden border-t border-pts-line/20 bg-pts-black/30 [perspective:1600px]"
+      className="section-transition relative overflow-hidden border-t border-pts-line/20 h-[100svh] min-h-[700px] w-full"
     >
-      <div
-        ref={floatRef}
-        className="pointer-events-none absolute right-[8%] top-[20%] h-40 w-40 rounded-full bg-pts-gold/5 blur-3xl"
-        aria-hidden
-      />
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <div className="gold-glow absolute -top-32 left-1/4 h-[60%] w-[60%] opacity-20" />
+      {/* Background Image Layer */}
+      <div className="absolute inset-0 z-0">
+        <div ref={imageShellRef} className="relative h-full w-full will-change-[clip-path,filter]">
+          <ParallaxImage
+            src={heroMedia.poster}
+            alt="Aircraft wing over clouds"
+            priority={false}
+            intensity={16}
+            zoomScrub
+          />
+        </div>
       </div>
 
-      <div className="mx-auto grid w-full max-w-[92rem] transform-gpu items-stretch gap-0 px-[clamp(1.25rem,3vw,2.5rem)] sm:px-[clamp(1.25rem,4vw,2.5rem)] lg:grid-cols-2">
+      {/* Dark Overlay for Text Readability */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-pts-black via-pts-black/80 to-transparent opacity-100" />
+      <div className="absolute inset-0 z-10 bg-pts-black/40" />
+      
+      {/* Glow Effects */}
+      <div
+        ref={floatRef}
+        className="pointer-events-none absolute left-[10%] top-[20%] z-10 h-40 w-40 rounded-full bg-pts-gold/10 blur-[80px]"
+        aria-hidden
+      />
+
+      <div className="relative z-20 mx-auto flex h-full w-full max-w-[92rem] flex-col justify-center px-[clamp(1.25rem,3vw,2.5rem)] sm:px-[clamp(1.25rem,4vw,2.5rem)]">
         <div
           ref={colRef}
-          className="flex flex-col justify-center py-24 [transform-style:preserve-3d] lg:py-36 lg:pr-20"
+          className="max-w-4xl [transform-style:preserve-3d]"
         >
           <div className="mb-4">
             <div className="mb-10 flex items-center gap-4">
-              <div className="h-px w-8 bg-pts-gold/60" />
-              <p className="lux-heading text-[0.55rem] tracking-[0.6em] text-pts-gold opacity-70">PTS</p>
+              <div className="h-px w-8 bg-pts-gold" />
+              <p className="lux-heading text-[0.55rem] tracking-[0.6em] text-pts-gold">
+                {t(locale, "brand.kicker")}
+              </p>
             </div>
-            <h2 className="font-heading text-[clamp(1.55rem,3.1vw,2.65rem)] uppercase leading-[1.12] tracking-[0.1em] text-pts-parchment">
+            <h2 className="font-heading text-[clamp(1.85rem,4vw,3.2rem)] font-bold uppercase leading-[1.12] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)]">
               {titleWords.map((w, i) => (
                 <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
                   <span className="biw inline-block will-change-transform">{w}</span>
                 </span>
               ))}
             </h2>
-            <div className="bi-accent mt-8 h-px w-20 scale-x-0 bg-gradient-to-r from-pts-gold to-transparent will-change-transform" />
+            <div className="bi-accent mt-8 h-[2px] w-24 scale-x-0 bg-pts-gold will-change-transform" />
           </div>
 
-          <div className="bi-copy mt-8 max-w-md [transform-style:preserve-3d]">
+          <div className="bi-copy mt-10 max-w-2xl [transform-style:preserve-3d]">
             <LineRevealText
               text={t(locale, "brand.body")}
               mode="cascade"
-              className="text-[0.64rem] uppercase leading-[2.35] tracking-[0.2em] text-pts-muted/70"
+              className="text-[0.8rem] sm:text-[0.95rem] font-bold uppercase leading-[2.2] tracking-[0.18em] text-pts-parchment drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
             />
           </div>
 
-          <div
-            ref={statsRef}
-            className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-px border border-pts-gold/10 bg-pts-gold/10 [transform-style:preserve-3d]"
-          >
-            {STATS.map((s) => (
-              <div
-                key={s.label}
-                className="stat-card group relative bg-pts-bg/80 p-6 sm:p-8 transition-colors duration-500 will-change-transform lg:p-10 hover:bg-pts-black/60"
-              >
-                <div className="absolute right-4 top-4 h-4 w-4 border-t border-r border-pts-gold/20 transition-colors duration-500 group-hover:border-pts-gold/50" />
 
-                <div className="flex items-end gap-0.5">
-                  <span
-                    className="stat-number lux-heading text-[clamp(1.45rem,3vw,2.35rem)] leading-none text-pts-gold"
-                    data-stat-val={s.value}
-                  >
-                    0
-                  </span>
-                  <span className="lux-heading mb-1 text-xl leading-none text-pts-gold/60">{s.suffix}</span>
-                </div>
-                <p className="mt-3 text-[0.58rem] uppercase leading-loose tracking-[0.35em] text-pts-muted/50">
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="relative min-h-[60vh] overflow-hidden lg:min-h-0">
-          <div ref={imageShellRef} className="relative h-full min-h-[60vh] overflow-hidden lg:min-h-0 will-change-[clip-path,filter]">
-            <ParallaxImage
-              src={brandMedia.intro}
-              alt="Luxury suite interior with evening light"
-              priority={false}
-              intensity={16}
-              zoomScrub
-            />
-          </div>
         </div>
       </div>
     </section>

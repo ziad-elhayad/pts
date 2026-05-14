@@ -46,6 +46,7 @@ export function StickySplitSection() {
     const stages = containerRef.current.querySelectorAll(".split-stage");
 
     // Pin the entire container
+    // We want stages.length * 100vh of scroll
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -57,42 +58,37 @@ export function StickySplitSection() {
     });
 
     stages.forEach((stage, idx) => {
-      // The first stage is already visible, don't animate its entry
+      const img = stage.querySelector(".split-img");
+      
+      // Image Parallax within the timeline
+      if (img) {
+        tl.fromTo(img, 
+          { yPercent: -10 },
+          { yPercent: 10, ease: "none" },
+          idx // Starts at the beginning of this stage's 'time'
+        );
+      }
+
       if (idx > 0) {
+        // Prepare stage off-screen
         gsap.set(stage, { yPercent: 100 });
         
         // Slide up the current stage
+        // This transition happens between idx-1 and idx
         tl.to(stage, {
           yPercent: 0,
           ease: "none",
-        }, idx - 1); // Sequence it based on index
+        }, idx); 
 
         // Push the previous stage back slightly
         const prevStage = stages[idx - 1];
         tl.to(prevStage, {
-          scale: 0.95,
-          opacity: 0.5,
-          yPercent: -5,
+          scale: 0.94,
+          opacity: 0.4,
+          yPercent: -8,
+          filter: "blur(4px)",
           ease: "none"
-        }, idx - 1);
-      }
-
-      // Internal parallax for the image inside the stage
-      const img = stage.querySelector(".split-img");
-      if (img) {
-        gsap.fromTo(img, 
-          { yPercent: -15 },
-          {
-            yPercent: 15,
-            ease: "none",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: () => `top+=${idx * window.innerHeight} top`,
-              end: () => `+=${window.innerHeight}`,
-              scrub: true,
-            }
-          }
-        );
+        }, idx);
       }
     });
 

@@ -115,12 +115,12 @@ export function LuxuryCtaSection() {
           src={ctaBackdrop}
           alt=""
           fill
-          className="object-cover brightness-[0.8] saturate-[0.9]"
+          className="object-cover brightness-[0.5] saturate-[0.7]"
           sizes="100vw"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-pts-deep/50 via-pts-deep/10 to-pts-deep/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/40 via-transparent to-pts-deep/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-pts-deep via-pts-deep/40 to-pts-deep" />
+        <div className="absolute inset-0 bg-pts-black/30" />
       </div>
 
       <div
@@ -165,7 +165,7 @@ export function LuxuryCtaSection() {
 
         <p
           data-cta-reveal
-          className="mx-auto mt-12 max-w-2xl text-[0.6rem] uppercase leading-[2.35] tracking-[0.2em] text-pts-muted/60"
+          className="mx-auto mt-12 max-w-2xl text-[0.6rem] uppercase leading-[2.35] tracking-[0.2em] text-pts-gold-2"
         >
           {t(locale, "lux.cta.body")}
         </p>
@@ -182,7 +182,7 @@ export function LuxuryCtaSection() {
           </MagneticButton>
         </div>
 
-        <p data-cta-reveal className="mt-20 lux-heading text-[0.42rem] tracking-[0.8em] text-pts-gold/25">
+        <p data-cta-reveal className="mt-20 lux-heading text-[0.42rem] tracking-[0.8em] text-pts-gold">
           PTS · JEDDAH · GLOBAL OPERATIONS · EST. 2010
         </p>
       </div>

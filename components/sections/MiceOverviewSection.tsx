@@ -67,23 +67,7 @@ export function MiceOverviewSection() {
           );
         })}
         
-        {/* Final CTA card */}
-        <div className="w-[85vw] sm:w-[60vw] md:w-[38vw] flex-shrink-0 flex flex-col justify-center px-8 sm:px-16 bg-pts-deep/20">
-          <div className="mb-8 flex items-center gap-4">
-            <div className="h-px w-6 bg-pts-gold/40" />
-            <p className="lux-heading text-[0.44rem] text-pts-gold tracking-[0.6em] opacity-50 uppercase">Next Step</p>
-          </div>
-          
-          <h3 className="font-heading text-xl sm:text-2xl text-pts-gold-2 tracking-[0.15em] leading-[1.3] uppercase mb-12 max-w-sm font-light">
-            Scalable Solutions for Global Leaders.
-          </h3>
-          
-          <MagneticButton href="/mice" className="w-fit px-10 py-5">
-            Discover MICE
-          </MagneticButton>
-          
-          <div className="mt-20 h-px w-12 bg-pts-gold/20" />
-        </div>
+
       </HorizontalScrollSection>
     </section>
   );

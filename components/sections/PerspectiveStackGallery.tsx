@@ -58,45 +58,60 @@ export function PerspectiveStackGallery() {
 
     items.forEach((item, i) => {
       const dir = i % 2 === 0 ? 1 : -1;
-      gsap.set(item, {
-        opacity: 0,
-        scale: 0.82,
-        y: 90,
-        rotateY: 18 * dir,
-        rotateZ: 2 * dir,
-        z: -220,
-        transformOrigin: "50% 50%",
-        force3D: true,
-      });
-
-      const enter = i * 0.95;
-      tl.to(
-        item,
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotateY: 0,
-          rotateZ: 0,
-          z: 0,
-          duration: 1.05,
-          ease: "power3.out",
-        },
-        enter,
-      ).to(
-        item,
-        {
+      
+      // Initial state
+      if (i === 0) {
+        gsap.set(item, { opacity: 1, scale: 1, z: 0, y: 0, rotateY: 0, rotateZ: 0 });
+      } else {
+        gsap.set(item, {
           opacity: 0,
-          scale: 1.045,
-          y: -120,
-          rotateY: -12 * dir,
-          rotateZ: -3 * dir,
-          z: -80,
-          duration: 0.75,
-          ease: "power4.in",
-        },
-        enter + 0.82,
-      );
+          scale: 0.85,
+          y: 100,
+          rotateY: 15 * dir,
+          z: -200,
+          transformOrigin: "50% 50%",
+        });
+      }
+
+      // Timeline mapping: each item gets roughly 1 unit of the scroll duration
+      // Item 0: Stays for 0-1, exits 1-2
+      if (i === 0) {
+        tl.to(item, {
+          opacity: 0,
+          y: -150,
+          scale: 1.1,
+          rotateY: -10 * dir,
+          z: 100,
+          duration: 1,
+          ease: "power2.inOut"
+        }, 1.2); // Start exit a bit later for breathing room
+      } 
+      // Middle items: enter, stay, exit
+      else {
+        // Enter transition
+        tl.to(item, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotateY: 0,
+          z: 0,
+          duration: 1,
+          ease: "power2.out"
+        }, i * 1.2);
+
+        // Exit transition (except for the last one)
+        if (i < totalItems - 1) {
+          tl.to(item, {
+            opacity: 0,
+            y: -150,
+            scale: 1.1,
+            rotateY: -10 * dir,
+            z: 100,
+            duration: 1,
+            ease: "power2.inOut"
+          }, (i + 1) * 1.2);
+        }
+      }
     });
   }, { scope: containerRef });
 
@@ -131,7 +146,7 @@ export function PerspectiveStackGallery() {
                 loading={i < 2 ? "eager" : "lazy"}
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-pts-black/60 to-transparent p-6 sm:p-10">
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-pts-black via-pts-black/80 to-transparent p-6 sm:p-10">
                 <div className="flex flex-col gap-2">
                   <span className="lux-heading text-[0.5rem] uppercase tracking-[0.6em] text-pts-gold">
                     Perspective Archive

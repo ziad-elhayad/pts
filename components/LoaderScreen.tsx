@@ -2,6 +2,7 @@
 
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 const SESSION_KEY = "pts-loader-seen";
 
@@ -95,10 +96,9 @@ export function LoaderScreen() {
         {/* Brand mark */}
         <div
           data-loader-label
-          className="lux-heading loader-glow text-center text-3xl sm:text-4xl text-pts-gold-2 tracking-[0.5em] font-light"
-          style={{ visibility: "visible" }}
+          className="flex flex-col items-center gap-6"
         >
-          PTS
+          <BrandLogo size={64} className="text-pts-gold" />
         </div>
 
         <p

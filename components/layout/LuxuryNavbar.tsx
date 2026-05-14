@@ -9,6 +9,7 @@ import { navItems, site } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { Magnetic } from "@/components/ui/Magnetic";
+import { BrandLogoFull } from "@/components/ui/BrandLogo";
 
 export function LuxuryNavbar() {
   const pathname        = usePathname();
@@ -59,13 +60,8 @@ export function LuxuryNavbar() {
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-8 py-5 sm:px-12">
           {/* Logo */}
           <Magnetic strength={0.3}>
-            <Link href="/" className="group flex flex-col gap-1.5">
-              <span className="lux-heading text-[0.66rem] text-pts-gold-2 tracking-[0.45em] transition-colors group-hover:text-pts-parchment">
-                {site.shortName}
-              </span>
-              <span className="text-[0.48rem] uppercase tracking-[0.42em] text-pts-muted/60">
-                Private Travel Services
-              </span>
+            <Link href="/" className="group">
+              <BrandLogoFull />
             </Link>
           </Magnetic>
 
@@ -81,7 +77,7 @@ export function LuxuryNavbar() {
                       "relative text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300",
                       active
                         ? "text-pts-parchment"
-                        : "text-pts-muted/70 hover:text-pts-gold-2"
+                        : "text-pts-gold-2 hover:text-pts-parchment"
                     )}
                   >
                     {t(locale, item.key as DictionaryKey)}
@@ -106,7 +102,7 @@ export function LuxuryNavbar() {
                     "rounded-full px-3 py-1 transition-colors duration-300",
                     locale === lang
                       ? "bg-pts-gold/20 text-pts-parchment"
-                      : "text-pts-muted/50 hover:text-pts-parchment"
+                      : "text-pts-gold-2 hover:text-pts-parchment"
                   )}
                   onClick={() => setLocale(lang)}
                 >
@@ -127,12 +123,20 @@ export function LuxuryNavbar() {
           {/* Mobile hamburger */}
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center border border-pts-line/30 bg-pts-black/40 text-[0.58rem] uppercase tracking-[0.3em] text-pts-parchment lg:hidden transition-colors hover:border-pts-gold/30"
+            className="flex items-center justify-center text-pts-gold lg:hidden transition-all duration-300 hover:scale-110"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label={open ? t(locale, "nav.close") : t(locale, "nav.menu")}
           >
-            {open ? "×" : "≡"}
+            {open ? (
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M8 8L24 24M8 24L24 8" />
+              </svg>
+            ) : (
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <path d="M6 12H30M6 18H30M6 24H30" />
+              </svg>
+            )}
           </button>
         </div>
       </div>
@@ -187,7 +191,7 @@ export function LuxuryNavbar() {
                       "flex-1 border py-2.5 text-[0.6rem] uppercase tracking-[0.3em] transition-colors",
                       locale === lang
                         ? "border-pts-gold text-pts-gold"
-                        : "border-pts-line/30 text-pts-muted/50"
+                        : "border-pts-line/30 text-pts-gold-2"
                     )}
                     onClick={() => setLocale(lang)}
                   >

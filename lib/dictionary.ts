@@ -23,9 +23,10 @@ export const dictionary = {
     "scroll": "Scroll",
     "hero.kicker": "Private Travel Services",
     "hero.tagline": "Crafting Executive Experiences Worldwide.",
-    "brand.title": "Quiet luxury. Precise execution.",
+    "brand.kicker": "OUR PHILOSOPHY",
+    "brand.title": "The Art of Invisible Excellence",
     "brand.body":
-      "PTS orchestrates executive hospitality with discretion—aligning global standards with the warmth of Saudi Arabian welcome.",
+      "At PTS, we orchestrate executive hospitality with absolute discretion—seamlessly aligning the highest global corporate standards with the authentic, world-renowned warmth of Saudi Arabian welcome. Every journey we craft is a silent statement of precision, ensuring that luxury is felt in every detail, yet never loud.",
     "mice.title": "MICE & corporate excellence",
     "mice.sub":
       "From intimate board settings to destination-wide programs, every touchpoint is composed with cinematic clarity.",
@@ -71,9 +72,10 @@ export const dictionary = {
     "scroll": "مرر للأسفل",
     "hero.kicker": "خدمات السفر الخاص",
     "hero.tagline": "نصوغ تجارب تنفيذية على مستوى العالم.",
-    "brand.title": "فخامة هادئة. تنفيذ دقيق.",
+    "brand.kicker": "فلسفتنا",
+    "brand.title": "فن التميز الخفي",
     "brand.body":
-      "تنسّق PTS الضيافة التنفيذية بسرية—توازناً بين المعايير العالمية ودفء الضيافة السعودية.",
+      "في PTS، نقوم بتنسيق الضيافة التنفيذية بسرية مطلقة—حيث نمزج بسلاسة بين أرقى المعايير المؤسسية العالمية ودفء الضيافة السعودية الأصيلة. كل رحلة نصيغها هي بيان صامت من الدقة، مما يضمن أن تشعر بالفخامة في كل تفصيل، دون تكلف.",
     "mice.title": "MICE والتميز المؤسسي",
     "mice.sub":
       "من اجتماعات مجالس صغيرة إلى برامج بمستوى الوجهة، كل لحظة تُؤلّف بوضوح سينمائي.",

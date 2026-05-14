@@ -11,7 +11,7 @@ export const galleryItems: readonly GalleryItem[] = [
     caption: "Aviation & arrivals",
   },
   {
-    src: "https://images.unsplash.com/photo-1501117716987-c8e1ecb21081?auto=format&fit=crop&w=2400&q=88",
+    src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=2400&q=88",
     alt: "Evening hospitality",
     caption: "Evening hospitality",
   },
@@ -21,9 +21,9 @@ export const galleryItems: readonly GalleryItem[] = [
     caption: "Culinary programs",
   },
   {
-    src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2400&q=88",
-    alt: "Desert landscape",
-    caption: "Destination immersion",
+    src: "https://images.unsplash.com/photo-1506466010722-395aa2bef877?auto=format&fit=crop&w=2400&q=88",
+    alt: "Curated itineraries",
+    caption: "Curated itineraries",
   },
   {
     src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2400&q=88",

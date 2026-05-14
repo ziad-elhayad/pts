@@ -76,10 +76,9 @@ export function CinematicHero() {
     () => {
       const reduced = prefersReducedMotion();
       const kicker = sectionRef.current?.querySelector(".hero-kicker");
-      const sweeps = sectionRef.current?.querySelectorAll(".hero-word-sweep");
       const wordInners = sectionRef.current?.querySelectorAll(".hero-word-inner");
       const sub = sectionRef.current?.querySelector(".hero-sub");
-      const ctas = sectionRef.current?.querySelector(".hero-ctas");
+      const ctas = sectionRef.current?.querySelector(".hero-cta");
       const scrollEl = sectionRef.current?.querySelector(".hero-scroll-hint");
       const coords = sectionRef.current?.querySelector(".hero-coords");
 
@@ -120,18 +119,11 @@ export function CinematicHero() {
         { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.25, stagger: 0.09 },
         0.35,
       );
-      if (sweeps && sweeps.length) {
-        intro.fromTo(
-          sweeps,
-          { xPercent: -130 },
-          { xPercent: 130, duration: 1.15, stagger: 0.07, ease: "power2.inOut" },
-          0.55,
-        );
-      }
+
       intro.fromTo(
         sub,
         { opacity: 0, y: 36, filter: "blur(10px)" },
-        { opacity: 0.55, y: 0, filter: "blur(0px)", duration: 1.2 },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2 },
         0.75,
       );
       intro.fromTo(
@@ -262,10 +254,10 @@ export function CinematicHero() {
 
       <div
         ref={overlayRef}
-        className="pointer-events-none absolute inset-0 z-[4] opacity-40"
+        className="pointer-events-none absolute inset-0 z-[4] opacity-60"
         style={{
           background:
-            "linear-gradient(180deg, rgba(13,13,15,0.1) 0%, rgba(13,13,15,0.0) 30%, rgba(13,13,15,0.4) 80%, rgba(13,13,15,0.75) 100%)",
+            "linear-gradient(180deg, rgba(13,13,15,0.4) 0%, rgba(13,13,15,0.2) 30%, rgba(13,13,15,0.6) 70%, rgba(13,13,15,0.85) 100%)",
         }}
         aria-hidden
       />
@@ -291,39 +283,36 @@ export function CinematicHero() {
         className="hero-content relative z-10 flex h-full transform-gpu flex-col justify-end px-6 pb-24 pt-40 [transform-style:preserve-3d] sm:px-10 lg:px-20"
       >
         <div className="mx-auto w-full max-w-6xl">
-          <div className="hero-kicker mb-8 flex items-center gap-5 opacity-0">
-            <div className="h-px w-12 bg-pts-gold/60" />
-            <p className="lux-heading text-[0.52rem] tracking-[0.55em] text-pts-gold opacity-90">
+          <div className="hero-kicker mb-8 flex items-center gap-5">
+            <div className="h-px w-12 bg-pts-gold" />
+            <p className="lux-heading text-[0.52rem] tracking-[0.55em] text-pts-gold">
               {t(locale, "hero.kicker")}
             </p>
           </div>
 
-          <h1 className="max-w-5xl font-heading text-[clamp(1.75rem,4.2vw,3.75rem)] uppercase leading-[1.06] tracking-[0.08em] text-pts-parchment [perspective:1200px]">
+          <h1 className="max-w-5xl font-heading text-[clamp(1.85rem,4.5vw,4rem)] font-bold uppercase leading-[1.04] tracking-[0.06em] text-pts-parchment [perspective:1200px] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
             {words.map((word, wi) => (
               <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-2 align-top">
                 <span className="hero-word-inner relative inline-block will-change-transform">
                   {word}
-                  <span
-                    className="hero-word-sweep pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-transparent via-pts-gold/25 to-transparent mix-blend-screen will-change-transform"
-                  />
                 </span>
               </span>
             ))}
           </h1>
 
-          <p className="hero-sub mt-10 max-w-xl text-[0.6rem] uppercase leading-[2.15] tracking-[0.26em] text-pts-muted opacity-0">
+          <p className="hero-sub mt-10 max-w-xl text-[0.75rem] sm:text-[0.85rem] font-bold uppercase leading-[2.15] tracking-[0.18em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] opacity-0">
             {site.description}
           </p>
 
-          <div className="hero-ctas mt-12 flex flex-wrap gap-5 opacity-0 [transform-style:preserve-3d]">
-            <MagneticButton href="/contact" className="btn-gold-glow">
-              {t(locale, "cta.inquire")}
+          <div className="hero-cta mt-12 sm:mt-16 flex flex-col sm:flex-row flex-wrap items-center gap-4 sm:gap-8 opacity-0">
+            <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold w-full sm:w-auto px-12 py-5 text-[0.7rem] font-bold text-pts-black">
+              Inquire
             </MagneticButton>
             <MagneticButton
-              href={site.whatsapp}
-              className="border-white/15 bg-transparent text-pts-parchment/80"
+              href="/mice"
+              className="border-pts-parchment bg-pts-black/80 w-full sm:w-auto px-12 py-5 text-[0.7rem] font-bold text-pts-parchment hover:bg-pts-black"
             >
-              {t(locale, "cta.begin")}
+              Begin Your Experience
             </MagneticButton>
           </div>
 

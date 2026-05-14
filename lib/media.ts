@@ -32,11 +32,11 @@ export const miceServiceMedia = [
     alt: "Coastal incentive destination",
   },
   {
-    src: img("photo-1540575467063-27a04d7b431c", 1200),
-    alt: "Conference auditorium",
+    src: img("photo-1505373877841-8d25f7d46678", 1200),
+    alt: "Grand cinematic conference hall",
   },
   {
-    src: img("photo-1504384308090-c54be3852f33", 1200),
+    src: img("photo-1565034946487-077786996e27", 1200),
     alt: "Exhibition hall architecture",
   },
   {
@@ -46,6 +46,10 @@ export const miceServiceMedia = [
   {
     src: img("photo-1469854523086-cc02fe5d8800", 1200),
     alt: "Highway through dramatic landscape",
+  },
+  {
+    src: img("photo-1512453979798-0ea884933476", 1200),
+    alt: "Dubai skyline representing global reach",
   },
 ] as const;
 
@@ -60,8 +64,8 @@ export const vipServiceMedia = [
     alt: "Fine dining table setting",
   },
   {
-    src: img("photo-1449965408867-eaa67c61d992", 1200),
-    alt: "Chauffeured vehicle at night",
+    src: img("photo-1544620347-c4fd4a3d5957", 1200),
+    alt: "Executive chauffeured transport",
   },
   {
     src: img("photo-1519677100203-a0e668c92439", 1200),

@@ -20,7 +20,7 @@ const EXPERIENCES = [
     description:
       "Private villas, yacht charters, and curated desert escapes—composed as a personal narrative for C-suite executives.",
     image:
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80",
     tag: "Bespoke",
   },
   {
@@ -30,7 +30,7 @@ const EXPERIENCES = [
     description:
       "Reward programs that feel cinematic—destination pacing, sensory detail, and discreet recognition for elite performers.",
     image:
-      "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
     tag: "Corporate",
   },
   {
@@ -40,7 +40,7 @@ const EXPERIENCES = [
     description:
       "Ancient landscapes, five-star camps, and cultural immersion through the lens of PTS's deep Saudi expertise.",
     image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1506466010722-395aa2bef877?auto=format&fit=crop&w=1600&q=80",
     tag: "Saudi Arabia",
   },
   {
@@ -50,7 +50,7 @@ const EXPERIENCES = [
     description:
       "From Jeddah to London, Tokyo to New York—large-scale orchestration with a boutique touch at every touchpoint.",
     image:
-      "https://images.unsplash.com/photo-1540575467063-27a04d7b431c?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1600&q=80",
     tag: "Worldwide",
   },
 ] as const;
@@ -123,16 +123,16 @@ export function ExpandingItineraries() {
         gsap.fromTo(
           tag,
           { opacity: 0, y: -8 },
-          { opacity: 0.8, y: 0, duration: 0.45, ease: "power2.out" },
+          { opacity: 0.8, y: 0, duration: 1.0, ease: "power2.out", delay: 0.4 }
         );
         gsap.fromTo(
           detail,
           { autoAlpha: 0, y: 36, rotateX: 16, transformOrigin: "50% 0%" },
-          { autoAlpha: 1, y: 0, rotateX: 0, duration: 0.65, ease: "power3.out", delay: 0.08 },
+          { autoAlpha: 1, y: 0, rotateX: 0, duration: 1.2, ease: "power3.out", delay: 0.5 }
         );
       } else {
-        gsap.to(tag, { opacity: 0, y: -6, duration: 0.3, ease: "power2.in" });
-        gsap.to(detail, { autoAlpha: 0, y: 24, duration: 0.35, ease: "power2.in" });
+        gsap.to(tag, { opacity: 0, y: -6, duration: 0.6, ease: "power2.in" });
+        gsap.to(detail, { autoAlpha: 0, y: 24, duration: 0.7, ease: "power2.in" });
       }
     });
   }, [activeIndex]);
@@ -164,10 +164,13 @@ export function ExpandingItineraries() {
               role="button"
               tabIndex={0}
               onMouseEnter={() => setActiveIndex(index)}
+              onClick={() => setActiveIndex(index)}
               onFocus={() => setActiveIndex(index)}
               className={clsx(
-                "exp-it-panel relative h-full cursor-pointer overflow-hidden transition-[flex,filter] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] [transform-style:preserve-3d]",
-                isActive ? "flex-[4.5] z-10" : "flex-[1] z-0 brightness-[0.68] hover:brightness-[0.88]",
+                "exp-it-panel relative h-full cursor-pointer overflow-hidden transition-[flex,filter] duration-[1600ms] ease-[cubic-bezier(0.25,1,0.5,1)] [transform-style:preserve-3d]",
+                isActive 
+                  ? "flex-[5] sm:flex-[4.5] z-10" 
+                  : "flex-[1.2] sm:flex-[1] z-0 brightness-[0.6] hover:brightness-[0.8]",
               )}
             >
               <div className="absolute inset-0 will-change-transform">
@@ -176,17 +179,17 @@ export function ExpandingItineraries() {
                   alt={item.title}
                   fill
                   className={clsx(
-                    "object-cover transition-[transform,filter] duration-[2.2s] ease-out",
-                    isActive ? "scale-100 saturate-[0.88]" : "scale-[1.12] saturate-[0.35] grayscale-[0.35]",
+                    "object-cover object-center transition-[transform,filter] duration-[2.8s] ease-out",
+                    isActive ? "scale-100 saturate-100 brightness-100" : "scale-[1.15] saturate-[0.2] brightness-[0.4]",
                   )}
-                  priority={index === 0}
+                  priority={index === 0 || index === 3}
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-pts-black/60" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-pts-black/80" />
               <div
                 className={clsx(
-                  "absolute inset-0 bg-pts-deep/30 transition-opacity duration-500",
+                  "absolute inset-0 bg-pts-deep/40 transition-opacity duration-700",
                   isActive ? "opacity-0" : "opacity-100",
                 )}
               />
@@ -204,13 +207,13 @@ export function ExpandingItineraries() {
                 </div>
 
                 <div>
-                  <div className="overflow-hidden">
+                  <div className="relative h-20 flex items-center">
                     <h3
                       className={clsx(
-                        "font-heading font-light uppercase leading-[1.1] text-pts-gold-2 transition-transform duration-500",
+                        "font-heading font-light uppercase leading-[1.1] text-pts-gold-2 transition-all duration-[1600ms] whitespace-nowrap origin-center",
                         isActive
-                          ? "translate-y-0 text-[clamp(1.35rem,2.35vw,2.35rem)]"
-                          : "translate-y-2 text-[1rem] sm:text-base sm:[writing-mode:vertical-rl] sm:rotate-180",
+                          ? "rotate-0 text-[clamp(1.1rem,4vw,2.35rem)] opacity-100"
+                          : "rotate-0 sm:-rotate-90 text-[0.85rem] sm:text-lg opacity-60",
                       )}
                     >
                       {item.title}
@@ -226,7 +229,7 @@ export function ExpandingItineraries() {
                         </span>
                       </div>
                       <div className="glass-deep max-w-md border border-pts-gold/15 p-8">
-                        <p className="text-[0.58rem] uppercase leading-[2.15] tracking-[0.2em] text-pts-gold-2/55">
+                        <p className="text-[0.58rem] uppercase leading-[2.15] tracking-[0.2em] text-pts-gold-2/80">
                           {item.description}
                         </p>
                         <div className="mt-8 flex items-center gap-4">
