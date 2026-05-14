@@ -44,6 +44,7 @@ export function StickySplitSection() {
     if (prefersReducedMotion()) return;
 
     const stages = containerRef.current.querySelectorAll(".split-stage");
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // Pin the entire container
     // We want stages.length * 100vh of scroll
@@ -53,15 +54,16 @@ export function StickySplitSection() {
         start: "top top",
         end: `+=${stages.length * 100}%`,
         pin: true,
-        scrub: 1,
+        anticipatePin: 1,
+        scrub: isTouch ? 0.5 : 1, // Softer scrub on mobile
       },
     });
 
     stages.forEach((stage, idx) => {
       const img = stage.querySelector(".split-img");
       
-      // Image Parallax within the timeline
-      if (img) {
+      // Image Parallax within the timeline - desktop only (scrubbing images on mobile is heavy)
+      if (img && !isTouch) {
         tl.fromTo(img, 
           { yPercent: -10 },
           { yPercent: 10, ease: "none" },
@@ -86,7 +88,8 @@ export function StickySplitSection() {
           scale: 0.94,
           opacity: 0.4,
           yPercent: -8,
-          filter: "blur(4px)",
+          // Blur is a massive performance hit on mobile GPU during scroll
+          filter: isTouch ? "none" : "blur(4px)",
           ease: "none"
         }, idx);
       }

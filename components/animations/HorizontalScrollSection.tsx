@@ -45,37 +45,20 @@ export function HorizontalScrollSection({
 
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    const getScrollDistance = () => {
-      let dist = track.scrollWidth - window.innerWidth;
-      if (isTouch) {
-        dist *= 1.5; // Make the horizontal scroll longer/slower on mobile
-      }
-      return dist > 0 ? dist : window.innerWidth; // Fallback
-    };
+    const getScrollDistance = () => track.scrollWidth - window.innerWidth;
 
-    const updateHeight = () => {
-      const distance = getScrollDistance();
-      wrapper.style.height = `${window.innerHeight + distance}px`;
-      ScrollTrigger.refresh();
-    };
-
-    // Update height on mount and when resizing
-    updateHeight();
-    const ro = new ResizeObserver(updateHeight);
-    ro.observe(track);
-    // Extra safety update after images potentially load
-    setTimeout(updateHeight, 300);
-
-    // Main horizontal tween
+    // Standard GSAP horizontal scroll with pinning
     const slideTween = gsap.to(track, {
-      x: () => -(track.scrollWidth - window.innerWidth),
+      x: () => -getScrollDistance(),
       ease: "none",
       scrollTrigger: {
         trigger: wrapper,
         start: "top top",
-        end: "bottom bottom",
-        scrub: isTouch ? 0.3 : 1,
+        end: () => `+=${getScrollDistance()}`,
+        pin: true,
+        scrub: 1, // Cinematic smoothing
         invalidateOnRefresh: true,
+        anticipatePin: 1,
         onUpdate: (self) => {
           if (progress) {
             progress.style.transform = `scaleX(${self.progress})`;
@@ -91,35 +74,33 @@ export function HorizontalScrollSection({
     const scaleSetter = isTouch ? () => {} : gsap.quickSetter(items, "scale", "number");
     const clamp = gsap.utils.clamp(-8, 8);
 
-    ScrollTrigger.create({
-      trigger: wrapper,
-      start: "top top",
-      end: "bottom bottom",
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        if (isTouch) return;
-        const skew = clamp(self.getVelocity() / -300);
-        if (Math.abs(skew) > Math.abs(proxy.skew)) {
-          proxy.skew = skew;
-          const squash = 1 - Math.min(Math.abs(skew) * 0.004, 0.04);
-          scaleSetter(squash);
-          gsap.to(proxy, {
-            skew: 0,
-            duration: 0.85,
-            ease: "power3",
-            overwrite: true,
-            onUpdate: () => {
-              skewSetter(proxy.skew);
-              scaleSetter(1 - Math.min(Math.abs(proxy.skew) * 0.004, 0.04));
-            },
-            onComplete: () => scaleSetter(1),
-          });
-        }
-      },
-    });
-
-    // Internal image parallax — desktop only (each card = 1 scrubbing ST)
     if (!isTouch) {
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "top top",
+        end: () => `+=${getScrollDistance()}`,
+        onUpdate: (self) => {
+          const skew = clamp(self.getVelocity() / -300);
+          if (Math.abs(skew) > Math.abs(proxy.skew)) {
+            proxy.skew = skew;
+            const squash = 1 - Math.min(Math.abs(skew) * 0.004, 0.04);
+            scaleSetter(squash);
+            gsap.to(proxy, {
+              skew: 0,
+              duration: 0.85,
+              ease: "power3",
+              overwrite: true,
+              onUpdate: () => {
+                skewSetter(proxy.skew);
+                scaleSetter(1 - Math.min(Math.abs(proxy.skew) * 0.004, 0.04));
+              },
+              onComplete: () => scaleSetter(1),
+            });
+          }
+        },
+      });
+
+      // Internal image parallax — desktop only (each card = 1 scrubbing ST)
       track.querySelectorAll(".hg-parallax-img").forEach((img) => {
         gsap.fromTo(
           img,
@@ -148,7 +129,7 @@ export function HorizontalScrollSection({
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "bottom bottom",
+          end: () => `+=${getScrollDistance()}`,
           scrub: 1.2,
           invalidateOnRefresh: true,
         },
@@ -159,7 +140,7 @@ export function HorizontalScrollSection({
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "bottom bottom",
+          end: () => `+=${getScrollDistance()}`,
           scrub: 1.5,
           invalidateOnRefresh: true,
         },
@@ -174,7 +155,7 @@ export function HorizontalScrollSection({
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "bottom bottom",
+          end: () => `+=${getScrollDistance()}`,
           scrub: 0.5,
         },
       });
@@ -200,15 +181,13 @@ export function HorizontalScrollSection({
         },
       );
     }
-
-    return () => ro.disconnect();
-  });
+  }, { scope: wrapperRef });
 
   const flatChildren = Children.toArray(children);
 
   return (
-    <div ref={wrapperRef} id={id} className="relative w-full overflow-hidden scroll-mt-20">
-      <div className="sticky top-0 flex h-[100svh] w-full flex-col overflow-hidden bg-pts-bg [perspective:1400px]">
+    <div ref={wrapperRef} id={id} className="relative w-full h-[100svh] overflow-hidden bg-pts-bg">
+      <div className="flex h-full w-full flex-col [perspective:1400px]">
 
         {/* Atmospheric lighting */}
         <div ref={glowRef} className="pointer-events-none absolute inset-0 z-0 will-change-transform">
