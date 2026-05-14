@@ -39,9 +39,11 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
   const headerInnerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
-  const [isTouch, setIsTouch] = useState(false);
+  const [isTouch, setIsTouch] = useState(() =>
+    typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0),
+  );
   useEffect(() => {
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   const { tier, isLowEnd, reducedMotion } = usePerformance();
@@ -86,7 +88,8 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
       },
     });
 
-    // Velocity-based skew effect — Performance Dependent
+    // Velocity-based skew effect — Elite/Standard Only
+    let velocitySt: ScrollTrigger | undefined;
     if (!isTouch && !isLowEnd && !reducedMotion) {
       const items = track.querySelectorAll(".hg-item");
       const proxy = { skew: 0 };
@@ -94,7 +97,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
       const scaleSetter = gsap.quickSetter(items, "scale", "number");
       const clamp = gsap.utils.clamp(-8, 8);
 
-      ScrollTrigger.create({
+      velocitySt = ScrollTrigger.create({
         trigger: wrapper,
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
@@ -195,14 +198,23 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         },
       );
     }
-    // Refresh on content changes (images loading, etc.)
+    // Refresh on content changes (images loading, etc.) — debounced to avoid ScrollTrigger thrash
+    let refreshT: ReturnType<typeof setTimeout> | undefined;
     const ro = new ResizeObserver(() => {
-      ScrollTrigger.refresh();
+      if (refreshT) clearTimeout(refreshT);
+      refreshT = setTimeout(() => {
+        refreshT = undefined;
+        ScrollTrigger.refresh();
+      }, 200);
     });
     ro.observe(track);
 
-    return () => ro.disconnect();
-  }, { scope: wrapperRef, dependencies: [tier, reducedMotion] });
+    return () => {
+      ro.disconnect();
+      if (refreshT) clearTimeout(refreshT);
+      velocitySt?.kill();
+    };
+  }, { scope: wrapperRef, dependencies: [tier, reducedMotion, isTouch, isLowEnd] });
 
   const flatChildren = Children.toArray(children);
 
@@ -261,7 +273,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         {/* ── Gallery Track ──────────────────────────────────────────── */}
         <div className={clsx(
           "relative flex-1 w-full flex items-stretch z-10",
-          isTouch ? "overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory py-10 px-[10vw]" : "overflow-hidden h-full"
+          isTouch ? "overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth snap-x snap-mandatory py-8 touch-pan-x sm:py-10 px-[max(1rem,4vw)]" : "overflow-hidden h-full"
         )}>
           <div
             ref={trackRef}
@@ -277,7 +289,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
             {flatChildren.map((child, i) => (
               <div key={i} className={clsx(
                 "hg-item flex-shrink-0 flex items-stretch",
-                isTouch ? "snap-center h-[55vh] min-h-[420px] w-[80vw]" : "h-full"
+                isTouch ? "snap-center h-[min(520px,calc(100dvh-12rem))] min-h-[min(380px,55dvh)] w-[min(85vw,calc(100vw-2rem))] max-w-[520px]" : "h-full"
               )}>
                 {child}
               </div>

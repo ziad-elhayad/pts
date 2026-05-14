@@ -10,9 +10,9 @@ export function WebGLBackground() {
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
   useEffect(() => {
-    // Disable WebGL on mobile/touch by default to save battery/memory
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouch) return;
+    // Disable WebGL on mobile/touch and when reduced motion / eco tier
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    if (isTouch || isLowEnd || reducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -166,7 +166,7 @@ export function WebGLBackground() {
     };
   }, [tier, isLowEnd, reducedMotion]);
 
-  if (isLowEnd && reducedMotion) return null; // Complete disable for ultra-low devices
+  if (isLowEnd || reducedMotion) return null;
 
   return (
     <canvas

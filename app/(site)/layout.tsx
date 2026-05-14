@@ -9,7 +9,9 @@ export default function SiteLayout({
   return (
     <>
       <LuxuryNavbar />
-      <div className="pt-24">{children}</div>
+      <div className="min-h-0 w-full max-w-[100vw] overflow-x-hidden pt-[max(5.5rem,env(safe-area-inset-top,0px)+3.5rem)] pb-[env(safe-area-inset-bottom,0px)]">
+        {children}
+      </div>
       <LuxuryFooter />
     </>
   );

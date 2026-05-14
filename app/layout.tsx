@@ -16,8 +16,8 @@ export const viewport: Viewport = {
   themeColor: "#333337",
   width: "device-width",
   initialScale: 1,
-  // Prevents address bar show/hide from resizing the layout and re-firing ScrollTrigger
-  interactiveWidget: "resizes-content",
+  viewportFit: "cover",
+  interactiveWidget: "overlays-content",
 };
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cinzel.variable} min-h-screen bg-pts-bg font-body text-pts-parchment antialiased overflow-x-hidden`}
+        className={`${cinzel.variable} min-h-screen max-w-[100vw] overflow-x-clip bg-pts-bg font-body text-pts-parchment antialiased`}
         suppressHydrationWarning
       >
         <div className="grain-overlay" aria-hidden="true" />

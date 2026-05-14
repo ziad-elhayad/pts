@@ -10,9 +10,8 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Lenis smooth scroll — desktop only.
- * On mobile/touch: skip Lenis entirely, use native scroll.
- * Lenis + touch = main thread blocking = lag + crashes.
+ * Lenis smooth scroll — desktop pointer devices.
+ * Touch: native scroll only (better battery + fewer jank / double-scroll issues).
  */
 export function SmoothScrollProvider({
   children,
@@ -20,31 +19,21 @@ export function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (typeof window === "undefined") return;
 
-    // Mobile: skip Lenis entirely, rely on native scroll
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
     if (isTouch) {
-      // Normalize scroll for mobile - this fixes the address bar resize / pinning jump issues
-      ScrollTrigger.normalizeScroll({ 
-        allowNestedScroll: true,
-        lockAxis: true
-      });
-      
-      const timer = setTimeout(() => {
+      const timer = window.setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 800);
-
-      return () => {
-        ScrollTrigger.normalizeScroll(false);
-        clearTimeout(timer);
-      };
+      }, 600);
+      return () => clearTimeout(timer);
     }
 
-    // Desktop: full Lenis experience
     const lenis = new Lenis({
-      lerp: 0.085,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.8,
+      lerp: 0.09,
+      wheelMultiplier: 0.92,
+      touchMultiplier: 1.6,
       smoothWheel: true,
       syncTouch: false,
     });

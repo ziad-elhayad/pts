@@ -134,7 +134,7 @@ export function PremiumCard({
         whileHover={typeof window !== 'undefined' && !('ontouchstart' in window || navigator.maxTouchPoints > 0) ? { scale: 1.015 } : {}}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={clsx(
-          "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full w-[85vw] sm:w-[60vw] md:w-[38vw] shrink-0 cursor-pointer",
+          "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full w-[min(85vw,calc(100vw-1.5rem))] shrink-0 cursor-pointer sm:w-[min(60vw,calc(100vw-2rem))] md:w-[38vw]",
           className,
         )}
         style={{

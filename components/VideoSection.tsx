@@ -28,13 +28,34 @@ export function VideoSection({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Never load video on touch/mobile or Low-End — poster is enough
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouch || isLowEnd || reducedMotion) {
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    // Eco / reduced motion: poster only (saves CPU, GPU decode, and battery)
+    if (isLowEnd || reducedMotion) {
       setUseVideo(false);
       return;
     }
 
+    // Touch + capable device: allow muted inline video after idle (keeps cinematic hero on phones)
+    if (isTouch && !isLowEnd && !reducedMotion) {
+      if (!lazyVideo) {
+        setMountVideo(true);
+        return;
+      }
+      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
+        .requestIdleCallback;
+      const cancel = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
+      if (typeof ric === "function") {
+        const id = ric(() => setMountVideo(true), { timeout: 2800 });
+        return () => {
+          if (typeof cancel === "function") cancel(id);
+        };
+      }
+      const t = window.setTimeout(() => setMountVideo(true), 900);
+      return () => window.clearTimeout(t);
+    }
+
+    // Desktop
     if (!lazyVideo) {
       setMountVideo(true);
       return;
@@ -43,7 +64,7 @@ export function VideoSection({
     const ric = (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
       .requestIdleCallback;
     const cancel = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
-    
+
     if (typeof ric === "function") {
       const id = ric(() => setMountVideo(true), { timeout: 2200 });
       return () => {
@@ -62,7 +83,7 @@ export function VideoSection({
     <div className={clsx("relative overflow-hidden", className)}>
       {mountVideo && src && useVideo ? (
         <video
-          className="absolute inset-0 h-full w-full scale-[1.06] object-cover"
+          className="absolute inset-0 h-full w-full scale-[1.06] object-cover object-center"
           autoPlay
           muted
           loop
@@ -78,7 +99,7 @@ export function VideoSection({
         </video>
       ) : (
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${poster})` }}
         />
       )}

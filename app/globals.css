@@ -31,7 +31,7 @@
 html {
   background: var(--pts-bg);
   scroll-behavior: auto;
-  overflow-x: hidden;
+  overflow-x: clip;
   /* Removed height: 100% to fix mobile ScrollTrigger calculations */
 }
 
@@ -41,7 +41,7 @@ body {
   font-family: var(--font-body);
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
   /* Removed overscroll-behavior-y to allow natural mobile scrolling */
   cursor: default; /* Fallback */
 }
@@ -231,8 +231,12 @@ body {
 /* ─── GPU ACCELERATION ──────────────────────────────────────────────────── */
 .gpu-layer {
   transform: translateZ(0);
-  will-change: transform;
   backface-visibility: hidden;
+}
+
+/* Use will-change only while animating in JS; avoid global permanent will-change (memory / layer explosion) */
+.will-change-transform {
+  will-change: transform;
 }
 
 /* ─── PERSPECTIVE CARDS ─────────────────────────────────────────────────── */
@@ -404,9 +408,6 @@ html.lenis, html.lenis body {
   animation: float-gentle 10s ease-in-out infinite;
 }
 
-/* ─── PERFORMANCE TIERS ────────────────────────────────────────────────── */
-
-/* Explicit Eco-Mode for weak hardware - Minimalist approach to keep the look */
 .eco-mode {
   --shadow-gold: none;
 }
@@ -424,24 +425,29 @@ html.lenis, html.lenis body {
   /* Prevent horizontal overflow on mobile */
   html, body {
     width: 100%;
-    overflow-x: hidden !important;
+    max-width: 100%;
+    overflow-x: clip;
     position: relative;
-    /* Fix for elastic scroll issues */
     overscroll-behavior-x: none;
-    overscroll-behavior-y: none;
+    overscroll-behavior-y: auto;
     background-color: var(--pts-bg) !important;
+  }
+
+  .grain-overlay {
+    opacity: 0.012;
+    animation-duration: 12s;
   }
 
   /* Force all page sections to respect the viewport width */
   .page-section, .section-bridge, .section-transition {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
+    max-width: 100%;
+    overflow-x: clip;
   }
   
   /* GSAP Pinning spacer stability */
   .pin-spacer {
     pointer-events: none !important;
-    overflow: hidden !important;
+    overflow: clip !important;
   }
   .pin-spacer > * {
     pointer-events: auto !important;
@@ -460,9 +466,9 @@ html.lenis, html.lenis body {
 
   .section-inner {
     width: 100% !important;
-    max-width: 100vw !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+    max-width: 100% !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
   }
 }
 
@@ -478,17 +484,6 @@ html.lenis, html.lenis body {
 /* Global snappier transitions for weak devices */
 .eco-mode * {
   transition-duration: 0.2s !important;
-}
-
-/* GPU Acceleration Utilities */
-.gpu-layer {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-.will-change-transform {
-  will-change: transform;
 }
 
 /* Component specific variables */

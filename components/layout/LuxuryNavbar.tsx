@@ -15,49 +15,60 @@ export function LuxuryNavbar() {
   const pathname        = usePathname();
   const { locale, setLocale } = useLocale();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled]   = useState(false);
-  const [hidden, setHidden]       = useState(false);
-  const [progress, setProgress]   = useState(0);
+  const [nav, setNav] = useState({ scrolled: false, hidden: false, progress: 0 });
   const lastScroll = useRef(0);
+  const rafRef = useRef(0);
 
-  // Scroll tracking
   useEffect(() => {
     const onScroll = () => {
-      const y   = window.scrollY;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-
-      setScrolled(y > 60);
-      setProgress(max > 0 ? y / max : 0);
-
-      if (y > lastScroll.current && y > 100) setHidden(true);
-      else setHidden(false);
-
-      lastScroll.current = y;
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = 0;
+        const y = window.scrollY;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = y > 60;
+        const progress = max > 0 ? y / max : 0;
+        const prev = lastScroll.current;
+        const hidden = y > prev && y > 100;
+        lastScroll.current = y;
+        setNav((prev) => {
+          if (prev.scrolled === scrolled && prev.hidden === hidden && Math.abs(prev.progress - progress) < 0.002) {
+            return prev;
+          }
+          return { scrolled, hidden, progress };
+        });
+      });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
+
+  const { scrolled, hidden, progress } = nav;
 
   useEffect(() => { setOpen(false); }, [pathname]);
 
   return (
     <header
-      className={clsx(
-        "fixed inset-x-0 top-0 z-[90] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        hidden ? "-translate-y-full" : "translate-y-0"
-      )}
+        className={clsx(
+          "fixed inset-x-0 top-0 z-[90] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] pt-[env(safe-area-inset-top,0px)]",
+          hidden ? "-translate-y-full" : "translate-y-0"
+        )}
     >
       {/* ── Main nav bar ────────────────────────────────────────────── */}
       <div
         className={clsx(
           "transition-[background,backdrop-filter,border-color] duration-500",
           scrolled
-            ? "bg-pts-deep/95 lg:bg-pts-deep/80 lg:backdrop-blur-2xl border-b border-pts-gold/10"
+            ? "bg-pts-deep/95 lg:bg-pts-deep/82 lg:backdrop-blur-xl border-b border-pts-gold/10"
             : "bg-transparent border-b border-transparent"
         )}
       >
-        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-8 py-5 sm:px-12">
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 sm:px-8 sm:py-5 md:px-12">
           {/* Logo */}
           <Magnetic strength={0.3}>
             <Link href="/" className="group">
@@ -160,7 +171,7 @@ export function LuxuryNavbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="border-t border-pts-line/15 bg-pts-deep/95 px-8 py-10 backdrop-blur-2xl lg:hidden max-h-[85vh] overflow-y-auto"
+            className="border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 backdrop-blur-xl sm:px-8 sm:py-10 lg:hidden max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain pb-[max(2rem,env(safe-area-inset-bottom))]"
           >
             <div className="mx-auto flex max-w-sm flex-col gap-8">
               {navItems.map((item, i) => (

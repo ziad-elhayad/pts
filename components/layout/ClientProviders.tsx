@@ -18,26 +18,42 @@ if (typeof window !== "undefined") {
 
 function TunnelEffect() {
   const { isLowEnd, reducedMotion } = usePerformance();
-  
+
   useGSAP(() => {
-    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    if (typeof window === "undefined") return;
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     if (isTouch || isLowEnd || reducedMotion) return;
 
     const tunnel = document.querySelector(".tunnel-vignette");
     if (!tunnel) return;
 
-    const setOpacity = gsap.quickSetter(tunnel, "opacity");
-    const setScale   = gsap.quickSetter(tunnel, "scale");
+    const setOpacity = gsap.quickSetter(tunnel, "opacity", "number");
+    const setScale = gsap.quickSetter(tunnel, "scale", "number");
 
-    ScrollTrigger.create({
+    let raf = 0;
+    let pendingVel = 0;
+    const st = ScrollTrigger.create({
+      trigger: document.body,
+      start: "top top",
+      end: "max max",
       onUpdate: (self) => {
-        const velocity = Math.abs(self.getVelocity());
-        const opacity = Math.min(velocity / 4000, 0.4);
-        const scale   = 1 + (velocity / 8000);
-        setOpacity(opacity);
-        setScale(scale);
-      }
+        pendingVel = Math.abs(self.getVelocity());
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const velocity = pendingVel;
+          const opacity = Math.min(velocity / 4000, 0.32);
+          const scale = 1 + Math.min(velocity / 8000, 0.05);
+          setOpacity(opacity);
+          setScale(scale);
+        });
+      },
     });
+
+    return () => {
+      st.kill();
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [isLowEnd, reducedMotion]);
 
   return <div className="tunnel-vignette" aria-hidden="true" />;

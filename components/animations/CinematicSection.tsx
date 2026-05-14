@@ -33,10 +33,12 @@ export function CinematicSection({
 }: CinematicSectionProps) {
   const root = useRef<HTMLDivElement>(null);
   const scrubLineRef = useRef<HTMLDivElement>(null);
-  const [isTouch, setIsTouch] = useState(true);
+  const [isTouch, setIsTouch] = useState(() =>
+    typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0),
+  );
 
   useEffect(() => {
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useGSAP(
