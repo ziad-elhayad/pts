@@ -132,7 +132,7 @@ export function HorizontalGallery() {
         </div>
 
         {/* Editorial Header */}
-        <div className="relative z-20 px-10 pt-20 pb-8 bg-pts-bg"
+        <div className="relative z-20 px-6 sm:px-10 pt-16 sm:pt-20 pb-6 sm:pb-8 bg-pts-bg"
              style={{ borderBottom: "1px solid rgba(168,143,100,0.07)" }}>
           <div className="mx-auto max-w-[1400px] flex items-end justify-between">
             <div>
@@ -160,25 +160,24 @@ export function HorizontalGallery() {
             {ITEMS.map((item, i) => (
               <div
                 key={item.id}
-                className="relative flex-shrink-0 group overflow-hidden h-full border-r border-pts-line/8"
-                style={{ width: "42vw" }}
+                className="relative flex-shrink-0 group overflow-hidden h-full border-r border-pts-line/8 w-[85vw] sm:w-[60vw] md:w-[42vw]"
               >
                 <div className="hg-parallax-img absolute inset-0 w-[140%] h-full left-[-20%]">
                   <Image
                     src={item.src}
                     alt={item.title}
                     fill
-                    className="object-cover brightness-[0.45] saturate-[0.65] transition-[filter] duration-[3s] ease-out group-hover:brightness-[0.65] group-hover:saturate-[0.85]"
+                    className="object-cover brightness-[0.7] saturate-[0.85] transition-[filter] duration-[3s] ease-out group-hover:brightness-[0.85] group-hover:saturate-[1]"
                     priority
                   />
                 </div>
 
                 {/* Gradients */}
-                <div className="absolute inset-0 bg-gradient-to-t from-pts-deep via-pts-deep/30 to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-pts-deep via-pts-deep/30 to-transparent opacity-60" />
                 <div className="absolute inset-0 bg-gradient-to-r from-pts-deep/30 via-transparent to-transparent" />
 
                 {/* Content */}
-                <div className="absolute inset-0 p-12 lg:p-16 flex flex-col justify-between">
+                <div className="absolute inset-0 p-8 sm:p-12 lg:p-16 flex flex-col justify-between">
                   {/* Index */}
                   <div className="flex items-center gap-3">
                     <div className="h-px w-5 bg-pts-gold/30" />
@@ -210,8 +209,7 @@ export function HorizontalGallery() {
 
             {/* End card */}
             <div
-              className="flex-shrink-0 flex flex-col justify-center px-16 border-r border-pts-line/8"
-              style={{ width: "30vw" }}
+              className="flex-shrink-0 flex flex-col justify-center px-10 sm:px-16 border-r border-pts-line/8 w-[80vw] sm:w-[50vw] md:w-[30vw]"
             >
               <p className="lux-heading text-[0.48rem] text-pts-gold tracking-[0.6em] mb-6 opacity-25">
                 PTS — GLOBAL PRECISION
@@ -236,7 +234,7 @@ export function HorizontalGallery() {
               background: "linear-gradient(90deg, var(--pts-gold), var(--pts-gold-2))",
             }}
           />
-          <div className="flex items-center justify-between px-10 py-5"
+          <div className="flex items-center justify-between px-6 sm:px-10 py-4 sm:py-5"
                style={{ borderTop: "1px solid rgba(168,143,100,0.06)" }}>
             <div className="flex items-center gap-5">
               <span className="lux-heading text-[0.48rem] text-pts-gold tracking-[0.5em]">01</span>

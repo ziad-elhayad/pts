@@ -124,7 +124,7 @@ export function LuxuryGalleryGrid() {
         {/* The Lens — starts as a small framed window */}
         <div
           ref={lensRef}
-          className="relative z-10 h-[400px] w-[280px] overflow-hidden rounded-lg border border-pts-gold/20 shadow-2xl will-change-[width,height,border-radius] md:h-[500px] md:w-[350px]"
+          className="relative z-10 h-[55vh] max-h-[400px] sm:h-[400px] w-[75vw] sm:w-[280px] overflow-hidden rounded-lg border border-pts-gold/20 shadow-2xl will-change-[width,height,border-radius] md:h-[500px] md:w-[350px]"
         >
           <div
             ref={ringRef}
@@ -184,10 +184,10 @@ export function LuxuryGalleryGrid() {
       </div>
 
       {/* Frame markers */}
-      <div className="absolute top-10 left-10 text-pts-gold/30 lux-heading text-[0.5rem] tracking-[0.5em] z-30">
+      <div className="absolute top-6 left-6 sm:top-10 sm:left-10 text-pts-gold/30 lux-heading text-[0.45rem] sm:text-[0.5rem] tracking-[0.5em] z-30">
         [ 24.7136 N / 46.6753 E ]
       </div>
-      <div className="absolute bottom-10 right-10 text-pts-gold/30 lux-heading text-[0.5rem] tracking-[0.5em] z-30">
+      <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 text-pts-gold/30 lux-heading text-[0.45rem] sm:text-[0.5rem] tracking-[0.5em] z-30">
         BEYOND THE SCROLL
       </div>
     </div>

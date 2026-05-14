@@ -115,10 +115,10 @@ export function BrandIntroSection() {
       /* Image shell: dual-depth parallax + iris mask */
       gsap.fromTo(
         shell,
-        { clipPath: "circle(18% at 50% 50%)", filter: "brightness(0.45)" },
+        { clipPath: "circle(18% at 50% 50%)", filter: "brightness(0.6)" },
         {
           clipPath: "circle(72% at 50% 48%)",
-          filter: "brightness(0.85)",
+          filter: "brightness(1)",
           ease: "none",
           scrollTrigger: {
             trigger: shell,
@@ -216,12 +216,12 @@ export function BrandIntroSection() {
 
           <div
             ref={statsRef}
-            className="mt-16 grid grid-cols-2 gap-px border border-pts-gold/10 bg-pts-gold/10 [transform-style:preserve-3d]"
+            className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-px border border-pts-gold/10 bg-pts-gold/10 [transform-style:preserve-3d]"
           >
             {STATS.map((s) => (
               <div
                 key={s.label}
-                className="stat-card group relative bg-pts-bg/80 p-8 transition-colors duration-500 will-change-transform lg:p-10 hover:bg-pts-black/60"
+                className="stat-card group relative bg-pts-bg/80 p-6 sm:p-8 transition-colors duration-500 will-change-transform lg:p-10 hover:bg-pts-black/60"
               >
                 <div className="absolute right-4 top-4 h-4 w-4 border-t border-r border-pts-gold/20 transition-colors duration-500 group-hover:border-pts-gold/50" />
 

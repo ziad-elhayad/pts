@@ -124,14 +124,14 @@ export function PerspectiveStackGallery() {
                 src={img.src}
                 alt={img.alt}
                 fill
-                className="object-cover object-center brightness-[0.88] transition-all duration-700 hover:brightness-100"
+                className="object-cover object-center brightness-[1] transition-all duration-700 hover:brightness-110"
                 sizes="(max-width: 640px) 90vw, 1020px"
                 quality={92}
                 priority={i < 2}
                 loading={i < 2 ? "eager" : "lazy"}
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-pts-black/90 to-transparent p-10">
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-pts-black/60 to-transparent p-6 sm:p-10">
                 <div className="flex flex-col gap-2">
                   <span className="lux-heading text-[0.5rem] uppercase tracking-[0.6em] text-pts-gold">
                     Perspective Archive
@@ -150,7 +150,7 @@ export function PerspectiveStackGallery() {
         ))}
       </div>
 
-      <div className="float-gentle absolute bottom-12 right-12 flex flex-col items-end gap-2 opacity-25">
+      <div className="float-gentle absolute bottom-6 sm:bottom-12 right-6 sm:right-12 flex flex-col items-end gap-2 opacity-25">
         <div className="h-20 w-px bg-gradient-to-t from-pts-gold to-transparent" />
         <span className="lux-heading translate-x-2 translate-y-8 origin-right rotate-90 text-[0.5rem] tracking-[0.5em] text-pts-gold">
           PTS025

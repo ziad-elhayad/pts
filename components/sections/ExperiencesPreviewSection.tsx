@@ -54,7 +54,7 @@ export function ExperiencesPreviewSection() {
             </div>
             <Link
               href="/experiences"
-              className="lux-heading border border-pts-gold/40 px-6 py-3 text-[0.62rem] text-pts-gold-2 transition hover:border-pts-gold hover:bg-pts-gold/10"
+              className="lux-heading border border-pts-gold/40 px-6 py-3 text-[0.62rem] text-pts-gold-2 transition hover:border-pts-gold hover:bg-pts-gold/10 w-full sm:w-auto text-center block sm:inline-block"
             >
               View Experiences
             </Link>

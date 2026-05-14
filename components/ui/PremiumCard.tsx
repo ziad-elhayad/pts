@@ -61,11 +61,10 @@ export function PremiumCard({
     <motion.article
       ref={cardRef}
       className={clsx(
-        "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full",
+        "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full w-[85vw] sm:w-[60vw] md:w-[38vw] shrink-0",
         className,
       )}
       style={{
-        width: "38vw",
         perspective: "1200px",
         transformStyle: "preserve-3d",
       }}

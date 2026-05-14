@@ -153,7 +153,7 @@ export function TestimonialsSection() {
   return (
     <section
       ref={sectionRef}
-      className="section-transition relative overflow-hidden border-t border-pts-line/15 py-28 sm:py-40 [perspective:1400px]"
+      className="section-transition relative overflow-hidden border-t border-pts-line/15 py-20 sm:py-28 lg:py-40 [perspective:1400px]"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div ref={bgRef} className="absolute inset-[-8%] will-change-transform">
@@ -181,9 +181,9 @@ export function TestimonialsSection() {
           {quotes.map((item) => (
             <blockquote
               key={item.index}
-              className="testimonial-card group relative bg-pts-bg/90 p-10 transition-[background-color,box-shadow] duration-700 will-change-transform [transform-style:preserve-3d] lg:p-12 hover:bg-pts-black/60"
+              className="testimonial-card group relative bg-pts-bg/90 p-8 sm:p-10 transition-[background-color,box-shadow] duration-700 will-change-transform [transform-style:preserve-3d] lg:p-12 hover:bg-pts-black/60"
             >
-              <div className="mb-10 flex items-center justify-between">
+              <div className="mb-8 sm:mb-10 flex items-center justify-between">
                 <span className="lux-heading text-[0.44rem] tracking-[0.5em] text-pts-gold/35">{item.index}</span>
                 <span
                   className="font-heading text-4xl leading-none text-pts-gold/15 transition-colors duration-700 group-hover:text-pts-gold/25"
@@ -205,7 +205,7 @@ export function TestimonialsSection() {
                 <span className="text-pts-gold/25">&rdquo;</span>
               </p>
 
-              <footer className="mt-10 border-t border-pts-line/20 pt-8">
+              <footer className="mt-8 sm:mt-10 border-t border-pts-line/20 pt-6 sm:pt-8">
                 <p className="lux-heading text-[0.52rem] tracking-[0.4em] text-pts-gold">{item.role}</p>
                 <p className="mt-2 text-[0.58rem] uppercase tracking-[0.3em] text-pts-muted/45">{item.org}</p>
               </footer>

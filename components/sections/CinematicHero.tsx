@@ -199,7 +199,7 @@ export function CinematicHero() {
 
       if (overlay) {
         gsap.to(overlay, {
-          opacity: 0.72,
+          opacity: 0.5,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -262,17 +262,17 @@ export function CinematicHero() {
 
       <div
         ref={overlayRef}
-        className="pointer-events-none absolute inset-0 z-[4] opacity-60"
+        className="pointer-events-none absolute inset-0 z-[4] opacity-40"
         style={{
           background:
-            "linear-gradient(180deg, rgba(13,13,15,0.3) 0%, rgba(13,13,15,0.1) 30%, rgba(13,13,15,0.7) 80%, rgba(13,13,15,0.92) 100%)",
+            "linear-gradient(180deg, rgba(13,13,15,0.1) 0%, rgba(13,13,15,0.0) 30%, rgba(13,13,15,0.4) 80%, rgba(13,13,15,0.75) 100%)",
         }}
         aria-hidden
       />
 
       <div className="pointer-events-none absolute inset-0 z-[5] mix-blend-soft-light" aria-hidden>
-        <div className="mist-drift absolute -left-1/4 top-0 h-[120%] w-[150%] opacity-60" />
-        <div className="mist-drift-slow absolute -right-1/3 top-1/4 h-full w-[140%] opacity-40" />
+        <div className="mist-drift absolute -left-1/4 top-0 h-[120%] w-[150%] opacity-30" />
+        <div className="mist-drift-slow absolute -right-1/3 top-1/4 h-full w-[140%] opacity-20" />
       </div>
 
       <div

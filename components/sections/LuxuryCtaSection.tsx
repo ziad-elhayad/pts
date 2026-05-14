@@ -115,12 +115,12 @@ export function LuxuryCtaSection() {
           src={ctaBackdrop}
           alt=""
           fill
-          className="object-cover brightness-[0.52] saturate-[0.72]"
+          className="object-cover brightness-[0.8] saturate-[0.9]"
           sizes="100vw"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-pts-deep/75 via-pts-deep/28 to-pts-deep/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/65 via-transparent to-pts-deep/32" />
+        <div className="absolute inset-0 bg-gradient-to-r from-pts-deep/50 via-pts-deep/10 to-pts-deep/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/40 via-transparent to-pts-deep/20" />
       </div>
 
       <div
@@ -143,7 +143,7 @@ export function LuxuryCtaSection() {
 
       <div
         ref={textRef}
-        className="relative z-10 mx-auto w-full max-w-[92rem] transform-gpu px-[clamp(1.25rem,3vw,2.5rem)] py-28 text-center [transform-style:preserve-3d] sm:px-[clamp(1.25rem,4vw,2.5rem)]"
+        className="relative z-10 mx-auto w-full max-w-[92rem] transform-gpu px-[clamp(1.25rem,3vw,2.5rem)] py-20 sm:py-28 text-center [transform-style:preserve-3d] sm:px-[clamp(1.25rem,4vw,2.5rem)]"
       >
         <div data-cta-reveal className="mb-14 flex items-center justify-center gap-5">
           <div className="h-px w-16 bg-gradient-to-r from-transparent to-pts-gold/50" />
@@ -170,13 +170,13 @@ export function LuxuryCtaSection() {
           {t(locale, "lux.cta.body")}
         </p>
 
-        <div data-cta-reveal className="mt-16 flex flex-wrap items-center justify-center gap-6">
-          <MagneticButton href="/contact" className="btn-gold-glow px-12 py-5 text-[0.68rem]">
+        <div data-cta-reveal className="mt-12 sm:mt-16 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 sm:gap-6">
+          <MagneticButton href="/contact" className="btn-gold-glow w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 text-[0.65rem] sm:text-[0.68rem]">
             {t(locale, "cta.begin")}
           </MagneticButton>
           <MagneticButton
             href={site.whatsapp}
-            className="border-pts-gold/25 bg-pts-gold/5 px-12 py-5 text-[0.68rem] text-pts-gold"
+            className="border-pts-gold/25 bg-pts-gold/5 w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 text-[0.65rem] sm:text-[0.68rem] text-pts-gold"
           >
             {t(locale, "cta.whatsapp")}
           </MagneticButton>
