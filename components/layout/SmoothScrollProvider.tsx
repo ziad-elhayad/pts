@@ -23,10 +23,18 @@ export function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Normalize scroll on mobile to prevent address bar jumps and jank
+    if (isTouch) {
+      ScrollTrigger.normalizeScroll(true);
+      ScrollTrigger.config({ ignoreMobileResize: true });
+    }
+
     const lenis = new Lenis({
-      lerp: 0.085,          // Buttery smooth — expensive feel
-      wheelMultiplier: 0.9, // Slightly slower for luxury pacing
-      touchMultiplier: 1.8,
+      lerp: isTouch ? 0.12 : 0.085, // Faster lerp on mobile for responsiveness
+      wheelMultiplier: 0.9,
+      touchMultiplier: isTouch ? 1.0 : 1.8, // Reduced for mobile
       smoothWheel: true,
       syncTouch: false,
     });

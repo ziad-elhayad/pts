@@ -29,6 +29,7 @@ export function PerspectiveStackGallery() {
       return;
     }
 
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const items = trackRef.current.querySelectorAll<HTMLElement>(".stack-item");
     const totalItems = items.length;
 
@@ -36,9 +37,10 @@ export function PerspectiveStackGallery() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${totalItems * 95}%`,
+        end: `+=${totalItems * (isTouch ? 80 : 95)}%`,
         pin: true,
-        scrub: 0.85,
+        scrub: isTouch ? 0.45 : 0.85, // More responsive scrub on mobile
+        anticipatePin: 1,
       },
     });
 
@@ -66,9 +68,9 @@ export function PerspectiveStackGallery() {
         gsap.set(item, {
           opacity: 0,
           scale: 0.85,
-          y: 100,
-          rotateY: 15 * dir,
-          z: -200,
+          y: isTouch ? 60 : 100,
+          rotateY: (isTouch ? 5 : 15) * dir,
+          z: isTouch ? -50 : -200,
           transformOrigin: "50% 50%",
         });
       }

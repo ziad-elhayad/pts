@@ -31,6 +31,9 @@ export function CinematicHero() {
   const botLineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) return;
+
     const onMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
       mouseRef.current = {

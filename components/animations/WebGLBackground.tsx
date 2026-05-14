@@ -12,6 +12,9 @@ export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 

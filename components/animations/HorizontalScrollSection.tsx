@@ -77,17 +77,20 @@ export function HorizontalScrollSection({
     });
 
     // Velocity-based skew effect (Premium "leaning" feel)
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const items = track.querySelectorAll(".hg-item");
     const proxy = { skew: 0 };
-    const skewSetter = gsap.quickSetter(items, "skewX", "deg");
-    const scaleSetter = gsap.quickSetter(items, "scale", "number");
+    const skewSetter = isTouch ? () => {} : gsap.quickSetter(items, "skewX", "deg");
+    const scaleSetter = isTouch ? () => {} : gsap.quickSetter(items, "scale", "number");
     const clamp = gsap.utils.clamp(-8, 8);
 
     ScrollTrigger.create({
       trigger: wrapper,
       start: "top top",
       end: "bottom bottom",
+      anticipatePin: 1,
       onUpdate: (self) => {
+        if (isTouch) return;
         const skew = clamp(self.getVelocity() / -300);
         if (Math.abs(skew) > Math.abs(proxy.skew)) {
           proxy.skew = skew;

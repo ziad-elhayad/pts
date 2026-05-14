@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 /**
@@ -11,9 +11,14 @@ import gsap from "gsap";
 export function CustomCursor() {
   const ringRef  = useRef<HTMLDivElement>(null);
   const dotRef   = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  useEffect(() => {
+    if (isTouch) return;
     const ring  = ringRef.current;
     const dot   = dotRef.current;
     if (!ring || !dot) return;
@@ -111,7 +116,9 @@ export function CustomCursor() {
       document.removeEventListener("mouseleave", onLeaveWindow);
       document.removeEventListener("mouseenter", onEnterWindow);
     };
-  }, []);
+  }, [isTouch]);
+
+  if (isTouch) return null;
 
   return (
     <>
