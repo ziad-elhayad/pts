@@ -16,9 +16,17 @@ interface LineRevealTextProps {
   className?: string;
   /** "line" = gold underline paint (default). "cascade" = alternating diagonal word entrances (scrub). */
   mode?: "line" | "cascade";
+  stagger?: number;
+  delay?: number;
 }
 
-export function LineRevealText({ text, className, mode = "line" }: LineRevealTextProps) {
+export function LineRevealText({ 
+  text, 
+  className, 
+  mode = "line",
+  stagger,
+  delay = 0 
+}: LineRevealTextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const words = text.split(" ");
 
@@ -36,7 +44,9 @@ export function LineRevealText({ text, className, mode = "line" }: LineRevealTex
             end: "top 48%",
             scrub: 0.55,
           },
+          delay: delay
         });
+        const finalStagger = stagger ?? 0.06;
         nodes.forEach((node, i) => {
           tl.fromTo(
             node,
@@ -56,7 +66,7 @@ export function LineRevealText({ text, className, mode = "line" }: LineRevealTex
               duration: 0.35,
               ease: "none",
             },
-            i * 0.06,
+            i * finalStagger,
           );
         });
         return;
@@ -72,10 +82,12 @@ export function LineRevealText({ text, className, mode = "line" }: LineRevealTex
           end: "bottom 58%",
           scrub: 0.45,
         },
+        delay: delay
       });
 
+      const finalStagger = stagger ?? 0.08;
       wordsEls.forEach((word, i) => {
-        const pos = i * 0.08;
+        const pos = i * finalStagger;
         tl.fromTo(
           word,
           { opacity: 0, y: 22, rotateX: 18, transformOrigin: "50% 100%", filter: "blur(5px)" },
