@@ -10,12 +10,9 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Lenis smooth scroll — correctly integrated with GSAP ScrollTrigger.
- *
- * Pattern: Lenis v1+ with GSAP ticker as RAF driver.
- * - Single RAF loop, zero jank
- * - No scrollerProxy (causes double-interpolation)
- * - scrub: 0 gives frame-perfect scroll sync
+ * Lenis smooth scroll — desktop only.
+ * On mobile/touch: skip Lenis entirely, use native scroll.
+ * Lenis + touch = main thread blocking = lag + crashes.
  */
 export function SmoothScrollProvider({
   children,
@@ -24,38 +21,33 @@ export function SmoothScrollProvider({
 }) {
   useEffect(() => {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    // Normalize scroll on mobile to prevent address bar jumps and jank
+
+    // Mobile: skip Lenis entirely, rely on native scroll
     if (isTouch) {
-      ScrollTrigger.normalizeScroll(true);
       ScrollTrigger.config({ ignoreMobileResize: true });
+      // Just refresh ST once after mount
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+      return;
     }
 
+    // Desktop: full Lenis experience
     const lenis = new Lenis({
-      lerp: isTouch ? 0.12 : 0.085, // Faster lerp on mobile for responsiveness
+      lerp: 0.085,
       wheelMultiplier: 0.9,
-      touchMultiplier: isTouch ? 1.0 : 1.8, // Reduced for mobile
+      touchMultiplier: 1.8,
       smoothWheel: true,
       syncTouch: false,
     });
 
-    // Keep ScrollTrigger in sync
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Drive Lenis from GSAP ticker (single RAF)
     const onTick = (time: number) => {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(onTick);
+    gsap.ticker.lagSmoothing(0);
 
-    // Only disable lag smoothing on desktop — mobile needs it for GC pauses
-    if (!isTouch) {
-      gsap.ticker.lagSmoothing(0);
-    }
-
-    // Expose for debugging only (typed window slot)
     (window as Window & { __lenis?: Lenis }).__lenis = lenis;
-
     document.documentElement.classList.add("lenis", "lenis-smooth");
 
     return () => {

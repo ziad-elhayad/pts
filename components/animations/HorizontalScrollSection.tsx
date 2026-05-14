@@ -43,30 +43,24 @@ export function HorizontalScrollSection({
     const progress = progressRef.current;
     if (!wrapper || !track) return;
 
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     const getScrollDistance = () => {
       const dist = track.scrollWidth - window.innerWidth;
       return dist > 0 ? dist : 0;
     };
 
-    const updateHeight = () => {
-      const distance = getScrollDistance();
-      wrapper.style.height = distance > 0 ? `${window.innerHeight + distance}px` : "auto";
-      ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 200);
-    };
-
-    const ro = new ResizeObserver(updateHeight);
-    ro.observe(track);
-
-    // Main horizontal tween
+    // Use ScrollTrigger pin instead of manual height + sticky
     const slideTween = gsap.to(track, {
       x: () => -getScrollDistance(),
       ease: "none",
       scrollTrigger: {
         trigger: wrapper,
         start: "top top",
-        end: "bottom bottom",
-        scrub: 1,
+        end: () => `+=${getScrollDistance()}`,
+        pin: true,
+        anticipatePin: 1,
+        scrub: isTouch ? 0.5 : 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (progress) {
@@ -76,8 +70,7 @@ export function HorizontalScrollSection({
       },
     });
 
-    // Velocity-based skew effect (Premium "leaning" feel)
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    // Velocity-based skew effect (Premium "leaning" feel) — desktop only
     const items = track.querySelectorAll(".hg-item");
     const proxy = { skew: 0 };
     const skewSetter = isTouch ? () => {} : gsap.quickSetter(items, "skewX", "deg");
@@ -194,14 +187,13 @@ export function HorizontalScrollSection({
       );
     }
 
-    return () => ro.disconnect();
   });
 
   const flatChildren = Children.toArray(children);
 
   return (
-    <div ref={wrapperRef} id={id} className="relative w-full overflow-visible scroll-mt-20">
-      <div className="sticky top-0 flex h-[100svh] w-full flex-col overflow-hidden bg-pts-bg [perspective:1400px]">
+    <div ref={wrapperRef} id={id} className="relative w-full overflow-hidden scroll-mt-20">
+      <div className="flex h-[100svh] w-full flex-col overflow-hidden bg-pts-bg">
 
         {/* Atmospheric lighting */}
         <div ref={glowRef} className="pointer-events-none absolute inset-0 z-0 will-change-transform">
