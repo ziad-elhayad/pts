@@ -43,27 +43,30 @@ export function CinematicHero() {
   }, []);
 
   useEffect(() => {
+    if (prefersReducedMotion()) return;
+
+    // Use quickSetter for high-frequency updates (better performance than gsap.to in ticker)
+    const setL1X = gsap.quickSetter(layer1Ref.current, "x", "px");
+    const setL1Y = gsap.quickSetter(layer1Ref.current, "y", "px");
+    const setL2X = gsap.quickSetter(layer2Ref.current, "x", "px");
+    const setL2Y = gsap.quickSetter(layer2Ref.current, "y", "px");
+
+    let xLerp = 0;
+    let yLerp = 0;
+
     const tick = () => {
       const { x, y } = mouseRef.current;
-      if (layer1Ref.current) {
-        gsap.to(layer1Ref.current, {
-          x: x * -22,
-          y: y * -12,
-          duration: 2.2,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
-      }
-      if (layer2Ref.current) {
-        gsap.to(layer2Ref.current, {
-          x: x * 14,
-          y: y * 8,
-          duration: 3.2,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
-      }
+      
+      // Smooth lerp for the mouse values
+      xLerp += (x - xLerp) * 0.08;
+      yLerp += (y - yLerp) * 0.08;
+
+      setL1X(xLerp * -22);
+      setL1Y(yLerp * -12);
+      setL2X(xLerp * 14);
+      setL2Y(yLerp * 8);
     };
+
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);
   }, []);

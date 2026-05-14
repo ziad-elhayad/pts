@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: "https",
@@ -14,6 +15,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  // Optimize bundle size
+  experimental: {
+    optimizePackageImports: ["gsap", "framer-motion", "lucide-react"],
   },
 };
 

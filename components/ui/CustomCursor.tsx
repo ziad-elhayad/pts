@@ -16,35 +16,42 @@ export function CustomCursor() {
   useEffect(() => {
     const ring  = ringRef.current;
     const dot   = dotRef.current;
-    const label = labelRef.current;
     if (!ring || !dot) return;
+
+    // quickSetter is much faster for high-frequency updates
+    const setDotX = gsap.quickSetter(dot, "x", "px");
+    const setDotY = gsap.quickSetter(dot, "y", "px");
+    const setRingX = gsap.quickSetter(ring, "x", "px");
+    const setRingY = gsap.quickSetter(ring, "y", "px");
 
     let mouseX = window.innerWidth  / 2;
     let mouseY = window.innerHeight / 2;
     let ringX  = mouseX;
     let ringY  = mouseY;
+    let dotX   = mouseX;
+    let dotY   = mouseY;
 
-    // Fast dot follows instantly
     const onMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-
-      gsap.to(dot, {
-        x: mouseX,
-        y: mouseY,
-        duration: 0.12,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
     };
 
-    // Lerp ring for inertia feel
+    // Smooth everything in the ticker
     const tick = () => {
-      ringX += (mouseX - ringX) * 0.12;
-      ringY += (mouseY - ringY) * 0.12;
-      gsap.set(ring, { x: ringX, y: ringY });
-      if (label) gsap.set(label, { x: ringX, y: ringY });
+      // Ring inertia
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      
+      // Dot is fast but still slightly smoothed for "liquid" feel
+      dotX += (mouseX - dotX) * 0.45;
+      dotY += (mouseY - dotY) * 0.45;
+
+      setDotX(dotX);
+      setDotY(dotY);
+      setRingX(ringX);
+      setRingY(ringY);
     };
+    
     gsap.ticker.add(tick);
 
     // Hover states
@@ -59,11 +66,13 @@ export function CustomCursor() {
         borderColor: "rgba(168,143,100,0.8)",
         duration: 0.4,
         ease: "power3.out",
+        overwrite: true,
       });
       gsap.to(dot, {
         scale: 0,
         duration: 0.3,
         ease: "power3.out",
+        overwrite: true,
       });
     };
 
@@ -74,25 +83,23 @@ export function CustomCursor() {
         borderColor: "rgba(168,143,100,0.4)",
         duration: 0.5,
         ease: "power3.out",
+        overwrite: true,
       });
       gsap.to(dot, {
         scale: 1,
         duration: 0.4,
         ease: "power3.out",
+        overwrite: true,
       });
     };
 
     // Hide/show on window focus
-    const onLeaveWindow = () => {
-      gsap.to([ring, dot], { autoAlpha: 0, duration: 0.3 });
-    };
-    const onEnterWindow = () => {
-      gsap.to([ring, dot], { autoAlpha: 1, duration: 0.3 });
-    };
+    const onLeaveWindow = () => gsap.to([ring, dot], { autoAlpha: 0, duration: 0.3 });
+    const onEnterWindow = () => gsap.to([ring, dot], { autoAlpha: 1, duration: 0.3 });
 
     window.addEventListener("mousemove",  onMove,        { passive: true });
-    document.addEventListener("mouseover",  onEnter);
-    document.addEventListener("mouseout",   onLeave);
+    document.addEventListener("mouseover",  onEnter,     { passive: true });
+    document.addEventListener("mouseout",   onLeave,     { passive: true });
     document.addEventListener("mouseleave", onLeaveWindow);
     document.addEventListener("mouseenter", onEnterWindow);
 
