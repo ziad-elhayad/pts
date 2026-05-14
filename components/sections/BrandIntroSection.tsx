@@ -44,8 +44,10 @@ export function BrandIntroSection() {
 
       if (prefersReducedMotion()) return;
 
-      /* Floating gold shards — ambient */
-      if (floater) {
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      /* Floating gold glow — skip on mobile (infinite repeat = constant repaints) */
+      if (floater && !isTouch) {
         gsap.to(floater, {
           y: -18,
           x: 12,
@@ -112,23 +114,24 @@ export function BrandIntroSection() {
         );
       }
 
-      /* Image shell: dual-depth parallax + iris mask */
-      gsap.fromTo(
-        shell,
-        { clipPath: "circle(18% at 50% 50%)", filter: "brightness(0.6)" },
-        {
-          clipPath: "circle(72% at 50% 48%)",
-          filter: "brightness(1)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: shell,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.8,
+      /* Image shell: iris reveal — desktop only (clip-path is GPU-heavy on mobile) */
+      if (!isTouch) {
+        gsap.fromTo(
+          shell,
+          { clipPath: "circle(18% at 50% 50%)", filter: "brightness(0.6)" },
+          {
+            clipPath: "circle(72% at 50% 48%)",
+            filter: "brightness(1)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: shell,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.8,
+            },
           },
-        },
-      );
-
+        );
+      }
 
     },
     { scope: sectionRef },

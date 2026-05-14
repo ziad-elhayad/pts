@@ -41,6 +41,13 @@ export function ParallaxImage({
         return;
       }
 
+      // Skip ALL parallax on touch — two scrubbing STs per image are too heavy
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouch) {
+        gsap.set(target, { yPercent: 0, scale: 1 });
+        return;
+      }
+
       // Vertical parallax + optional zoom — scrub:0 for Lenis sync
       gsap.fromTo(
         target,
@@ -59,7 +66,7 @@ export function ParallaxImage({
         }
       );
 
-      // Subtle 3D depth shift — image comes slightly toward viewer
+      // Subtle 3D depth shift — desktop only
       gsap.fromTo(
         container,
         { rotateX: 2, z: -20 },

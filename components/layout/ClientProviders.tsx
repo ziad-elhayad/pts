@@ -21,23 +21,23 @@ if (typeof window !== "undefined") {
  */
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   useGSAP(() => {
-    // Tunnel Vision Effect based on velocity
+    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    if (isTouch) return; // Skip velocity tunnel effect on mobile — gsap.to on scroll = jank
+
+    // Tunnel Vision Effect based on velocity — desktop only
     const tunnel = document.querySelector(".tunnel-vignette");
     if (!tunnel) return;
+
+    const setOpacity = gsap.quickSetter(tunnel, "opacity");
+    const setScale   = gsap.quickSetter(tunnel, "scale");
 
     ScrollTrigger.create({
       onUpdate: (self) => {
         const velocity = Math.abs(self.getVelocity());
         const opacity = Math.min(velocity / 3000, 0.45);
-        const scale = 1 + (velocity / 6000);
-        
-        gsap.to(tunnel, {
-          opacity: opacity,
-          scale: scale,
-          duration: 0.8,
-          ease: "power2.out",
-          overwrite: "auto"
-        });
+        const scale   = 1 + (velocity / 6000);
+        setOpacity(opacity);
+        setScale(scale);
       }
     });
   });

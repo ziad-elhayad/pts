@@ -47,7 +47,11 @@ export function SmoothScrollProvider({
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(onTick);
-    gsap.ticker.lagSmoothing(0);
+
+    // Only disable lag smoothing on desktop — mobile needs it for GC pauses
+    if (!isTouch) {
+      gsap.ticker.lagSmoothing(0);
+    }
 
     // Expose for debugging only (typed window slot)
     (window as Window & { __lenis?: Lenis }).__lenis = lenis;

@@ -16,6 +16,8 @@ export const viewport: Viewport = {
   themeColor: "#333337",
   width: "device-width",
   initialScale: 1,
+  // Prevents address bar show/hide from resizing the layout and re-firing ScrollTrigger
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({
@@ -26,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.cdnfonts.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
           href="https://fonts.cdnfonts.com/css/glacial-indifference"
