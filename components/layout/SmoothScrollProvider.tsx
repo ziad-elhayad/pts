@@ -24,17 +24,14 @@ export function SmoothScrollProvider({
 
     // Mobile: skip Lenis entirely, rely on native scroll
     if (isTouch) {
-      // Normalize scroll prevents the address bar from interfering with GSAP pinning
-      ScrollTrigger.normalizeScroll(true);
+      // Removed ScrollTrigger.normalizeScroll(true) as it blocks scroll on some devices
       
-      // Safety refresh after a short delay
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 500);
 
       return () => {
         clearTimeout(timer);
-        ScrollTrigger.normalizeScroll(false);
       };
     }
 

@@ -74,9 +74,18 @@ export function LoaderScreen() {
         { yPercent: 0, duration: 0.65 * d, ease: "power4.inOut" }, "+=0.1")
       .to(root, { autoAlpha: 0, duration: 0.01 });
 
+    // Emergency unlock after 5 seconds just in case GSAP fails
+    const emergencyTimer = setTimeout(() => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      setVisible(false);
+    }, 5000);
+
     return () => {
       tl.kill();
+      clearTimeout(emergencyTimer);
       document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
     };
   }, [isLowEnd]);
 
