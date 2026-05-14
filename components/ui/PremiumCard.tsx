@@ -185,8 +185,8 @@ export function PremiumCard({
 
           {/* Content panel */}
           <div
-            className="relative z-10 mt-auto mx-6 mb-10 glass-deep p-10 lg:p-14 border border-pts-gold/15 transition-[border-color,box-shadow] duration-700 group-hover:border-pts-gold/30 group-hover:shadow-[0_0_40px_rgba(168,143,100,0.08)]"
-            style={{ transform: "translateZ(30px)" }}
+            className="relative z-10 mt-auto mx-4 sm:mx-6 mb-8 sm:mb-10 glass-deep p-6 sm:p-10 lg:p-14 border border-pts-gold/15 transition-[border-color,box-shadow] duration-700 group-hover:border-pts-gold/30 group-hover:shadow-[0_0_40px_rgba(168,143,100,0.08)]"
+            style={{ transform: "translateZ(var(--card-z, 30px))" }}
           >
             {kicker ? (
               <span className="lux-heading text-[0.44rem] text-pts-gold tracking-[0.6em] uppercase mb-5 block">

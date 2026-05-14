@@ -218,7 +218,7 @@ export function BrandIntroSection() {
                 {t(locale, "brand.kicker")}
               </p>
             </div>
-            <h2 className="font-heading text-[clamp(1.85rem,4vw,3.2rem)] font-bold uppercase leading-[1.12] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)]">
+            <h2 className="font-heading text-[clamp(1.5rem,5vw,2.4rem)] sm:text-[clamp(1.85rem,4vw,3.2rem)] font-bold uppercase leading-[1.12] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)]">
               {titleWords.map((w, i) => (
                 <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
                   <span className="biw inline-block will-change-transform">{w}</span>

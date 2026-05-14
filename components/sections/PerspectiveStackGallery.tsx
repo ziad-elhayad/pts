@@ -83,7 +83,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
       if (i < totalItems - 1) {
         tl.to(item, {
           z: isLowEnd ? 50 : 150, 
-          x: (isTouch || isLowEnd) ? "105%" : "120%", 
+          x: (isTouch || isLowEnd) ? "115%" : "120%", 
           rotateZ: isLowEnd ? 0 : 8,
           rotateY: isLowEnd ? 0 : 15,
           opacity: 0,
@@ -127,7 +127,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
                 loading={i < 2 ? "eager" : "lazy"}
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-pts-black via-pts-black/80 to-transparent p-6 sm:p-10">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col sm:flex-row items-start sm:items-end justify-between bg-gradient-to-t from-pts-black via-pts-black/80 to-transparent p-6 sm:p-10 gap-4 sm:gap-0">
                 <div className="flex flex-col gap-2">
                   <span className="lux-heading text-[0.5rem] uppercase tracking-[0.6em] text-pts-gold">
                     Perspective Archive

@@ -283,7 +283,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
 
             <div className="flex items-center gap-3">
               {!isLowEnd && <div className="h-1.5 w-1.5 rounded-full bg-pts-gold/30 animate-pulse" />}
-              <p className="lux-heading text-[0.42rem] text-pts-gold/25 tracking-[0.8em]">
+              <p className="lux-heading text-[0.42rem] text-pts-gold/25 tracking-[0.4em] sm:tracking-[0.8em]">
                 Drag to Navigate
               </p>
             </div>
