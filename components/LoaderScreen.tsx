@@ -14,7 +14,16 @@ export function LoaderScreen() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem(SESSION_KEY)) {
+    let hasSeenLoader = false;
+    try {
+      if (sessionStorage.getItem(SESSION_KEY)) {
+        hasSeenLoader = true;
+      }
+    } catch (e) {
+      console.warn("Session storage access denied");
+    }
+
+    if (hasSeenLoader) {
       setVisible(false);
       return;
     }

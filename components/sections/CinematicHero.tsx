@@ -161,13 +161,11 @@ export const CinematicHero = memo(function CinematicHero() {
           opacity: 0.5,
           ease: "none",
           scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          pin: !isTouch, // Disable pinning on mobile to prevent overlap bugs
-          scrub: isTouch ? 0.4 : true,
-          pinType: "fixed",
-        },
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: isTouch ? 0.4 : true,
+          },
         });
       }
     },
