@@ -73,7 +73,12 @@ export function BrandIntroSection() {
             stagger: 0.05,
             duration: 0.6,
             ease: "power3.out",
-            scrollTrigger: { trigger: col, start: "top 98%", once: true },
+            scrollTrigger: { 
+              trigger: col, 
+              start: "top 98%", 
+              end: "top 60%", 
+              scrub: 0.5 
+            },
           },
         );
       } else {

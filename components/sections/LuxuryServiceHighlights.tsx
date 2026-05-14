@@ -57,8 +57,9 @@ export function LuxuryServiceHighlights() {
         ease: "power3.out",
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%",
-          once: true
+          start: "top 85%",
+          end: "bottom bottom",
+          scrub: 0.5,
         }
       }
     );

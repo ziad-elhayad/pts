@@ -74,8 +74,9 @@ export function SectionReveal({
             delay,
             scrollTrigger: {
               trigger: el,
-              start: "top 88%",
-              once: true,
+              start: "top 94%",
+              end: "bottom bottom",
+              scrub: 0.8, // Reversible even in 'snap' mode
               invalidateOnRefresh: true,
             },
           },

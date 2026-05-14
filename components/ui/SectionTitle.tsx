@@ -29,8 +29,8 @@ interface SectionTitleProps {
 }
 
 const ST = {
-  trigger: { start: "top 98%", end: "top 52%", toggleActions: "play none none none" as const },
-  scrub: { start: "top 90%", end: "top 40%", scrub: 0.65 },
+  trigger: { start: "top 98%", end: "top 60%", scrub: 0.5 }, // Scrub instead of play once
+  scrub: { start: "top 95%", end: "top 40%", scrub: 0.8 },
 };
 
 /**
@@ -141,7 +141,7 @@ export function SectionTitle({
               duration: 0.65,
               delay: Math.abs(i - nodes.length / 2) * 0.012,
               ease: "power3.out",
-              scrollTrigger: { trigger: root, ...ST.trigger, once: true },
+              scrollTrigger: { trigger: root, ...ST.trigger },
             },
           );
         });
@@ -196,7 +196,7 @@ export function SectionTitle({
               duration: 1.05,
               delay: orderIndex * 0.025,
               ease: "expo.out",
-              scrollTrigger: { trigger: root, ...ST.trigger, once: true },
+              scrollTrigger: { trigger: root, ...ST.trigger },
             },
           );
         });

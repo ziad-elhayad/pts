@@ -44,6 +44,13 @@ export function HorizontalScrollSection({
     if (!wrapper || !track) return;
 
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Performance: Force GPU acceleration on the track
+    gsap.set(track, { 
+      force3D: true, 
+      willChange: "transform",
+      backfaceVisibility: "hidden" 
+    });
 
     const getScrollDistance = () => track.scrollWidth - window.innerWidth;
 
@@ -56,25 +63,27 @@ export function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: isTouch ? 0.4 : 1, // More responsive on mobile, cinematic on desktop
-        invalidateOnRefresh: true,
+        scrub: isTouch ? 0.5 : 0.8, // Optimized for mobile buttery smoothness
+        invalidateOnRefresh: false, // Prevent jump/reposition on mobile address bar toggle
+        fastScrollEnd: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           if (progress) {
-            progress.style.transform = `scaleX(${self.progress})`;
+            // Use direct transform for progress bar to avoid layout shifts
+            progress.style.transform = `scaleX(${self.progress}) translateZ(0)`;
           }
         },
       },
     });
 
-    // Velocity-based skew effect (Premium "leaning" feel) — desktop only
-    const items = track.querySelectorAll(".hg-item");
-    const proxy = { skew: 0 };
-    const skewSetter = isTouch ? () => {} : gsap.quickSetter(items, "skewX", "deg");
-    const scaleSetter = isTouch ? () => {} : gsap.quickSetter(items, "scale", "number");
-    const clamp = gsap.utils.clamp(-8, 8);
-
+    // Velocity-based skew effect — Desktop Only
     if (!isTouch) {
+      const items = track.querySelectorAll(".hg-item");
+      const proxy = { skew: 0 };
+      const skewSetter = gsap.quickSetter(items, "skewX", "deg");
+      const scaleSetter = gsap.quickSetter(items, "scale", "number");
+      const clamp = gsap.utils.clamp(-8, 8);
+
       ScrollTrigger.create({
         trigger: wrapper,
         start: "top top",
@@ -100,13 +109,13 @@ export function HorizontalScrollSection({
         },
       });
 
-      // Internal image parallax — desktop only (each card = 1 scrubbing ST)
+      // Internal image parallax — Desktop Only
       track.querySelectorAll(".hg-parallax-img").forEach((img) => {
         gsap.fromTo(
           img,
-          { x: "-18%" },
+          { x: "-15%" },
           {
-            x: "18%",
+            x: "15%",
             ease: "none",
             scrollTrigger: {
               trigger: img,
@@ -120,6 +129,7 @@ export function HorizontalScrollSection({
       });
     }
 
+    // Header perspective — Desktop Only
     if (!isTouch && headerRef.current && headerInnerRef.current) {
       gsap.to(headerInnerRef.current, {
         rotateX: -7,
@@ -131,7 +141,6 @@ export function HorizontalScrollSection({
           start: "top top",
           end: () => `+=${getScrollDistance()}`,
           scrub: 1.2,
-          invalidateOnRefresh: true,
         },
       });
       gsap.to(headerRef.current, {
@@ -142,15 +151,14 @@ export function HorizontalScrollSection({
           start: "top top",
           end: () => `+=${getScrollDistance()}`,
           scrub: 1.5,
-          invalidateOnRefresh: true,
         },
       });
     }
 
+    // Ambient glow — Optimized for both but simplified on mobile
     if (glowRef.current) {
       gsap.to(glowRef.current, {
-        xPercent: 18,
-        yPercent: -10,
+        xPercent: isTouch ? 8 : 18,
         ease: "none",
         scrollTrigger: {
           trigger: wrapper,
@@ -161,21 +169,27 @@ export function HorizontalScrollSection({
       });
     }
 
+    // Title words reveal — Immediate on mobile
     const titleWords = wrapper.querySelectorAll<HTMLElement>(".mice-title-word");
     if (titleWords.length) {
       gsap.fromTo(
         titleWords,
-        { yPercent: 118, rotateX: 52, opacity: 0.15, transformOrigin: "50% 0%" },
+        { 
+          yPercent: 118, 
+          rotateX: isTouch ? 0 : 52, 
+          opacity: 0.15, 
+          transformOrigin: "50% 0%" 
+        },
         {
           yPercent: 0,
           rotateX: 0,
           opacity: 1,
-          duration: 1.25,
-          stagger: 0.07,
+          duration: isTouch ? 0.8 : 1.25,
+          stagger: 0.05,
           ease: "power4.out",
           scrollTrigger: {
             trigger: headerRef.current,
-            start: "top 88%",
+            start: "top 96%",
             once: true,
           },
         },

@@ -41,6 +41,7 @@ export function PremiumCard({
   const shine = useTransform(rawX, [-0.5, 0.5], ["rgba(207,186,144,0)", "rgba(207,186,144,0.08)"]);
 
   const onMove = (e: React.MouseEvent<HTMLElement>) => {
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width - 0.5;
     const ny = (e.clientY - rect.top) / rect.height - 0.5;
@@ -130,7 +131,7 @@ export function PremiumCard({
       <motion.article
         ref={cardRef}
         onClick={() => setIsOpen(true)}
-        whileHover={{ scale: 1.015 }}
+        whileHover={typeof window !== 'undefined' && !('ontouchstart' in window || navigator.maxTouchPoints > 0) ? { scale: 1.015 } : {}}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={clsx(
           "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full w-[85vw] sm:w-[60vw] md:w-[38vw] shrink-0 cursor-pointer",
@@ -159,8 +160,10 @@ export function PremiumCard({
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover brightness-100 saturate-100 transition-[filter,transform] duration-[3s] ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 85vw, (max-width: 1200px) 60vw, 38vw"
+                  className="object-cover brightness-100 saturate-100 transition-transform duration-[3s] ease-out group-hover:scale-105"
                   priority={image.priority}
+                  loading={image.priority ? "eager" : "lazy"}
                 />
               </div>
 

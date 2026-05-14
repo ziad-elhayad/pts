@@ -54,7 +54,8 @@ export function LineRevealText({
               scrollTrigger: {
                 trigger: el,
                 start: "top 98%",
-                once: true,
+                end: "top 65%",
+                scrub: 0.5,
               },
             },
           );
@@ -115,7 +116,8 @@ export function LineRevealText({
             scrollTrigger: {
               trigger: el,
               start: "top 98%",
-              once: true,
+              end: "top 70%",
+              scrub: 0.5,
             },
           },
         );

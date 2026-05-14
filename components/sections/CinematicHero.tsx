@@ -263,10 +263,10 @@ export function CinematicHero() {
 
       <div
         ref={overlayRef}
-        className="pointer-events-none absolute inset-0 z-[4] opacity-60"
+        className="pointer-events-none absolute inset-0 z-[4] opacity-75"
         style={{
           background:
-            "linear-gradient(180deg, rgba(13,13,15,0.4) 0%, rgba(13,13,15,0.2) 30%, rgba(13,13,15,0.6) 70%, rgba(13,13,15,0.85) 100%)",
+            "linear-gradient(180deg, rgba(13,13,15,0.7) 0%, rgba(13,13,15,0.4) 35%, rgba(13,13,15,0.7) 75%, rgba(13,13,15,0.95) 100%)",
         }}
         aria-hidden
       />
@@ -299,7 +299,7 @@ export function CinematicHero() {
             </p>
           </div>
 
-          <h1 className="max-w-5xl font-heading text-[clamp(1.85rem,4.5vw,4rem)] font-bold uppercase leading-[1.04] tracking-[0.06em] text-pts-parchment [perspective:1200px] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
+          <h1 className="max-w-5xl font-heading text-[clamp(1.85rem,4.5vw,4rem)] font-bold uppercase leading-[1.04] tracking-[0.06em] text-pts-parchment [perspective:1200px] drop-shadow-[0_8px_40px_rgba(0,0,0,1)]">
             {words.map((word, wi) => (
               <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-2 align-top">
                 <span className="hero-word-inner relative inline-block will-change-transform">
@@ -309,7 +309,7 @@ export function CinematicHero() {
             ))}
           </h1>
 
-          <p className="hero-sub mt-10 max-w-xl text-[0.75rem] sm:text-[0.85rem] font-bold uppercase leading-[2.15] tracking-[0.18em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] opacity-0">
+          <p className="hero-sub mt-10 max-w-xl text-[0.75rem] sm:text-[0.85rem] font-bold uppercase leading-[2.15] tracking-[0.18em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] opacity-0">
             {site.description}
           </p>
 

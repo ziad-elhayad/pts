@@ -48,8 +48,9 @@ export function AnimatedText({ text, className }: AnimatedTextProps) {
           },
           scrollTrigger: {
             trigger: el,
-            start: "top 90%",
-            once: true,
+            start: "top 95%",
+            end: "top 60%",
+            scrub: 0.6,
           },
         },
       );
