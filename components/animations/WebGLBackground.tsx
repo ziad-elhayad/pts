@@ -60,7 +60,7 @@ export function WebGLBackground() {
         float v = 0.0;
         float amp = 0.5;
         mat2 rot = mat2(0.8, -0.6, 0.6, 0.8);
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 3; i++) {
           v += amp * noise(p);
           p = rot * p * 2.01 + vec2(0.7, 1.3);
           amp *= 0.5;
@@ -145,7 +145,7 @@ export function WebGLBackground() {
 
     // Low-res for GPU performance (40% of DPR)
     const setSize = () => {
-      const dpr = Math.min(window.devicePixelRatio, 1.5) * 0.38;
+      const dpr = Math.min(window.devicePixelRatio, 1.5) * 0.28;
       canvas.width  = Math.round(window.innerWidth  * dpr);
       canvas.height = Math.round(window.innerHeight * dpr);
       gl.viewport(0, 0, canvas.width, canvas.height);

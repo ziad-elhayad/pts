@@ -78,17 +78,21 @@ export function CinematicSection({
         <>
           <div className="section-border-top" aria-hidden="true" />
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-pts-black/70 via-pts-black/18 to-transparent opacity-90"
+            className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-pts-black/70 via-transparent to-transparent opacity-90"
             aria-hidden
           />
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-t from-pts-black/75 via-pts-black/22 to-transparent opacity-90"
-            aria-hidden
-          />
-          <div
-            className="mist-drift pointer-events-none absolute inset-0 z-[1] opacity-[0.22]"
-            aria-hidden
-          />
+          {!('ontouchstart' in window || navigator.maxTouchPoints > 0) && (
+            <>
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-t from-pts-black/75 via-pts-black/22 to-transparent opacity-90"
+                aria-hidden
+              />
+              <div
+                className="mist-drift pointer-events-none absolute inset-0 z-[1] opacity-[0.22]"
+                aria-hidden
+              />
+            </>
+          )}
         </>
       )}
       <div className="relative z-[2]">{children}</div>
