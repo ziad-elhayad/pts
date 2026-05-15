@@ -25,7 +25,7 @@ export function LoaderScreen() {
       if (sessionStorage.getItem(SESSION_KEY)) {
         hasSeenLoader = true;
       }
-    } catch (e) {
+    } catch {
       console.warn("Session storage access denied");
     }
 
@@ -58,7 +58,7 @@ export function LoaderScreen() {
       onComplete: () => {
         try {
           sessionStorage.setItem(SESSION_KEY, "1");
-        } catch (e) {
+        } catch {
           console.warn("Session storage not available");
         }
         document.documentElement.style.overflow = "";

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
-import { navItems, site } from "@/lib/site";
+import { navItems } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { Magnetic } from "@/components/ui/Magnetic";

@@ -36,7 +36,9 @@ export function SmoothScrollProvider({
       
       return () => {
         clearTimeout(timer);
-        if (normalized) (normalized as any).kill?.();
+        if (normalized && 'kill' in normalized) {
+          (normalized as { kill: () => void }).kill();
+        }
       };
     }
 

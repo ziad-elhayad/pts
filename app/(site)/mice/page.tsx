@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MicePage } from "@/components/pages/MicePage";
+// import { MicePage } from "@/components/pages/MicePage";
 
 export const metadata: Metadata = {
   title: "MICE Services",

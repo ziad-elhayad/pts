@@ -25,7 +25,7 @@ export function WebGLBackground() {
         powerPreference: "high-performance",
         preserveDrawingBuffer: false
       });
-    } catch (e) {
+    } catch {
       console.warn("WebGL not supported or blocked by browser.");
       return;
     }
