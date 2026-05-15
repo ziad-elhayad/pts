@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, memo } from "react";
+import { useRef, memo, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -38,10 +38,15 @@ const pillars = [
  */
 export const StickySplitSection = memo(function StickySplitSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useGSAP(() => {
-    if (!containerRef.current || reducedMotion) return;
+    if (!containerRef.current || reducedMotion || !mounted) return;
 
     const stages = containerRef.current.querySelectorAll(".split-stage");
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -93,7 +98,7 @@ export const StickySplitSection = memo(function StickySplitSection() {
       }
     });
 
-  }, { scope: containerRef, dependencies: [tier, reducedMotion] });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted] });
 
   return (
     <section
@@ -134,7 +139,7 @@ export const StickySplitSection = memo(function StickySplitSection() {
 
             <div className={clsx(
               "split-content-box relative z-20 w-[92%] sm:w-full border border-pts-gold/20 p-6 sm:p-8 shadow-lux md:p-14 lg:absolute lg:left-0 lg:top-1/2 lg:w-1/2 lg:-translate-y-1/2 -mt-12 sm:mt-0",
-              isLowEnd ? "bg-pts-black/95" : "glass-deep"
+              (mounted && isLowEnd) ? "bg-pts-black/95" : "glass-deep"
             )}>
               <div className="mb-4 sm:mb-6 hidden items-center gap-4 lg:flex">
                 <div className="h-px w-8 bg-pts-gold" />

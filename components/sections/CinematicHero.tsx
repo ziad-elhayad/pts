@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, memo } from "react";
+import { useRef, useEffect, memo, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -30,7 +30,12 @@ export const CinematicHero = memo(function CinematicHero() {
   const topLineRef = useRef<HTMLDivElement>(null);
   const botLineRef = useRef<HTMLDivElement>(null);
 
+  const [mounted, setMounted] = useState(false);
   const { tier, isLowEnd, reducedMotion } = usePerformance();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
@@ -93,7 +98,7 @@ export const CinematicHero = memo(function CinematicHero() {
         return;
       }
 
-      if (!topLineRef.current || !botLineRef.current || !kicker || !sub || !ctas || !scrollEl || !coords || !wordInners) return;
+      if (!topLineRef.current || !botLineRef.current || !kicker || !sub || !ctas || !scrollEl || !coords || !wordInners || !mounted) return;
 
       const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
       intro.fromTo(topLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0);
@@ -109,7 +114,7 @@ export const CinematicHero = memo(function CinematicHero() {
         gsap.to(auroraRef.current, { rotate: 360, duration: 60, repeat: -1, ease: "none" });
       }
     },
-    { scope: sectionRef, dependencies: [locale, isLowEnd, reducedMotion] },
+    { scope: sectionRef, dependencies: [locale, isLowEnd, reducedMotion, mounted] },
   );
 
   useGSAP(
@@ -117,7 +122,7 @@ export const CinematicHero = memo(function CinematicHero() {
       const media = mediaRef.current;
       const content = contentRef.current;
       const overlay = overlayRef.current;
-      if (!media || !content) return;
+      if (!media || !content || !mounted) return;
 
       const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
@@ -169,7 +174,7 @@ export const CinematicHero = memo(function CinematicHero() {
         });
       }
     },
-    { scope: sectionRef, dependencies: [isLowEnd] },
+    { scope: sectionRef, dependencies: [isLowEnd, mounted] },
   );
 
   return (
@@ -177,7 +182,7 @@ export const CinematicHero = memo(function CinematicHero() {
       ref={sectionRef}
       className="relative h-[100svh] min-h-[500px] sm:min-h-[700px] w-full overflow-hidden bg-pts-deep [perspective:1600px]"
     >
-      {!isLowEnd && (
+      {mounted && !isLowEnd && (
         <div
           ref={auroraRef}
           className="pointer-events-none absolute -left-1/2 top-1/2 z-[1] h-[180%] w-[200%] -translate-y-1/2 opacity-30 will-change-transform"
@@ -204,7 +209,7 @@ export const CinematicHero = memo(function CinematicHero() {
         />
       </div>
 
-      {!isLowEnd && (
+      {mounted && !isLowEnd && (
         <>
           <div
             ref={layer1Ref}

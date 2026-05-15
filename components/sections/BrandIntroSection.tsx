@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -28,10 +28,15 @@ const STATS = [
 export function BrandIntroSection() {
   const { locale } = useLocale();
   const sectionRef = useRef<HTMLElement>(null);
+  const [mounted, setMounted] = useState(false);
 
   const colRef = useRef<HTMLDivElement>(null);
   const imageShellRef = useRef<HTMLDivElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useGSAP(
     () => {
@@ -40,7 +45,7 @@ export function BrandIntroSection() {
       const col = colRef.current;
       const shell = imageShellRef.current;
       const floater = floatRef.current;
-      if (!root || !col || !shell) return;
+      if (!root || !col || !shell || !mounted) return;
 
       if (prefersReducedMotion()) return;
 
@@ -170,7 +175,7 @@ export function BrandIntroSection() {
       }
 
     },
-    { scope: sectionRef },
+    { scope: sectionRef, dependencies: [mounted] },
   );
 
   const title = t(locale, "brand.title");

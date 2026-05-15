@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,12 +18,17 @@ if (typeof window !== "undefined") {
 
 export function LuxuryCtaSection() {
   const { locale } = useLocale();
+  const [mounted, setMounted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const orbARef = useRef<HTMLDivElement>(null);
   const orbBRef = useRef<HTMLDivElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useGSAP(
     () => {
@@ -32,7 +37,7 @@ export function LuxuryCtaSection() {
       const orbA = orbARef.current;
       const orbB = orbBRef.current;
       const div = dividerRef.current;
-      if (!bg || !text) return;
+      if (!bg || !text || !mounted) return;
 
       if (prefersReducedMotion()) {
         gsap.set(text.querySelectorAll("[data-cta-reveal]"), { opacity: 1, clearProps: "transform" });
@@ -102,7 +107,7 @@ export function LuxuryCtaSection() {
         tl.fromTo(div, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.1, ease: "power3.inOut" }, 0.35);
       }
     },
-    { scope: sectionRef },
+    { scope: sectionRef, dependencies: [mounted] },
   );
 
   return (

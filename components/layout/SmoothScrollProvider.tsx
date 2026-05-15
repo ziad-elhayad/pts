@@ -21,15 +21,20 @@ export function SmoothScrollProvider({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Fix for Vercel/Production: Ensure ScrollTrigger is ready
+    gsap.registerPlugin(ScrollTrigger);
+
     const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
     if (isTouch) {
+      // On touch, we just want to make sure ScrollTrigger is aware of the layout
       const timer = window.setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 600);
+      }, 1000);
       return () => clearTimeout(timer);
     }
 
+    // Desktop: Lenis
     const lenis = new Lenis({
       lerp: 0.09,
       wheelMultiplier: 0.92,
@@ -38,7 +43,9 @@ export function SmoothScrollProvider({
       syncTouch: false,
     });
 
-    lenis.on("scroll", ScrollTrigger.update);
+    lenis.on("scroll", () => {
+      ScrollTrigger.update();
+    });
 
     const onTick = (time: number) => {
       lenis.raf(time * 1000);
@@ -49,9 +56,15 @@ export function SmoothScrollProvider({
     (window as Window & { __lenis?: Lenis }).__lenis = lenis;
     document.documentElement.classList.add("lenis", "lenis-smooth");
 
+    // Force a refresh after a delay to ensure all assets are loaded
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 1500);
+
     return () => {
       gsap.ticker.remove(onTick);
       lenis.destroy();
+      clearTimeout(refreshTimer);
       delete (window as Window & { __lenis?: Lenis }).__lenis;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
     };

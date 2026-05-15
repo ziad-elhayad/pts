@@ -23,9 +23,11 @@ export function VideoSection({
 }: VideoSectionProps) {
   const [mountVideo, setMountVideo] = useState(false);
   const [useVideo, setUseVideo] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window === "undefined") return;
 
     const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
@@ -81,7 +83,7 @@ export function VideoSection({
 
   return (
     <div className={clsx("relative overflow-hidden", className)}>
-      {mountVideo && src && useVideo ? (
+      {mounted && mountVideo && src && useVideo ? (
         <video
           className="absolute inset-0 h-full w-full scale-[1.06] object-cover object-center"
           autoPlay

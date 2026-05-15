@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import clsx from "clsx";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -44,13 +44,18 @@ export function SectionTitle({
   reveal = "lift",
 }: SectionTitleProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const words = useMemo(() => title.split(" "), [title]);
   const chars = useMemo(() => title.split(""), [title]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useGSAP(
     () => {
       const root = rootRef.current;
-      if (!root) return;
+      if (!root || !mounted) return;
       if (prefersReducedMotion()) {
         gsap.set(root.querySelectorAll("[data-st-anim]"), { clearProps: "opacity,transform,filter,clipPath" });
         return;
@@ -226,7 +231,7 @@ export function SectionTitle({
         },
       );
     },
-    { scope: rootRef, dependencies: [reveal, title, align] },
+    { scope: rootRef, dependencies: [reveal, title, align, mounted] },
   );
 
   const isCenter = align === "center";

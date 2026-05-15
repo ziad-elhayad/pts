@@ -33,17 +33,17 @@ export function CinematicSection({
 }: CinematicSectionProps) {
   const root = useRef<HTMLDivElement>(null);
   const scrubLineRef = useRef<HTMLDivElement>(null);
-  const [isTouch, setIsTouch] = useState(() =>
-    typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0),
-  );
-
+  const [isTouch, setIsTouch] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  
   useEffect(() => {
+    setMounted(true);
     setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useGSAP(
     () => {
-      if (!scrubReveal || !root.current || !scrubLineRef.current) return;
+      if (!scrubReveal || !root.current || !scrubLineRef.current || !mounted) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         gsap.set(scrubLineRef.current, { scaleX: 1, transformOrigin: "left center" });
         return;
@@ -65,7 +65,7 @@ export function CinematicSection({
         }
       );
     },
-    { scope: root, dependencies: [scrubReveal] }
+    { scope: root, dependencies: [scrubReveal, mounted] }
   );
 
   return (
@@ -81,7 +81,7 @@ export function CinematicSection({
           aria-hidden
         />
       )}
-      {mist && (
+      {mist && mounted && (
         <>
           <div className="section-border-top" aria-hidden="true" />
           <div

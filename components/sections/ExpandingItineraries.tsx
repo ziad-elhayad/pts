@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useLayoutEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import gsap from "gsap";
@@ -60,15 +60,20 @@ const EXPERIENCES = [
  */
 export function ExpandingItineraries() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const scanRef = useRef<HTMLDivElement>(null);
   const panelsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useGSAP(
     () => {
       const root = sectionRef.current;
       const scan = scanRef.current;
-      if (!root || prefersReducedMotion()) return;
+      if (!root || prefersReducedMotion() || !mounted) return;
 
       const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
@@ -114,10 +119,11 @@ export function ExpandingItineraries() {
         });
       }
     },
-    { scope: sectionRef },
+    { scope: sectionRef, dependencies: [mounted] },
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (!mounted) return;
     panelsRef.current.forEach((panel, i) => {
       if (!panel) return;
       const detail = panel.querySelector<HTMLElement>(".exp-detail");
@@ -140,7 +146,7 @@ export function ExpandingItineraries() {
         gsap.to(detail, { autoAlpha: 0, y: 24, duration: 0.7, ease: "power2.in" });
       }
     });
-  }, [activeIndex]);
+  }, [activeIndex, mounted]);
 
   return (
     <section

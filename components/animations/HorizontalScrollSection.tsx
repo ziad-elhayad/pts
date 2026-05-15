@@ -39,10 +39,11 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
   const headerInnerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
-  const [isTouch, setIsTouch] = useState(() =>
-    typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0),
-  );
+  const [isTouch, setIsTouch] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  
   useEffect(() => {
+    setMounted(true);
     setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
@@ -52,7 +53,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
     const wrapper  = wrapperRef.current;
     const track    = trackRef.current;
     const progress = progressRef.current;
-    if (!wrapper || !track) return;
+    if (!wrapper || !track || !mounted) return;
 
     // Performance: Force GPU acceleration on the track
     gsap.set(track, { 
@@ -214,7 +215,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
       if (refreshT) clearTimeout(refreshT);
       velocitySt?.kill();
     };
-  }, { scope: wrapperRef, dependencies: [tier, reducedMotion, isTouch, isLowEnd] });
+  }, { scope: wrapperRef, dependencies: [tier, reducedMotion, isTouch, isLowEnd, mounted] });
 
   const flatChildren = Children.toArray(children);
 
@@ -224,7 +225,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
       id={id} 
       className={clsx(
         "relative w-full bg-pts-bg transition-colors duration-1000",
-        isTouch ? "h-auto overflow-hidden" : "h-[100svh] overflow-hidden"
+        (mounted && isTouch) ? "h-auto overflow-hidden" : "h-[100svh] overflow-hidden"
       )}
     >
       <div className="flex h-full w-full flex-col [perspective:1400px]">
@@ -273,16 +274,16 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         {/* ── Gallery Track ──────────────────────────────────────────── */}
         <div className={clsx(
           "relative flex-1 w-full flex items-stretch z-10",
-          isTouch ? "overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth snap-x snap-mandatory py-8 touch-pan-x sm:py-10 px-[max(1rem,4vw)]" : "overflow-hidden h-full"
+          (mounted && isTouch) ? "overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth snap-x snap-mandatory py-8 touch-pan-x sm:py-10 px-[max(1rem,4vw)]" : "overflow-hidden h-full"
         )}>
           <div
             ref={trackRef}
             className="flex items-stretch will-change-transform h-full"
             style={{ 
               width: "max-content", 
-              paddingLeft: isTouch ? "1.5rem" : paddingLeft, 
-              paddingRight: isTouch ? "1.5rem" : paddingRight, 
-              gap: isTouch ? "1.25rem" : gap,
+              paddingLeft: (mounted && isTouch) ? "1.5rem" : paddingLeft, 
+              paddingRight: (mounted && isTouch) ? "1.5rem" : paddingRight, 
+              gap: (mounted && isTouch) ? "1.25rem" : gap,
               transform: "translateZ(0)" // Force GPU
             }}
           >
@@ -300,7 +301,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         {/* ── Progress System ────────────────────────────────────────── */}
         <div className={clsx(
           "relative z-30",
-          isTouch ? "mt-4" : "absolute bottom-0 left-0 right-0"
+          (mounted && isTouch) ? "mt-4" : "absolute bottom-0 left-0 right-0"
         )}>
           {/* Cinematic progress bar */}
           {!isTouch && (

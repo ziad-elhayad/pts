@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, memo } from "react";
+import { useRef, memo, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -19,10 +19,15 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useGSAP(() => {
-    if (!containerRef.current || !trackRef.current) return;
+    if (!containerRef.current || !trackRef.current || !mounted) return;
 
     if (reducedMotion) {
       const items = trackRef.current.querySelectorAll(".stack-item");
@@ -92,14 +97,14 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
         }, i * 1.5);
       }
     });
-  }, { scope: containerRef, dependencies: [tier, reducedMotion] });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted] });
 
   return (
     <section
       ref={containerRef}
       className="relative flex h-[100svh] w-full items-center justify-center overflow-hidden bg-pts-bg [perspective:1600px]"
     >
-      {!isLowEnd && (
+      {mounted && !isLowEnd && (
         <div
           ref={glowRef}
           className="pointer-events-none absolute inset-0 origin-center bg-[radial-gradient(circle_at_center,rgba(168,143,100,0.12),transparent_62%)] opacity-25 will-change-transform"

@@ -7,7 +7,7 @@ import { ScrollLayoutSync } from "@/components/layout/ScrollLayoutSync";
 import { LoaderScreen } from "@/components/LoaderScreen";
 import { WebGLBackground } from "@/components/animations/WebGLBackground";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -60,10 +60,35 @@ function TunnelEffect() {
 }
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    
+    // Global ScrollTrigger refresh after mount and load
+    const refresh = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("load", refresh);
+    
+    // Multiple refreshes to catch lazy-loaded content or dynamic layout shifts
+    const timers = [
+      setTimeout(refresh, 500),
+      setTimeout(refresh, 1500),
+      setTimeout(refresh, 3000),
+    ];
+
+    return () => {
+      window.removeEventListener("load", refresh);
+      timers.forEach(clearTimeout);
+    };
+  }, []);
+
   return (
     <PerformanceProvider>
       <LocaleProvider>
-        <TunnelEffect />
+        {mounted && <TunnelEffect />}
         <SmoothScrollProvider>
           <WebGLBackground />
           <CustomCursor />

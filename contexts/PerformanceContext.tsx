@@ -8,19 +8,23 @@ interface PerformanceContextType {
   tier: PerformanceTier;
   isLowEnd: boolean;
   reducedMotion: boolean;
+  isHydrated: boolean;
 }
 
 const PerformanceContext = createContext<PerformanceContextType>({
   tier: "Elite",
   isLowEnd: false,
   reducedMotion: false,
+  isHydrated: false,
 });
 
 export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [tier, setTier] = useState<PerformanceTier>("Elite");
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    setIsHydrated(true);
     if (typeof window === "undefined") return;
 
     // 1. Detect Reduced Motion preference
@@ -34,7 +38,6 @@ export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const memory = (navigator as any).deviceMemory || 8;
       const cores = navigator.hardwareConcurrency || 4;
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
       if (memory <= 4 || cores <= 4 || (isMobile && memory <= 4)) {
         setTier("Eco");
@@ -52,12 +55,13 @@ export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const value = useMemo(() => ({
     tier,
     isLowEnd: tier === "Eco",
-    reducedMotion
-  }), [tier, reducedMotion]);
+    reducedMotion,
+    isHydrated
+  }), [tier, reducedMotion, isHydrated]);
 
   return (
     <PerformanceContext.Provider value={value}>
-      <div className={tier === "Eco" ? "eco-mode" : ""}>
+      <div className={isHydrated && tier === "Eco" ? "eco-mode" : ""}>
         {children}
       </div>
     </PerformanceContext.Provider>

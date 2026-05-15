@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -24,11 +24,16 @@ export function SectionReveal({
   variant = "snap",
 }: SectionRevealProps) {
   const root = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useGSAP(
     () => {
       const el = root.current;
-      if (!el) return;
+      if (!el || !mounted) return;
       const items = el.querySelectorAll<HTMLElement>("[data-reveal]");
       if (!items.length) return;
 
@@ -85,7 +90,7 @@ export function SectionReveal({
 
       return () => clearTimeout(timeoutId);
     },
-    { scope: root, dependencies: [delay, variant] }
+    { scope: root, dependencies: [delay, variant, mounted] }
   );
 
   return (
