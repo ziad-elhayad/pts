@@ -85,7 +85,7 @@ export function VideoSection({
     <div className={clsx("relative overflow-hidden", className)}>
       {mounted && mountVideo && src && useVideo ? (
         <video
-          className="absolute inset-0 h-full w-full scale-[1.06] object-cover object-center"
+          className="absolute inset-0 h-full w-full scale-[1.06] object-cover object-center will-change-transform transform-gpu"
           autoPlay
           muted
           loop
@@ -101,8 +101,8 @@ export function VideoSection({
         </video>
       ) : (
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${poster})` }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-opacity transform-gpu"
+          style={{ backgroundImage: `url(${poster})`, transform: "translate3d(0,0,0)" }}
         />
       )}
       {overlayClassName !== "none" && (

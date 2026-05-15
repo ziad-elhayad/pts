@@ -151,7 +151,7 @@ export function ExpandingItineraries() {
   return (
     <section
       ref={sectionRef}
-      className="section-transition relative min-h-[600px] w-full overflow-hidden border-t border-pts-line/10 bg-pts-black/20 [perspective:2000px]"
+      className="section-transition relative min-h-[600px] w-full overflow-hidden border-t border-pts-line/10 bg-pts-black/20 [perspective:2000px] touch-pan-y"
     >
       <div
         className="pointer-events-none absolute -left-[20%] top-0 h-full w-[55%] rounded-full bg-pts-gold/[0.045] blur-[120px]"

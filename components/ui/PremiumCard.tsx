@@ -134,7 +134,7 @@ export function PremiumCard({
         whileHover={typeof window !== 'undefined' && !('ontouchstart' in window || navigator.maxTouchPoints > 0) ? { scale: 1.015 } : {}}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={clsx(
-          "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full w-[min(85vw,calc(100vw-1.5rem))] shrink-0 cursor-pointer sm:w-[min(60vw,calc(100vw-2rem))] md:w-[38vw]",
+          "group relative flex flex-col overflow-hidden border-r border-pts-gold/10 h-full w-[82vw] shrink-0 cursor-pointer sm:w-[60vw] md:w-[38vw] transform-gpu will-change-transform",
           className,
         )}
         style={{
@@ -155,13 +155,13 @@ export function PremiumCard({
           {/* Background image */}
           {image ? (
             <div className="absolute inset-0 z-0 overflow-hidden">
-              <div className="hg-parallax-img absolute inset-0 w-[140%] h-full left-[-20%]">
+              <div className="hg-parallax-img absolute inset-0 w-[140%] h-full left-[-20%] transform-gpu will-change-transform">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
-                  sizes="(max-width: 768px) 85vw, (max-width: 1200px) 60vw, 38vw"
-                  className="object-cover brightness-100 saturate-100 transition-transform duration-[3s] ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 82vw, (max-width: 1200px) 60vw, 38vw"
+                  className="object-cover brightness-100 saturate-100 transition-transform duration-[3s] ease-out group-hover:scale-105 transform-gpu will-change-transform"
                   priority={image.priority}
                   loading={image.priority ? "eager" : "lazy"}
                 />

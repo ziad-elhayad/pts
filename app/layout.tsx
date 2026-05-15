@@ -35,7 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cinzel.variable} min-h-screen max-w-[100vw] overflow-x-clip bg-pts-bg font-body text-pts-parchment antialiased`}
+        className={`${cinzel.variable} min-h-screen overflow-x-hidden bg-pts-bg font-body text-pts-parchment antialiased`}
         suppressHydrationWarning
       >
         <div className="grain-overlay" aria-hidden="true" />

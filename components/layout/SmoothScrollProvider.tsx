@@ -27,11 +27,17 @@ export function SmoothScrollProvider({
     const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
     if (isTouch) {
-      // On touch, we just want to make sure ScrollTrigger is aware of the layout
+      // Normalize scroll on touch to prevent pinning jank and erratic behavior
+      const normalized = ScrollTrigger.normalizeScroll(true);
+      
       const timer = window.setTimeout(() => {
         ScrollTrigger.refresh();
       }, 1000);
-      return () => clearTimeout(timer);
+      
+      return () => {
+        clearTimeout(timer);
+        if (normalized) (normalized as any).kill?.();
+      };
     }
 
     // Desktop: Lenis
@@ -57,14 +63,19 @@ export function SmoothScrollProvider({
     document.documentElement.classList.add("lenis", "lenis-smooth");
 
     // Force a refresh after a delay to ensure all assets are loaded
-    const refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 1500);
+    const refresh = () => ScrollTrigger.refresh();
+    const refreshTimer = setTimeout(refresh, 1500);
+
+    // Refresh on focus/visibility (Fixes Chrome/Brave background tab throttling)
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
 
     return () => {
       gsap.ticker.remove(onTick);
       lenis.destroy();
       clearTimeout(refreshTimer);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
       delete (window as Window & { __lenis?: Lenis }).__lenis;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
     };

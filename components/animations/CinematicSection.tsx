@@ -69,7 +69,7 @@ export function CinematicSection({
   );
 
   return (
-    <div ref={root} id={id} className={clsx("section-bridge relative", className)}>
+    <div ref={root} id={id} className={clsx("section-bridge relative z-10 bg-pts-bg", className)}>
       {scrubReveal && (
         <div
           ref={scrubLineRef}

@@ -63,12 +63,6 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
 
     const getScrollDistance = () => track.scrollWidth - window.innerWidth;
 
-    if (isTouch) {
-      // On mobile, we use native horizontal scrolling with CSS snap for the best experience
-      // No GSAP pinning or x-translation needed for the track itself
-      return; 
-    }
-
     const slideTween = gsap.to(track, {
       x: () => -getScrollDistance(),
       ease: "none",
@@ -77,10 +71,16 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: isLowEnd ? 0.1 : 0.8,
+        scrub: isLowEnd ? 0.1 : (isTouch ? 0.5 : 0.8),
         invalidateOnRefresh: true,
         fastScrollEnd: true,
         anticipatePin: 1,
+        snap: {
+          snapTo: 1 / (flatChildren.length - 1),
+          duration: { min: 0.1, max: 0.3 },
+          delay: 0,
+          ease: "power1.inOut"
+        },
         onUpdate: (self) => {
           if (progress) {
             progress.style.transform = `scaleX(${self.progress}) translateZ(0)`;
@@ -223,12 +223,9 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
     <div 
       ref={wrapperRef} 
       id={id} 
-      className={clsx(
-        "relative w-full bg-pts-bg transition-colors duration-1000",
-        (mounted && isTouch) ? "h-auto overflow-hidden" : "h-[100svh] overflow-hidden"
-      )}
+      className="relative w-full bg-pts-bg transition-colors duration-1000 h-[100svh] overflow-hidden"
     >
-      <div className="flex h-full w-full flex-col [perspective:1400px]">
+      <div className="flex h-[100dvh] w-full flex-col [perspective:1400px]">
 
         {/* Atmospheric lighting */}
         {!isLowEnd && (
@@ -272,25 +269,22 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         </div>
 
         {/* ── Gallery Track ──────────────────────────────────────────── */}
-        <div className={clsx(
-          "relative flex-1 w-full flex items-stretch z-10",
-          (mounted && isTouch) ? "overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth snap-x snap-mandatory py-8 touch-pan-x sm:py-10 px-[max(1rem,4vw)]" : "overflow-hidden h-full"
-        )}>
+        <div className="relative flex-1 w-full flex items-stretch z-10 overflow-hidden h-full">
           <div
             ref={trackRef}
-            className="flex items-stretch will-change-transform h-full"
+            className="flex items-stretch will-change-transform h-full transform-gpu"
             style={{ 
               width: "max-content", 
-              paddingLeft: (mounted && isTouch) ? "1.5rem" : paddingLeft, 
-              paddingRight: (mounted && isTouch) ? "1.5rem" : paddingRight, 
-              gap: (mounted && isTouch) ? "1.25rem" : gap,
-              transform: "translateZ(0)" // Force GPU
+              paddingLeft: isTouch ? "2rem" : paddingLeft, 
+              paddingRight: isTouch ? "15vw" : paddingRight, 
+              gap: isTouch ? "1rem" : gap,
+              backfaceVisibility: "hidden"
             }}
           >
             {flatChildren.map((child, i) => (
               <div key={i} className={clsx(
-                "hg-item flex-shrink-0 flex items-stretch",
-                isTouch ? "snap-center h-[min(520px,calc(100dvh-12rem))] min-h-[min(380px,55dvh)] w-[min(85vw,calc(100vw-2rem))] max-w-[520px]" : "h-full"
+                "hg-item flex-shrink-0 flex items-stretch will-change-transform transform-gpu",
+                isTouch ? "h-[calc(100svh-14rem)] min-h-[340px] w-[82vw] max-w-[500px]" : "h-full"
               )}>
                 {child}
               </div>
@@ -299,10 +293,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         </div>
 
         {/* ── Progress System ────────────────────────────────────────── */}
-        <div className={clsx(
-          "relative z-30",
-          (mounted && isTouch) ? "mt-4" : "absolute bottom-0 left-0 right-0"
-        )}>
+        <div className="relative z-30 absolute bottom-0 left-0 right-0">
           {/* Cinematic progress bar */}
           {!isTouch && (
             <div

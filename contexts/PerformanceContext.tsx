@@ -35,13 +35,15 @@ export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     // 2. Hardware Detection
     const checkPerformance = () => {
-      const memory = (navigator as any).deviceMemory || 8;
+      // Brave/Privacy browsers often block deviceMemory or cap hardwareConcurrency
+      const memory = (navigator as any).deviceMemory || 4; // Assume 4 if blocked
       const cores = navigator.hardwareConcurrency || 4;
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      if (memory <= 4 || cores <= 4 || (isMobile && memory <= 4)) {
+      // More conservative threshold for 'Elite' to avoid jank on privacy-shielded browsers
+      if (memory <= 2 || cores <= 2) {
         setTier("Eco");
-      } else if (memory < 8 || cores < 8 || isMobile) {
+      } else if (memory <= 4 || cores <= 4 || isMobile) {
         setTier("Standard");
       } else {
         setTier("Elite");

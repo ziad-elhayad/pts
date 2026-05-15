@@ -87,14 +87,14 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
       // Exit animations: Only for items that are NOT the last one
       if (i < totalItems - 1) {
         tl.to(item, {
-          z: isLowEnd ? 50 : 150, 
-          x: (isTouch || isLowEnd) ? "115%" : "120%", 
+          z: isLowEnd ? 40 : 100, 
+          x: isTouch ? "105%" : "120%", 
           rotateZ: isLowEnd ? 0 : 8,
           rotateY: isLowEnd ? 0 : 15,
           opacity: 0,
-          duration: 1.5,
+          duration: isTouch ? 1.2 : 1.5,
           ease: "power2.inOut"
-        }, i * 1.5);
+        }, i * (isTouch ? 1.2 : 1.5));
       }
     });
   }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted] });
@@ -102,7 +102,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
   return (
     <section
       ref={containerRef}
-      className="relative flex h-[100svh] w-full items-center justify-center overflow-hidden bg-pts-bg [perspective:1600px]"
+      className="relative flex h-[100svh] w-full items-center justify-center overflow-hidden bg-pts-bg sm:[perspective:1600px] [perspective:1200px] touch-pan-y"
     >
       {mounted && !isLowEnd && (
         <div

@@ -31,7 +31,7 @@
 html {
   background: var(--pts-bg);
   scroll-behavior: auto;
-  overflow-x: clip;
+  overflow-x: hidden;
   /* Removed height: 100% to fix mobile ScrollTrigger calculations */
 }
 
@@ -41,7 +41,7 @@ body {
   font-family: var(--font-body);
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
+  overflow-x: hidden;
   /* Removed overscroll-behavior-y to allow natural mobile scrolling */
   cursor: default; /* Fallback */
 }
@@ -426,7 +426,7 @@ html.lenis, html.lenis body {
   html, body {
     width: 100%;
     max-width: 100%;
-    overflow-x: clip;
+    overflow-x: hidden;
     position: relative;
     overscroll-behavior-x: none;
     overscroll-behavior-y: auto;
@@ -447,7 +447,7 @@ html.lenis, html.lenis body {
   /* GSAP Pinning spacer stability */
   .pin-spacer {
     pointer-events: none !important;
-    overflow: clip !important;
+    overflow: hidden !important;
   }
   .pin-spacer > * {
     pointer-events: auto !important;

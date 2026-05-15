@@ -39,7 +39,7 @@ export function MiceOverviewSection() {
   const { locale } = useLocale();
 
   return (
-    <section id="mice-section" className="mx-auto max-w-[92rem] border-t border-pts-line bg-pts-black/10">
+    <section id="mice-section" className="mx-auto max-w-[92rem] border-t border-pts-line bg-pts-bg">
       <HorizontalScrollSection
         kicker="MICE"
         title={t(locale, "mice.title")}

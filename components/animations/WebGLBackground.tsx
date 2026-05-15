@@ -17,12 +17,18 @@ export function WebGLBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl", {
-      antialias: false,
-      alpha: false,
-      powerPreference: "high-performance",
-      preserveDrawingBuffer: false
-    });
+    let gl: WebGLRenderingContext | null = null;
+    try {
+      gl = canvas.getContext("webgl", {
+        antialias: false,
+        alpha: false,
+        powerPreference: "high-performance",
+        preserveDrawingBuffer: false
+      });
+    } catch (e) {
+      console.warn("WebGL not supported or blocked by browser.");
+      return;
+    }
     if (!gl) return;
 
     const vsSource = `
