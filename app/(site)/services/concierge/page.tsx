@@ -16,77 +16,77 @@ const services = [
   {
     title: "Luxury & Michelin-Star Restaurants",
     description: "Experience the pinnacle of gastronomy with curated Restaurant and Dining Services. Not just a table booking — a secured experience. From hidden local gems to world-renowned Michelin-starred establishments, the concierge team ensures every meal is a highlight of the journey.",
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1518780664697-55e3ad937233.jpeg",
   },
   {
     title: "Worldwide Cinema",
     description: "Exclusive Cinema and Media Services providing access to the most luxurious viewing environments. Whether catching the latest blockbuster or hosting a private screening, the experience is immersive, comfortable, and entirely bespoke.",
-    image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1489599849927-2ee91cede3ba.jpeg",
   },
   {
     title: "Private Jet",
     description: "Travel without limits through exclusive private jet services for clients who value comfort, flexibility, and privacy. For business or leisure — seamless private aviation experiences with premium aircraft, VIP terminals, and personalized onboard services.",
-    image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1540962351504-03099e0a754b.jpeg",
   },
   {
     title: "Guard & Accompanying",
     description: "Bodyguard and Accompanying services designed to provide discreet, rigorous protection that integrates seamlessly with the itinerary. Prioritizes privacy and security without compromising mobility or comfort.",
-    image: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1566073771259-6a8506099945.jpeg",
   },
   {
     title: "Childcare Abroad While Traveling",
     description: "International childcare services providing experienced nannies and personalized family support, allowing parents to relax and enjoy their journey while ensuring children remain safe, entertained, and comfortable.",
-    image: "https://images.unsplash.com/photo-1544126592-807ade215a94?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1567899378494-47b22a2ae96a.jpeg",
   },
   {
     title: "Luxury Hotels",
     description: "Access to the world's most prestigious luxury hotels and resorts. From exclusive suites and beachfront escapes to city landmarks and boutique retreats — personalized stays enhanced with VIP privileges, premium amenities, and exceptional hospitality.",
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1507525428034-b723cf961d3e.jpeg",
   },
   {
     title: "Luxury Chalet",
     description: "Luxury chalet experiences — mountain retreats, lakeside escapes, or private resort stays — combining privacy, comfort, breathtaking views, and world-class services for unforgettable stays.",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1503220317375-aaad61436b1b.jpeg",
   },
   {
     title: "Beautiful Islands in the World",
     description: "Tailor-made luxury travel experiences to the most stunning islands. From tropical paradises and crystal-clear waters to hidden exclusive destinations — unforgettable island getaways designed around relaxation, adventure, and ultimate luxury.",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1514362545857-3bc16c4c7d1b.jpeg",
   },
   {
     title: "Yachts",
     description: "Bespoke yacht charter services for private vacations, romantic escapes, celebrations, or corporate events. Luxury yachts equipped with premium amenities, professional crews, and customized itineraries for extraordinary experiences at sea.",
-    image: "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1515562141207-7a88fb7ce338.jpeg",
   },
   {
     title: "Adventures",
     description: "Unique luxury adventure experiences worldwide — desert safaris, diving trips, mountain expeditions, and exclusive outdoor activities — combining thrill, comfort, and personalized planning.",
-    image: "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1469334031218-e382a71b716b.jpeg",
   },
   {
     title: "International Fashion Shows",
     description: "Privileged access to prestigious international fashion shows and elite events in the world's leading fashion capitals. VIP invitations, luxury accommodations, transportation, and exclusive experiences for style enthusiasts.",
-    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1449965408869-eaa3f722e40d.jpeg",
   },
   {
     title: "International Jewelry Shows",
     description: "Exclusive access to international jewelry exhibitions and elite showcases. Connections to renowned jewelry brands, private collections, and prestigious events for collectors and luxury enthusiasts.",
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/photo-1436491865332-7a61a109cc05.jpeg",
   },
   {
     title: "Chauffeur Service",
     description: "Professional chauffeur-driven vehicles for business and leisure. Each ride offers privacy, elegance, and convenience. Experienced drivers ensure a smooth, punctual, and refined travel experience.",
-    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/lai-man-nung-Td6Yy3S3Ls0-unsplash.jpg",
   },
   {
     title: "Meet & Greet",
     description: "Professional Meet & Greet service at airports: personalized name signage, baggage assistance, and priority guidance through the airport. A welcoming, hassle-free experience from the moment of arrival.",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/dx_www-XJ2NPqVcjwY-unsplash.jpg",
   },
   {
     title: "Airport Transfers",
     description: "Reliable airport transfer service with seamless door-to-door transportation, real-time flight monitoring, timely pickups, and comfortable vehicles. Efficient, relaxing, and completely stress-free.",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/concierge/b2-1024x617-1.jpg",
   },
 ];
 
@@ -127,17 +127,26 @@ export default function ConciergePage() {
       },
     });
 
+    // Set initial states
+    slideElements.forEach((slide, idx) => {
+      if (idx === 0) {
+        gsap.set(slide, { yPercent: 0, opacity: 1, scale: 1 });
+      } else {
+        gsap.set(slide, { yPercent: 100, opacity: 1, scale: 1 });
+      }
+    });
+
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        gsap.set(slide, { yPercent: 100 });
-        
         const startTime = idx * 0.5;
 
+        // Animate current slide in
         tl.to(slide, {
           yPercent: 0,
           ease: "power2.inOut",
-        }, startTime); 
+        }, startTime);
 
+        // Animate previous slide out
         const prevSlide = slideElements[idx - 1];
         tl.to(prevSlide, {
           scale: isLowEnd ? 1 : 0.94,
@@ -186,11 +195,12 @@ export default function ConciergePage() {
             </h2>
           </div>
 
-          <div className="relative min-h-[450px]">
+          <div className="relative min-h-[450px] overflow-hidden">
             {slides.map((slideServices, slideIndex) => (
               <div
                 key={slideIndex}
-                className="service-slide absolute inset-0 bg-pts-black"
+                className="service-slide absolute inset-0 bg-pts-black will-change-transform"
+                style={{ zIndex: slides.length - slideIndex }}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
                   {slideServices.map((service, serviceIndex) => (

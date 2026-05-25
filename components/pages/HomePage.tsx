@@ -3,9 +3,7 @@
 import { CinematicSection } from "@/components/animations/CinematicSection";
 import { CinematicHero } from "@/components/sections/CinematicHero";
 import { BrandIntroSection } from "@/components/sections/BrandIntroSection";
-import { VipOverviewSection } from "@/components/sections/VipOverviewSection";
 import { FaqSection } from "@/components/sections/FaqSection";
-
 import { PerspectiveStackGallery } from "@/components/sections/PerspectiveStackGallery";
 import { SideDotNavigator } from "@/components/ui/SideDotNavigator";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -17,7 +15,6 @@ export function HomePage() {
   return (
     <div className="bg-pts-bg">
       <SideDotNavigator />
-
       <CinematicSection id="hero" mist={false}>
         <CinematicHero />
       </CinematicSection>
@@ -26,13 +23,9 @@ export function HomePage() {
         <BrandIntroSection />
       </CinematicSection>
 
-      <CinematicSection id="services" mist>
-        <VipOverviewSection />
-      </CinematicSection>
-
       <CinematicSection id="gallery" mist className="page-section">
         <div className="section-inner flex flex-col items-center text-center">
-          <SectionTitle number="03" subtitle="Archive" title="FOLLOW THE JOURNEY" align="center" reveal="lift" />
+          <SectionTitle number="02" subtitle="Archive" title="FOLLOW THE JOURNEY" align="center" reveal="lift" />
           <h3 className="font-heading text-2xl sm:text-3xl uppercase tracking-[0.1em] text-pts-parchment mb-6">
             Experience the World Like Never Before
           </h3>

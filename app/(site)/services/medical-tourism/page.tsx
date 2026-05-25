@@ -19,19 +19,19 @@ const content = {
     title: "Medical Tourism for Patients",
     description:
       "Gervae medical tourism concierge service supports patients seeking high-quality medical care abroad. Assistance includes hospital and doctor selection, appointment scheduling, travel arrangements, accommodation, and full coordination throughout the treatment journey. The goal is a comfortable, safe, and professionally managed medical experience from start to end.",
-    image: "https://images.unsplash.com/photo-1576091160399-112ba88f0d55?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/medical/medical-tourism-patients.webp",
   },
   doctors: {
     title: "Medical Travel for Doctors",
     description:
       "Gervae provides specialized concierge services for medical professionals traveling for conferences, training programs, and international collaborations. The team handles travel planning, accommodation, scheduling, and logistics to ensure doctors can focus entirely on professional development and networking opportunities.",
-    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/medical/medical-alex-bertha.webp",
   },
   wellness: {
     title: "Wellness & Recovery Tourism",
     description:
       "Gervae wellness and recovery tourism services are designed for individuals seeking relaxation, rehabilitation, or preventive health programs. Tailored wellness experiences include medical spas, rehabilitation centers, and recovery programs, combined with comfortable travel and accommodation arrangements for a truly restorative experience.",
-    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/medical/medical-whatsapp.webp",
   },
 };
 

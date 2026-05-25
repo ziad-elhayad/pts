@@ -1,46 +1,137 @@
 "use client";
 
-import { InquiryForm } from "@/components/InquiryForm";
-import { PageTransition } from "@/components/animations/PageTransition";
-import { site } from "@/lib/site";
+import { useState } from "react";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 
-export function ContactPage() {
+export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log(formData);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <PageTransition>
-      <section className="border-b border-pts-line px-6 py-20 sm:px-10 sm:py-28">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-xl">
-            <p className="lux-heading text-[0.62rem] text-pts-gold">Contact</p>
-            <h1 className="mt-6 font-heading text-3xl tracking-[0.12em] text-pts-parchment sm:text-4xl">
-              Begin quietly. Move decisively.
-            </h1>
-            <p className="mt-6 text-sm leading-relaxed text-pts-muted sm:text-base">
-              For proposals, retainers, and same-day executive support, reach our desk directly. WhatsApp is
-              monitored for active itineraries.
-            </p>
-            <div className="mt-10 space-y-4 text-sm text-pts-muted">
-              <p>
-                <span className="lux-heading text-[0.58rem] text-pts-gold">Email</span>
-                <br />
-                <a className="text-pts-parchment transition hover:text-pts-gold-2" href={`mailto:${site.email}`}>
-                  {site.email}
-                </a>
-              </p>
-              <p>
-                <span className="lux-heading text-[0.58rem] text-pts-gold">Desk</span>
-                <br />
-                {site.phone}
-              </p>
-              <p>
-                <span className="lux-heading text-[0.58rem] text-pts-gold">City</span>
-                <br />
-                {site.city}
-              </p>
-            </div>
-          </div>
-          <InquiryForm />
+    <div className="bg-pts-bg min-h-screen">
+      {/* Hero Section */}
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center border-b border-pts-line/20">
+        <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">Contact Us</p>
+          <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-8">
+            Get in Touch
+          </h1>
+          <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
+            Request a private consultation for MICE programs or VIP concierge services. Our team responds with a composed proposal tailored to your requirements.
+          </p>
         </div>
       </section>
-    </PageTransition>
+
+      {/* Contact Form Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-pts-deep/40 border border-pts-gold/30 p-12">
+            <h2 className="font-heading text-3xl sm:text-4xl tracking-[0.1em] text-pts-parchment uppercase mb-8 text-center">
+              Send us a Message
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div>
+                <label className="block text-[0.7rem] uppercase tracking-[0.3em] text-pts-gold mb-3">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  placeholder="Your full name"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.7rem] uppercase tracking-[0.3em] text-pts-gold mb-3">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.7rem] uppercase tracking-[0.3em] text-pts-gold mb-3">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  placeholder="+966 500 000 0000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.7rem] uppercase tracking-[0.3em] text-pts-gold mb-3">
+                  Company
+                </label>
+                <input
+                  type="text"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  placeholder="Your company name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.7rem] uppercase tracking-[0.3em] text-pts-gold mb-3">
+                  Message
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={6}
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
+                  placeholder="Tell us about your requirements..."
+                  required
+                />
+              </div>
+
+              <MagneticButton
+                type="submit"
+                className="w-full border-pts-gold bg-pts-gold px-12 py-5 text-[0.75rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
+              >
+                Send Message
+              </MagneticButton>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

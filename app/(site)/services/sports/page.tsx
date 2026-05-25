@@ -16,47 +16,47 @@ const services = [
   {
     title: "Tennis Championships",
     description: "Premium access and event management for Grand Slams and ATP tours, ensuring world-class hospitality for fans and players.",
-    image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/abhinand-venugopal-1WZfzLWBSi4-unsplash.jpg",
   },
   {
     title: "Formula 1® Grand Prix",
     description: "High-octane logistics and VIP Paddock Club arrangements for the world's most elite motorsport circuits.",
-    image: "https://images.unsplash.com/photo-1504707748692-419802cf939d?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/daniil-zanevskiy-NIZS__PjZyM-unsplash.jpg",
   },
   {
     title: "Professional Racing",
     description: "Specialized support for international racing series, from GT endurance to motorcycle championships and rally events.",
-    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/mike-kotsch-PiP3mbzg6To-unsplash.jpg",
   },
   {
     title: "Football Leagues",
     description: "Comprehensive management for international matches, club tours, and major tournaments like the World Cup and Champions League.",
-    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/photo-1549719386-74dfcbf7dbed.jpeg",
   },
   {
     title: "Championship Boxing",
     description: "Expert coordination for global title fights, focusing on venue management, media logistics, and elite fan experiences.",
-    image: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/photo-1551524559-8af4e6624178 (1).jpeg",
   },
   {
     title: "MMA & Combat Sports",
     description: "Full-scale event production and hospitality for major MMA organizations and global combat sport spectacles.",
-    image: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/photo-1554068865-24cecd4e34b8 (1).jpeg",
   },
   {
     title: "Skiing & Winter Sports",
     description: "World-class logistics for alpine tournaments and luxury ski retreats, featuring elite resort management and professional competition support.",
-    image: "https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/photo-1568605117036-5fe5e7bab0b7.jpeg",
   },
   {
     title: "Horse Racing & Equestrian",
     description: "Exclusive VIP hospitality and paddock access for premier global races, from Royal Ascot to the Grand National.",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/photo-1579952363873-27f3bade9f55 (1).jpeg",
   },
   {
     title: "Camel Racing",
     description: "Celebrating desert heritage with professional management of traditional races, featuring high-tech robotic jockeys and authentic cultural experiences.",
-    image: "https://images.unsplash.com/photo-1542259681-d4cd695d9b9e?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/sports/tom-macret-xH34lqnzVJ4-unsplash.jpg",
   },
 ];
 

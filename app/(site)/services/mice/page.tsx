@@ -16,57 +16,57 @@ const services = [
   {
     title: "Abroad Corporate Services",
     description: "Bespoke business travel, incentive programs, and executive meetings tailored for global corporate growth.",
-    image: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/evangeline-shaw-DNVYaleNUF0-unsplash.jpg",
   },
   {
     title: "Medical Exhibitions & Symposium",
     description: "Premier platforms showcasing the latest breakthroughs in healthcare technology and medical equipment.",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1503387762-592deb58ef4e.jpeg",
   },
   {
     title: "Medical Associations Conferences",
     description: "Comprehensive management for professional medical unions and scientific societies' annual gatherings.",
-    image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1505373877841-8d25f7d46678.jpeg",
   },
   {
     title: "Pharmaceutical Exhibitions",
     description: "Strategic hubs for global labs and pharma companies to launch innovations and network with industry leaders.",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1515562141207-7a88fb7ce338.jpeg",
   },
   {
     title: "Tourism Exhibitions",
     description: "Vibrant trade shows bringing together luxury brands, suppliers, and beauty industry professionals.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1517245386807-bb43f82c33c4.jpeg",
   },
   {
     title: "Building Materials Exhibitions",
     description: "The ultimate destination for architects and contractors to explore the future of construction and design.",
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1517502884422-41eaead166d4.jpeg",
   },
   {
     title: "Defense Exhibitions",
     description: "High-security, elite-level logistics and organization for international defense and security forums.",
-    image: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1532094349884-543bc11b234d.jpeg",
   },
   {
     title: "International Conferences",
     description: "Smart, scalable solutions for cross-border conferences that unite global experts and thought leaders.",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1540575467063-178a50c2df87.jpeg",
   },
   {
     title: "Davos Summit & Global Forums",
     description: "Exclusive concierge and management services for high-profile participation in the World Economic Forum and elite summits.",
-    image: "https://images.unsplash.com/photo-1565514020116-4d3c1c698725?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1542744173-8e7e53415bb0.jpeg",
   },
   {
     title: "Political Conferences",
     description: "Premium arrangements and VIP access to international political conferences, summits, and diplomatic events around the world. Travel coordination, luxury accommodations, secure transportation, and personalized assistance ensuring a seamless and professional experience for delegates.",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1579684385127-1ef15d508118.jpeg",
   },
   {
     title: "Fashion & Jewelry Exhibitions",
     description: "VIP experiences at the world's most prestigious fashion and jewelry events, connecting clients with renowned designers, luxury brands, private showcases, and elite networking opportunities.",
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80",
+    image: "/images/services/mice/photo-1591115765373-5207764f72e7.jpeg",
   },
 ];
 
@@ -120,17 +120,26 @@ export default function MicePage() {
       },
     });
 
+    // Set initial states
+    slideElements.forEach((slide, idx) => {
+      if (idx === 0) {
+        gsap.set(slide, { yPercent: 0, opacity: 1, scale: 1 });
+      } else {
+        gsap.set(slide, { yPercent: 100, opacity: 1, scale: 1 });
+      }
+    });
+
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        gsap.set(slide, { yPercent: 100 });
-        
         const startTime = idx * 0.5;
 
+        // Animate current slide in
         tl.to(slide, {
           yPercent: 0,
           ease: "power2.inOut",
-        }, startTime); 
+        }, startTime);
 
+        // Animate previous slide out
         const prevSlide = slideElements[idx - 1];
         tl.to(prevSlide, {
           scale: isLowEnd ? 1 : 0.94,
@@ -179,11 +188,12 @@ export default function MicePage() {
             </h2>
           </div>
 
-          <div className="relative min-h-[450px]">
+          <div className="relative min-h-[450px] overflow-hidden">
             {slides.map((slideServices, slideIndex) => (
               <div
                 key={slideIndex}
-                className="service-slide absolute inset-0 bg-pts-black"
+                className="service-slide absolute inset-0 bg-pts-black will-change-transform"
+                style={{ zIndex: slides.length - slideIndex }}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
                   {slideServices.map((service, serviceIndex) => (

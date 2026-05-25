@@ -1,54 +1,61 @@
 /**
- * Curated cinematic media for PTS. Unsplash URLs use auto=format for web-friendly delivery.
- * Replace with self-hosted / CDN assets in production for full control.
+ * Curated cinematic media for PTS.
+ * All images are stored locally in /public/images/ for optimal performance and control.
+ * 
+ * Folder structure:
+ * /public/images/hero/ - Hero section images
+ * /public/images/brand/ - Brand intro section images
+ * /public/images/mice/ - MICE services images
+ * /public/images/vip/ - VIP concierge services images
+ * /public/images/destinations/ - Destination tiles
+ * /public/images/testimonials/ - Testimonials backdrop
+ * /public/images/cta/ - CTA section backdrops
+ * /public/images/services/ - Service-specific images (concierge, medical, sports)
  */
 
-const img = (path: string, w: number, q = 65) =>
-  `https://images.unsplash.com/${path}?auto=format&fm=webp&fit=crop&w=${w}&q=${q}`;
+const img = (path: string) => `/images/${path}`;
 
 /** Full-screen hero: aviation / global travel mood + HD video (H.264). */
 export const heroMedia = {
-  poster: img("photo-1436491865332-7a61a109cc05", 2000, 60),
+  poster: img("hero/hero-poster.webp"),
   /** Primary loop — balanced bitrate for web; 1080p variant. */
-  videoHd:
-    "https://videos.pexels.com/video-files/1448735/1448735-hd_1920_1080_25fps.mp4",
+  videoHd: "/videos/hero-hd.mp4",
   /** Optional heavier UHD for large displays (loaded via media query where supported). */
-  videoUhd:
-    "https://videos.pexels.com/video-files/1448735/1448735-uhd_2560_1440_25fps.mp4",
+  videoUhd: "/videos/hero-uhd.mp4",
 } as const;
 
 export const brandMedia = {
-  intro: img("photo-1564501049412-61c2a3083791", 1600),
+  intro: img("brand/brand-intro.webp"),
 } as const;
 
 /** MICE cards — corporate travel, venues, scale, DMC. */
 export const miceServiceMedia = [
   {
-    src: img("photo-1521737604893-d14cc237f11d", 1000),
+    src: img("mice/meetings.webp"),
     alt: "Executive boardroom meeting",
   },
   {
-    src: img("photo-1507525428034-b723cf961d3e", 1000),
+    src: img("mice/incentives.webp"),
     alt: "Coastal incentive destination",
   },
   {
-    src: img("photo-1505373877841-8d25f7d46678", 1000),
+    src: img("mice/conferences.webp"),
     alt: "Grand cinematic conference hall",
   },
   {
-    src: img("photo-1565034946487-077786996e27", 1000),
+    src: img("mice/exhibitions.webp"),
     alt: "Exhibition hall architecture",
   },
   {
-    src: img("photo-1436491865332-7a61a109cc05", 1000),
+    src: img("mice/executive-coordination.webp"),
     alt: "Aircraft wing over clouds at twilight",
   },
   {
-    src: img("photo-1469854523086-cc02fe5d8800", 1000),
+    src: img("mice/destination-management.webp"),
     alt: "Highway through dramatic landscape",
   },
   {
-    src: img("photo-1512453979798-0ea884933476", 1000),
+    src: img("mice/global-reach.webp"),
     alt: "Dubai skyline representing global reach",
   },
 ] as const;
@@ -56,43 +63,43 @@ export const miceServiceMedia = [
 /** VIP pillars — lifestyle, dining, movement, access, events, bespoke journeys. */
 export const vipServiceMedia = [
   {
-    src: img("photo-1564501049412-61c2a3083791", 1000),
+    src: img("vip/luxury-hotels.webp"),
     alt: "Luxury hotel suite interior",
   },
   {
-    src: img("photo-1414235077428-338989a2e8c0", 1000),
+    src: img("vip/fine-dining.webp"),
     alt: "Fine dining table setting",
   },
   {
-    src: img("photo-1544620347-c4fd4a3d5957", 1000),
+    src: img("vip/chauffeur.webp"),
     alt: "Executive chauffeured transport",
   },
   {
-    src: img("photo-1519677100203-a0e668c92439", 1000),
+    src: img("vip/private-aviation.webp"),
     alt: "City skyline through aircraft window",
   },
   {
-    src: img("photo-1511578314322-379afb476865", 1000),
+    src: img("vip/events.webp"),
     alt: "Evening gala lighting",
   },
   {
-    src: img("photo-1469854523086-cc02fe5d8800", 1000),
+    src: img("vip/bespoke-journeys.webp"),
     alt: "Open road through dramatic landscape",
   },
 ] as const;
 
 /** Editorial destination strip — cities, airports, night energy. */
 export const destinationTiles = [
-  { city: "London", src: img("photo-1513635269975-596ae1548d6b", 1200), alt: "London skyline at dusk" },
-  { city: "Paris", src: img("photo-1502602898657-c3fa9fe6a7de", 1200), alt: "Paris cityscape" },
-  { city: "Tokyo", src: img("photo-1549693578-43e8925074d2", 1200), alt: "Tokyo urban night" },
-  { city: "Dubai", src: img("photo-1512453979798-0ea884933476", 1200), alt: "Dubai skyline" },
-  { city: "New York", src: img("photo-1514525253161-7a46d19cd819", 1200), alt: "New York at night" },
-  { city: "Jeddah", src: img("photo-1507525428034-b723cf961d3e", 1200), alt: "Coastal horizon at dusk" },
+  { city: "London", src: img("destinations/london.webp"), alt: "London skyline at dusk" },
+  { city: "Paris", src: img("destinations/paris.webp"), alt: "Paris cityscape" },
+  { city: "Tokyo", src: img("destinations/tokyo.webp"), alt: "Tokyo urban night" },
+  { city: "Dubai", src: img("destinations/dubai.webp"), alt: "Dubai skyline" },
+  { city: "New York", src: img("destinations/new-york.webp"), alt: "New York at night" },
+  { city: "Jeddah", src: img("destinations/jeddah.webp"), alt: "Coastal horizon at dusk" },
 ] as const;
 
 /** Soft abstract / lounge mood behind testimonials (very low opacity in UI). */
-export const testimonialBackdrop = img("photo-1514933651103-005eec06f4ab", 1600, 50);
+export const testimonialBackdrop = img("testimonials/testimonials-bg.webp");
 
 /** Final CTA band — airport / motion blur, dark cinematic. */
-export const ctaBackdrop = img("photo-1436491865332-7a61a109cc05", 1800, 60);
+export const ctaBackdrop = img("cta/cta-bg.webp");
