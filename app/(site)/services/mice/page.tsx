@@ -7,89 +7,25 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import { useLocale } from "@/contexts/LocaleContext";
+import { t, type DictionaryKey } from "@/lib/dictionary";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const services = [
-  {
-    title: "Abroad Corporate Services",
-    description: "Bespoke business travel, incentive programs, and executive meetings tailored for global corporate growth.",
-    image: "/images/services/mice/evangeline-shaw-DNVYaleNUF0-unsplash.jpg",
-  },
-  {
-    title: "Medical Exhibitions & Symposium",
-    description: "Premier platforms showcasing the latest breakthroughs in healthcare technology and medical equipment.",
-    image: "/images/services/mice/photo-1503387762-592deb58ef4e.jpeg",
-  },
-  {
-    title: "Medical Associations Conferences",
-    description: "Comprehensive management for professional medical unions and scientific societies' annual gatherings.",
-    image: "/images/services/mice/photo-1505373877841-8d25f7d46678.jpeg",
-  },
-  {
-    title: "Pharmaceutical Exhibitions",
-    description: "Strategic hubs for global labs and pharma companies to launch innovations and network with industry leaders.",
-    image: "/images/services/mice/photo-1515562141207-7a88fb7ce338.jpeg",
-  },
-  {
-    title: "Tourism Exhibitions",
-    description: "Vibrant trade shows bringing together luxury brands, suppliers, and beauty industry professionals.",
-    image: "/images/services/mice/photo-1517245386807-bb43f82c33c4.jpeg",
-  },
-  {
-    title: "Building Materials Exhibitions",
-    description: "The ultimate destination for architects and contractors to explore the future of construction and design.",
-    image: "/images/services/mice/photo-1517502884422-41eaead166d4.jpeg",
-  },
-  {
-    title: "Defense Exhibitions",
-    description: "High-security, elite-level logistics and organization for international defense and security forums.",
-    image: "/images/services/mice/photo-1532094349884-543bc11b234d.jpeg",
-  },
-  {
-    title: "International Conferences",
-    description: "Smart, scalable solutions for cross-border conferences that unite global experts and thought leaders.",
-    image: "/images/services/mice/photo-1540575467063-178a50c2df87.jpeg",
-  },
-  {
-    title: "Davos Summit & Global Forums",
-    description: "Exclusive concierge and management services for high-profile participation in the World Economic Forum and elite summits.",
-    image: "/images/services/mice/photo-1542744173-8e7e53415bb0.jpeg",
-  },
-  {
-    title: "Political Conferences",
-    description: "Premium arrangements and VIP access to international political conferences, summits, and diplomatic events around the world. Travel coordination, luxury accommodations, secure transportation, and personalized assistance ensuring a seamless and professional experience for delegates.",
-    image: "/images/services/mice/photo-1579684385127-1ef15d508118.jpeg",
-  },
-  {
-    title: "Fashion & Jewelry Exhibitions",
-    description: "VIP experiences at the world's most prestigious fashion and jewelry events, connecting clients with renowned designers, luxury brands, private showcases, and elite networking opportunities.",
-    image: "/images/services/mice/photo-1591115765373-5207764f72e7.jpeg",
-  },
-];
-
-// Group services into slides of 3 each
-const slides = [
-  services.slice(0, 3),
-  services.slice(3, 6),
-  services.slice(6, 9),
-  services.slice(9, 11),
-];
-
-const eventTypes = [
-  "Abroad Corporate Services",
-  "Medical Exhibitions & Symposium",
-  "Medical Associations Conferences",
-  "Pharmaceutical Exhibitions",
-  "Tourism Exhibitions",
-  "Building Materials Exhibitions",
-  "Defense Exhibitions",
-  "International Conferences",
-  "Davos Summit",
-  "Political Conferences",
-  "Fashion & Jewelry Exhibitions",
+const serviceImages = [
+  "/images/services/mice/evangeline-shaw-DNVYaleNUF0-unsplash.jpg",
+  "/images/services/mice/photo-1503387762-592deb58ef4e.jpeg",
+  "/images/services/mice/photo-1505373877841-8d25f7d46678.jpeg",
+  "/images/services/mice/photo-1515562141207-7a88fb7ce338.jpeg",
+  "/images/services/mice/photo-1517245386807-bb43f82c33c4.jpeg",
+  "/images/services/mice/photo-1517502884422-41eaead166d4.jpeg",
+  "/images/services/mice/photo-1532094349884-543bc11b234d.jpeg",
+  "/images/services/mice/photo-1540575467063-178a50c2df87.jpeg",
+  "/images/services/mice/photo-1542744173-8e7e53415bb0.jpeg",
+  "/images/services/mice/photo-1579684385127-1ef15d508118.jpeg",
+  "/images/services/mice/photo-1591115765373-5207764f72e7.jpeg",
 ];
 
 export default function MicePage() {
@@ -97,6 +33,25 @@ export default function MicePage() {
   const [mounted, setMounted] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
+  const { locale } = useLocale();
+
+  // Create services array dynamically based on locale
+  const services = serviceImages.map((image, index) => ({
+    title: t(locale, `mice.service${index + 1}.title` as DictionaryKey),
+    description: t(locale, `mice.service${index + 1}.description` as DictionaryKey),
+    image,
+  }));
+
+  // Group services into slides of 3 each
+  const slides = [
+    services.slice(0, 3),
+    services.slice(3, 6),
+    services.slice(6, 9),
+    services.slice(9, 11),
+  ];
+
+  // Create eventTypes array dynamically based on locale
+  const eventTypes = services.map((service) => service.title);
 
   useEffect(() => {
     setMounted(true);
@@ -162,18 +117,18 @@ export default function MicePage() {
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">MICE & International Events Management</p>
+          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "mice.page.hero" as DictionaryKey)}</p>
           <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6">
-            Connecting Excellence with Global Opportunities
+            {t(locale, "mice.page.title" as DictionaryKey)}
           </h1>
           <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
-            End-to-end solutions for the MICE industry, blending logistical precision with innovative execution. From high-level diplomatic summits to specialized industrial exhibitions, every event is ensured to be a world-class experience.
+            {t(locale, "mice.page.subtitle" as DictionaryKey)}
           </p>
           <MagneticButton
             onClick={() => setShowEnquiry(true)}
             className="border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
           >
-            ENQUIRE NOW
+            {t(locale, "mice.page.cta" as DictionaryKey)}
           </MagneticButton>
         </div>
       </section>
@@ -182,9 +137,9 @@ export default function MicePage() {
       <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-10 px-10 relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto relative z-10">
           <div className="mb-12 text-center">
-            <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">11 Categories</p>
+            <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">11 {t(locale, "mice.page.categories" as DictionaryKey)}</p>
             <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
-              MICE Event Categories
+              {t(locale, "mice.page.categories" as DictionaryKey)}
             </h2>
           </div>
 
@@ -234,7 +189,7 @@ export default function MicePage() {
           <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
               <h3 className="font-heading text-xl uppercase tracking-[0.1em] text-pts-parchment">
-                MICE Enquiry
+                {t(locale, "mice.page.enquiry.title" as DictionaryKey)}
               </h3>
               <button
                 type="button"
@@ -245,55 +200,55 @@ export default function MicePage() {
               </button>
             </div>
             <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-6">
-              Please fill out the form below and our MICE team will get back to you shortly.
+              {t(locale, "mice.page.enquiry.subtitle" as DictionaryKey)}
             </p>
             <form className="space-y-4">
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Full Name
+                  {t(locale, "mice.page.form.fullName" as DictionaryKey)}
                 </label>
                 <input
                   type="text"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your full name"
+                  placeholder={t(locale, "mice.page.form.placeholder.name" as DictionaryKey)}
                 />
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Email
+                  {t(locale, "mice.page.form.email" as DictionaryKey)}
                 </label>
                 <input
                   type="email"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="your@email.com"
+                  placeholder={t(locale, "mice.page.form.placeholder.email" as DictionaryKey)}
                 />
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Company Name
+                  {t(locale, "mice.page.form.company" as DictionaryKey)}
                 </label>
                 <input
                   type="text"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your company name"
+                  placeholder={t(locale, "mice.page.form.placeholder.company" as DictionaryKey)}
                 />
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Company Address
+                  {t(locale, "mice.page.form.address" as DictionaryKey)}
                 </label>
                 <input
                   type="text"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your company address"
+                  placeholder={t(locale, "mice.page.form.placeholder.address" as DictionaryKey)}
                 />
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Nationality
+                  {t(locale, "mice.page.form.nationality" as DictionaryKey)}
                 </label>
                 <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
-                  <option value="">Select country</option>
+                  <option value="">{t(locale, "mice.page.form.selectCountry" as DictionaryKey)}</option>
                   <option value="SA">Saudi Arabia</option>
                   <option value="AE">United Arab Emirates</option>
                   <option value="QA">Qatar</option>
@@ -310,7 +265,7 @@ export default function MicePage() {
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Phone/Mobile
+                  {t(locale, "mice.page.form.phone" as DictionaryKey)}
                 </label>
                 <input
                   type="tel"
@@ -320,10 +275,10 @@ export default function MicePage() {
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Event Type
+                  {t(locale, "mice.page.form.eventType" as DictionaryKey)}
                 </label>
                 <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
-                  <option value="">Select event type</option>
+                  <option value="">{t(locale, "mice.page.form.selectEvent" as DictionaryKey)}</option>
                   {eventTypes.map((type) => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -331,19 +286,19 @@ export default function MicePage() {
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Message
+                  {t(locale, "mice.page.form.message" as DictionaryKey)}
                 </label>
                 <textarea
                   rows={4}
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us about your MICE event requirements..."
+                  placeholder={t(locale, "mice.page.form.placeholder.message" as DictionaryKey)}
                 />
               </div>
               <MagneticButton
                 type="submit"
                 className="w-full border-pts-gold bg-pts-gold px-8 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
               >
-                Submit Form
+                {t(locale, "mice.page.form.submit" as DictionaryKey)}
               </MagneticButton>
             </form>
           </div>

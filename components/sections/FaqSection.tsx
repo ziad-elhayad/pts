@@ -2,32 +2,20 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const faqs = [
-  {
-    question: "What types of visas does Gervae assist with?",
-    answer: "Short-term visas, long-term visas, education visas, business visas, and medical tourism visas. Each application is handled with precision and confidentiality.",
-  },
-  {
-    question: "How long does the visa process take?",
-    answer: "Processing times vary depending on the type of visa and the country's requirements. Gervae guides clients through each step to ensure applications are submitted efficiently, reducing delays.",
-  },
-  {
-    question: "Do you guarantee visa approval?",
-    answer: "While expert guidance and thorough application support is provided, visa approval ultimately depends on the embassy or consulate. The goal is to maximize chances with complete and accurate documentation.",
-  },
-  {
-    question: "Can you assist with document preparation?",
-    answer: "Absolutely. Gervae helps gather, review, and organize all necessary documents to ensure applications meet every requirement.",
-  },
-  {
-    question: "Is my personal information secure with Gervae?",
-    answer: "Yes. Confidentiality is a core part of the service. All data is handled with the utmost security and discretion.",
-  },
-];
+import { t, type DictionaryKey } from "@/lib/dictionary";
+import { useLocale } from "@/contexts/LocaleContext";
 
 export function FaqSection() {
+  const { locale } = useLocale();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const faqs = [
+    { question: t(locale, "faq.q1" as DictionaryKey), answer: t(locale, "faq.a1" as DictionaryKey) },
+    { question: t(locale, "faq.q2" as DictionaryKey), answer: t(locale, "faq.a2" as DictionaryKey) },
+    { question: t(locale, "faq.q3" as DictionaryKey), answer: t(locale, "faq.a3" as DictionaryKey) },
+    { question: t(locale, "faq.q4" as DictionaryKey), answer: t(locale, "faq.a4" as DictionaryKey) },
+    { question: t(locale, "faq.q5" as DictionaryKey), answer: t(locale, "faq.a5" as DictionaryKey) },
+  ];
 
   const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -37,9 +25,9 @@ export function FaqSection() {
     <section id="faq" className="border-t border-pts-line bg-pts-black/25 py-20 px-10">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center">
-          <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">FAQ</p>
+          <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">{t(locale, "nav.faq" as DictionaryKey)}</p>
           <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
-            Frequently Asked Questions
+            {t(locale, "faq.title" as DictionaryKey)}
           </h2>
         </div>
 

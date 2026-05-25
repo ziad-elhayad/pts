@@ -23,6 +23,7 @@
   --color-pts-deep:      var(--pts-deep);
   --font-heading: var(--font-cinzel), ui-serif, Georgia, serif;
   --font-body: "Glacial Indifference", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-tajawal), "Tajawal", ui-sans-serif, system-ui, sans-serif;
   --shadow-lux:  0 40px 100px rgba(0, 0, 0, 0.6);
   --shadow-gold: 0 0 80px rgba(168, 143, 100, 0.12);
 }
@@ -528,4 +529,75 @@ html.lenis, html.lenis body {
   }
 }
 
+
+
+
+/* --- ARABIC TYPOGRAPHY & RTL SUPPORT --------------------------------------- */
+html[dir="rtl"] {
+  font-family: var(--font-arabic);
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+html[dir="rtl"] .lux-heading {
+  font-family: var(--font-arabic);
+  letter-spacing: 0.05em;
+}
+
+/* Arabic text improvements */
+html[dir="rtl"] * {
+  letter-spacing: 0 !important;
+}
+
+/* Better line height for Arabic */
+html[dir="rtl"] p,
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6 {
+  line-height: 1.6;
+}
+
+/* Arabic font weights */
+html[dir="rtl"] strong,
+html[dir="rtl"] b {
+  font-weight: 700;
+}
+
+/* RTL spacing adjustments */
+html[dir="rtl"] .section-label {
+  right: auto;
+  left: 60px;
+}
+
+html[dir="rtl"] .section-border-top {
+  left: auto;
+  right: 10%;
+}
+
+/* RTL transform origin fixes */
+html[dir="rtl"] .line-draw {
+  transform-origin: right center;
+}
+
+html[dir="rtl"] .progress-line {
+  transform-origin: right center;
+}
+
+/* Mobile Arabic adjustments */
+@media (max-width: 768px) {
+  html[dir="rtl"] .lux-heading {
+    letter-spacing: 0.03em !important;
+  }
+
+  html[dir="rtl"] .section-label {
+    right: auto;
+    left: 20px;
+  }
+}
 

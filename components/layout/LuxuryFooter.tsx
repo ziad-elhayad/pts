@@ -59,7 +59,7 @@ export function LuxuryFooter() {
               {navItems.map((item, i) => (
                 <motion.li
                   key={item.href}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: locale === "ar" ? 10 : -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.06, duration: 0.5 }}

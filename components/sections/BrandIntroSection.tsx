@@ -15,12 +15,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const STATS = [
-  { value: 14, suffix: "+", label: "Years of Excellence" },
-  { value: 38, suffix: "", label: "Global Destinations" },
-  { value: 100, suffix: "%", label: "Bespoke Execution" },
-  { value: 24, suffix: "/7", label: "Concierge Access" },
-] as const;
+const STATS = (_locale: string) => [] as const; // Stats labels now come from dictionary
 
 /**
  * Brand intro — scroll-scrubbed “editorial depth” + kinetic stats (unique vs other sections).

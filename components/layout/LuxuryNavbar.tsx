@@ -16,6 +16,7 @@ export function LuxuryNavbar() {
   const { locale, setLocale } = useLocale();
   const [open, setOpen] = useState(false);
   const [nav, setNav] = useState({ scrolled: false, hidden: false, progress: 0 });
+  const [servicesHovered, setServicesHovered] = useState(false);
   const lastScroll = useRef(0);
   const rafRef = useRef(0);
 
@@ -116,7 +117,6 @@ export function LuxuryNavbar() {
               }
 
               if ("dropdown" in item && item.dropdown) {
-                const [servicesHovered, setServicesHovered] = useState(false);
                 const dropdownActive = serviceItems.some((sub) => pathname === sub.href);
                 return (
                   <div
@@ -218,7 +218,7 @@ export function LuxuryNavbar() {
           <div className="hidden items-center gap-5 lg:flex">
             {/* Language toggle */}
             <div className="flex rounded-full border border-pts-line/30 bg-pts-black/30 p-1 text-[0.58rem] uppercase tracking-[0.28em]">
-              {(["en", "de", "ar"] as const).map((lang) => (
+              {(["en", "ar"] as const).map((lang) => (
                 <button
                   key={lang}
                   type="button"
@@ -230,7 +230,7 @@ export function LuxuryNavbar() {
                   )}
                   onClick={() => setLocale(lang)}
                 >
-                  {lang === "en" ? "EN" : lang === "de" ? "DE" : "AR"}
+                  {lang === "en" ? "EN" : "AR"}
                 </button>
               ))}
             </div>

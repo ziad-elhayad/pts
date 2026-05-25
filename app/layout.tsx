@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel } from "next/font/google";
+import { Cinzel, Tajawal } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata } from "@/lib/seo";
 import { ClientProviders } from "@/components/layout/ClientProviders";
@@ -8,6 +8,12 @@ const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-cinzel",
   weight: ["400", "500", "600", "700"],
+});
+
+const tajawal = Tajawal({
+  subsets: ["arabic", "latin"],
+  variable: "--font-tajawal",
+  weight: ["300", "400", "500", "700"],
 });
 
 export const metadata: Metadata = defaultMetadata;
@@ -35,7 +41,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cinzel.variable} min-h-screen overflow-x-hidden bg-pts-bg font-body text-pts-parchment antialiased`}
+        className={`${cinzel.variable} ${tajawal.variable} min-h-screen overflow-x-hidden bg-pts-bg font-body text-pts-parchment antialiased`}
         suppressHydrationWarning
       >
         <div className="grain-overlay" aria-hidden="true" />

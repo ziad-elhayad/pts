@@ -7,77 +7,23 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import { useLocale } from "@/contexts/LocaleContext";
+import { t, type DictionaryKey } from "@/lib/dictionary";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const services = [
-  {
-    title: "Tennis Championships",
-    description: "Premium access and event management for Grand Slams and ATP tours, ensuring world-class hospitality for fans and players.",
-    image: "/images/services/sports/abhinand-venugopal-1WZfzLWBSi4-unsplash.jpg",
-  },
-  {
-    title: "Formula 1® Grand Prix",
-    description: "High-octane logistics and VIP Paddock Club arrangements for the world's most elite motorsport circuits.",
-    image: "/images/services/sports/daniil-zanevskiy-NIZS__PjZyM-unsplash.jpg",
-  },
-  {
-    title: "Professional Racing",
-    description: "Specialized support for international racing series, from GT endurance to motorcycle championships and rally events.",
-    image: "/images/services/sports/mike-kotsch-PiP3mbzg6To-unsplash.jpg",
-  },
-  {
-    title: "Football Leagues",
-    description: "Comprehensive management for international matches, club tours, and major tournaments like the World Cup and Champions League.",
-    image: "/images/services/sports/photo-1549719386-74dfcbf7dbed.jpeg",
-  },
-  {
-    title: "Championship Boxing",
-    description: "Expert coordination for global title fights, focusing on venue management, media logistics, and elite fan experiences.",
-    image: "/images/services/sports/photo-1551524559-8af4e6624178 (1).jpeg",
-  },
-  {
-    title: "MMA & Combat Sports",
-    description: "Full-scale event production and hospitality for major MMA organizations and global combat sport spectacles.",
-    image: "/images/services/sports/photo-1554068865-24cecd4e34b8 (1).jpeg",
-  },
-  {
-    title: "Skiing & Winter Sports",
-    description: "World-class logistics for alpine tournaments and luxury ski retreats, featuring elite resort management and professional competition support.",
-    image: "/images/services/sports/photo-1568605117036-5fe5e7bab0b7.jpeg",
-  },
-  {
-    title: "Horse Racing & Equestrian",
-    description: "Exclusive VIP hospitality and paddock access for premier global races, from Royal Ascot to the Grand National.",
-    image: "/images/services/sports/photo-1579952363873-27f3bade9f55 (1).jpeg",
-  },
-  {
-    title: "Camel Racing",
-    description: "Celebrating desert heritage with professional management of traditional races, featuring high-tech robotic jockeys and authentic cultural experiences.",
-    image: "/images/services/sports/tom-macret-xH34lqnzVJ4-unsplash.jpg",
-  },
-];
-
-// Group services into slides of 3 each (last slide will have 1)
-const slides = [
-  services.slice(0, 3),
-  services.slice(3, 6),
-  services.slice(6, 9),
-  services.slice(9, 10),
-];
-
-const sportTypes = [
-  "Tennis Championships",
-  "Formula 1® Grand Prix",
-  "Professional Racing",
-  "Football Tournaments",
-  "Championship Boxing",
-  "MMA & Combat Sports",
-  "Skiing",
-  "Horse Racing",
-  "Camel Racing",
+const serviceImages = [
+  "/images/services/sports/abhinand-venugopal-1WZfzLWBSi4-unsplash.jpg",
+  "/images/services/sports/daniil-zanevskiy-NIZS__PjZyM-unsplash.jpg",
+  "/images/services/sports/mike-kotsch-PiP3mbzg6To-unsplash.jpg",
+  "/images/services/sports/photo-1549719386-74dfcbf7dbed.jpeg",
+  "/images/services/sports/photo-1551524559-8af4e6624178 (1).jpeg",
+  "/images/services/sports/photo-1554068865-24cecd4e34b8 (1).jpeg",
+  "/images/services/sports/photo-1568605117036-5fe5e7bab0b7.jpeg",
+  "/images/services/sports/photo-1579952363873-27f3bade9f55 (1).jpeg",
+  "/images/services/sports/tom-macret-xH34lqnzVJ4-unsplash.jpg",
 ];
 
 export default function SportsPage() {
@@ -85,6 +31,25 @@ export default function SportsPage() {
   const [mounted, setMounted] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
+  const { locale } = useLocale();
+
+  // Create services array dynamically based on locale
+  const services = serviceImages.map((image, index) => ({
+    title: t(locale, `sports.service${index + 1}.title` as DictionaryKey),
+    description: t(locale, `sports.service${index + 1}.description` as DictionaryKey),
+    image,
+  }));
+
+  // Group services into slides of 3 each (last slide will have 1)
+  const slides = [
+    services.slice(0, 3),
+    services.slice(3, 6),
+    services.slice(6, 9),
+    services.slice(9, 10),
+  ];
+
+  // Create sportTypes array dynamically based on locale
+  const sportTypes = services.map((service) => service.title);
 
   useEffect(() => {
     setMounted(true);
@@ -140,21 +105,21 @@ export default function SportsPage() {
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">Sports Services</p>
+          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "sports.page.hero" as DictionaryKey)}</p>
           <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6">
-            Elite Sports Events & Hospitality
+            {t(locale, "sports.page.title" as DictionaryKey)}
           </h1>
           <p className="lux-heading text-[0.6rem] text-pts-gold mb-8 tracking-[0.4em] uppercase">
-            Experience the Thrill of Global Competition
+            {t(locale, "sports.page.tagline" as DictionaryKey)}
           </p>
           <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
-            Managing premium and specialized logistics and hospitality for the world's most prestigious sporting events. Whether hosting a tournament or organizing VIP travel for athletes and supporters, Gervae delivers a front-row experience.
+            {t(locale, "sports.page.subtitle" as DictionaryKey)}
           </p>
           <MagneticButton
             onClick={() => setShowEnquiry(true)}
             className="border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
           >
-            Enquire Now
+            {t(locale, "sports.page.cta" as DictionaryKey)}
           </MagneticButton>
         </div>
       </section>
@@ -163,9 +128,9 @@ export default function SportsPage() {
       <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-10 px-10 relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto relative z-10">
           <div className="mb-12 text-center">
-            <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">9 Categories</p>
+            <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">9 {t(locale, "sports.page.categories" as DictionaryKey)}</p>
             <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
-              Sports Categories
+              {t(locale, "sports.page.categories" as DictionaryKey)}
             </h2>
           </div>
 
@@ -214,7 +179,7 @@ export default function SportsPage() {
           <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
               <h3 className="font-heading text-xl uppercase tracking-[0.1em] text-pts-parchment">
-                Sports Enquiry
+                {t(locale, "sports.page.enquiry.title" as DictionaryKey)}
               </h3>
               <button
                 type="button"
@@ -225,35 +190,35 @@ export default function SportsPage() {
               </button>
             </div>
             <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-6">
-              Please fill out the form below and our sports team will get back to you shortly.
+              {t(locale, "sports.page.enquiry.subtitle" as DictionaryKey)}
             </p>
             <form className="space-y-4">
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  First Name
+                  {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
                 </label>
                 <input
                   type="text"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your first name"
+                  placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
                 />
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Email
+                  {t(locale, "services.concierge.form.email" as DictionaryKey)}
                 </label>
                 <input
                   type="email"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="your@email.com"
+                  placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
                 />
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Nationality
+                  {t(locale, "sports.page.form.nationality" as DictionaryKey)}
                 </label>
                 <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
-                  <option value="">Select country</option>
+                  <option value="">{t(locale, "sports.page.form.selectCountry" as DictionaryKey)}</option>
                   <option value="SA">Saudi Arabia</option>
                   <option value="AE">United Arab Emirates</option>
                   <option value="QA">Qatar</option>
@@ -273,7 +238,7 @@ export default function SportsPage() {
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Phone/Mobile
+                  {t(locale, "sports.page.form.phone" as DictionaryKey)}
                 </label>
                 <input
                   type="tel"
@@ -283,10 +248,10 @@ export default function SportsPage() {
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Sport Type
+                  {t(locale, "sports.page.form.sportType" as DictionaryKey)}
                 </label>
                 <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
-                  <option value="">Select sport type</option>
+                  <option value="">{t(locale, "sports.page.form.selectSport" as DictionaryKey)}</option>
                   {sportTypes.map((type) => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -294,19 +259,19 @@ export default function SportsPage() {
               </div>
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Message
+                  {t(locale, "sports.page.form.message" as DictionaryKey)}
                 </label>
                 <textarea
                   rows={4}
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us about your sports event requirements..."
+                  placeholder={t(locale, "sports.page.form.placeholder.message" as DictionaryKey)}
                 />
               </div>
               <MagneticButton
                 type="submit"
                 className="w-full border-pts-gold bg-pts-gold px-8 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
               >
-                Submit Form
+                {t(locale, "sports.page.form.submit" as DictionaryKey)}
               </MagneticButton>
             </form>
           </div>

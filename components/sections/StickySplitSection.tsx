@@ -8,38 +8,27 @@ import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { vipServiceMedia } from "@/lib/media";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import { useLocale } from "@/contexts/LocaleContext";
+import { t, type DictionaryKey } from "@/lib/dictionary";
 import clsx from "clsx";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const pillars = [
-  {
-    title: "Executive lifestyle",
-    description: "Calendars, households, and travel ecosystems—handled with quiet precision.",
-  },
-  {
-    title: "Luxury reservations",
-    description: "Tables, suites, and private rooms secured through relationships—not algorithms.",
-  },
-  {
-    title: "Private transport",
-    description: "Chauffeured fleets, aviation coordination, and arrival choreography.",
-  },
-  {
-    title: "Exclusive access",
-    description: "Behind-the-velvet moments: private viewings and curated introductions.",
-  },
-] as const;
-
-/**
- * VIP split — overlapping stacked panels.
- */
 export const StickySplitSection = memo(function StickySplitSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const { tier, isLowEnd, reducedMotion } = usePerformance();
+  const { locale } = useLocale();
+
+  // Create pillars array dynamically based on locale
+  const pillars = [
+    { title: t(locale, "vip.pillar1.title" as DictionaryKey), description: t(locale, "vip.pillar1.description" as DictionaryKey) },
+    { title: t(locale, "vip.pillar2.title" as DictionaryKey), description: t(locale, "vip.pillar2.description" as DictionaryKey) },
+    { title: t(locale, "vip.pillar3.title" as DictionaryKey), description: t(locale, "vip.pillar3.description" as DictionaryKey) },
+    { title: t(locale, "vip.pillar4.title" as DictionaryKey), description: t(locale, "vip.pillar4.description" as DictionaryKey) },
+  ];
 
   useEffect(() => {
     setMounted(true);
@@ -118,7 +107,7 @@ export const StickySplitSection = memo(function StickySplitSection() {
           <div className="relative flex w-full max-w-6xl flex-col items-center gap-0 sm:gap-12 px-0 sm:px-8 lg:flex-row lg:gap-0 lg:px-16 pt-12 sm:pt-0">
             {/* Mobile Header Reveal */}
             <div className="mb-8 flex flex-col items-center text-center lg:hidden">
-              <span className="lux-heading text-[0.52rem] tracking-[0.8em] text-pts-gold opacity-90">VIP Concierge</span>
+              <span className="lux-heading text-[0.52rem] tracking-[0.8em] text-pts-gold opacity-90">{t(locale, "vip.header" as DictionaryKey)}</span>
               <div className="mt-4 h-px w-12 bg-pts-gold/30" />
             </div>
 
@@ -143,7 +132,7 @@ export const StickySplitSection = memo(function StickySplitSection() {
             )}>
               <div className="mb-4 sm:mb-6 hidden items-center gap-4 lg:flex">
                 <div className="h-px w-8 bg-pts-gold" />
-                <p className="lux-heading text-[0.45rem] uppercase tracking-[0.6em] text-pts-gold">VIP Concierge</p>
+                <p className="lux-heading text-[0.45rem] uppercase tracking-[0.6em] text-pts-gold">{t(locale, "vip.header" as DictionaryKey)}</p>
               </div>
 
               <h3 className="mb-4 sm:mb-8 font-heading text-lg sm:text-2xl uppercase leading-[1.1] tracking-[0.04em] text-pts-parchment md:text-5xl sm:leading-[1.12] sm:tracking-[0.05em]">
@@ -156,11 +145,11 @@ export const StickySplitSection = memo(function StickySplitSection() {
 
               {i === pillars.length - 1 ? (
                 <MagneticButton href="/vip-concierge" className="btn-gold-glow w-full sm:w-auto px-10 sm:px-12 py-3.5 sm:py-5 text-[0.6rem] sm:text-[0.65rem]">
-                  Explore VIP
+                  {t(locale, "vip.explore" as DictionaryKey)}
                 </MagneticButton>
               ) : (
                 <div className="flex items-center gap-3 text-pts-gold/40">
-                  <span className="lux-heading text-[0.45rem] uppercase tracking-[0.3em] sm:text-[0.5rem] sm:tracking-[0.4em]">Scroll to uncover</span>
+                  <span className="lux-heading text-[0.45rem] uppercase tracking-[0.3em] sm:text-[0.5rem] sm:tracking-[0.4em]">{t(locale, "vip.scroll提示" as DictionaryKey)}</span>
                   <div className="vip-scroll-line h-px w-6 bg-pts-gold/40" />
                 </div>
               )}

@@ -100,7 +100,15 @@ export const CinematicHero = memo(function CinematicHero() {
 
       if (!topLineRef.current || !botLineRef.current || !kicker || !sub || !ctas || !scrollEl || !coords || !wordInners || !mounted) return;
 
-      const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+      const intro = gsap.timeline({ 
+        defaults: { ease: "expo.out" },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center",
+          end: "center center",
+          toggleActions: "play reverse play reverse",
+        },
+      });
       intro.fromTo(topLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0);
       intro.fromTo(botLineRef.current, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6 }, 0.12);
       intro.fromTo(kicker, { opacity: 0, x: -40, filter: isLowEnd ? "none" : "blur(8px)" }, { opacity: 1, x: 0, filter: "none", duration: 1 }, 0.2);
@@ -110,8 +118,11 @@ export const CinematicHero = memo(function CinematicHero() {
       intro.fromTo(scrollEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.9 }, 1.15);
       intro.fromTo(coords, { opacity: 0, y: 10 }, { opacity: 0.35, y: 0, duration: 1 }, 1.35);
 
+
+
       if (auroraRef.current && !isLowEnd) {
         gsap.to(auroraRef.current, { rotate: 360, duration: 60, repeat: -1, ease: "none" });
+
       }
     },
     { scope: sectionRef, dependencies: [locale, isLowEnd, reducedMotion, mounted] },
@@ -274,13 +285,13 @@ export const CinematicHero = memo(function CinematicHero() {
 
           <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">
             <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto">
-              Inquire
+              {t(locale, "hero.cta.inquire")}
             </MagneticButton>
             <MagneticButton
               href="/mice"
               className="border-pts-parchment bg-pts-black/80 px-12 py-4 text-[0.65rem] font-bold text-pts-parchment hover:bg-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto"
             >
-              Begin Your Experience
+              {t(locale, "hero.cta.begin")}
             </MagneticButton>
           </div>
 
@@ -299,4 +310,26 @@ export const CinematicHero = memo(function CinematicHero() {
     </section>
   );
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

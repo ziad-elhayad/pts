@@ -7,54 +7,57 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import { t, type DictionaryKey } from "@/lib/dictionary";
+import { useLocale } from "@/contexts/LocaleContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const services = [
-  {
-    title: "Concierge",
-    subtitle: "Designed Around You and Delivered With Precision",
-    description: "Luxury transportation services providing a curated selection of chauffeur-driven vehicles and premium travel solutions tailored for comfort, privacy, and reliability. Whether for airport transfers, executive travel, or dedicated vehicles for the entire day, every journey is handled with professionalism, discretion, and exceptional attention to detail.",
-    image: "/images/services/concierge/lai-man-nung-Td6Yy3S3Ls0-unsplash.jpg",
-    link: "/services/concierge",
-  },
-  {
-    title: "MICE & International Events Management",
-    subtitle: "Connecting Excellence with Global Opportunities",
-    description: "Organizing professional global meetings, adhering to the highest international standards and protocols. From intimate board settings to destination-wide programs, every touchpoint is composed with cinematic clarity.",
-    image: "/images/services/mice/evangeline-shaw-DNVYaleNUF0-unsplash.jpg",
-    link: "/services/mice",
-  },
-  {
-    title: "Elite Medical Tourism Concierge",
-    subtitle: "Seamless Medical Journeys",
-    description: "Gervae makes medical journeys seamless — from arranging world-class treatment to handling travel and accommodations with precision. Every detail is managed confidentially and efficiently, so clients can focus on health and peace of mind. With Gervae, medical travel isn't just a trip — it's a worry-free experience, tailored just for you.",
-    image: "/images/services/medical/medical-alex-bertha.webp",
-    link: "/services/medical-tourism",
-  },
-  {
-    title: "Elite Sports Events & Hospitality",
-    subtitle: "Front-Row Experience",
-    description: "Managing premium and specialized logistics and hospitality for the world's most prestigious sporting events. Whether hosting a tournament or organizing VIP travel for athletes and supporters, Gervae delivers a front-row experience.",
-    image: "/images/services/sports/abhinand-venugopal-1WZfzLWBSi4-unsplash.jpg",
-    link: "/services/sports",
-  },
-];
-
-// Group services into slides of 1 each
-const slides = [
-  [services[0]],
-  [services[1]],
-  [services[2]],
-  [services[3]],
-];
-
 export function ServicesSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { reducedMotion, isLowEnd } = usePerformance();
+  const { locale } = useLocale();
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const services = [
+    {
+      title: t(locale, "services.section.concierge.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.concierge.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.concierge.description" as DictionaryKey),
+      image: "/images/services/concierge/lai-man-nung-Td6Yy3S3Ls0-unsplash.jpg",
+      link: "/services/concierge",
+    },
+    {
+      title: t(locale, "services.section.mice.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.mice.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.mice.description" as DictionaryKey),
+      image: "/images/services/mice/evangeline-shaw-DNVYaleNUF0-unsplash.jpg",
+      link: "/services/mice",
+    },
+    {
+      title: t(locale, "services.section.medical.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.medical.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.medical.description" as DictionaryKey),
+      image: "/images/services/medical/medical-alex-bertha.webp",
+      link: "/services/medical-tourism",
+    },
+    {
+      title: t(locale, "services.section.sports.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.sports.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.sports.description" as DictionaryKey),
+      image: "/images/services/sports/abhinand-venugopal-1WZfzLWBSi4-unsplash.jpg",
+      link: "/services/sports",
+    },
+  ];
+
+  // Group services into slides of 1 each
+  const slides = [
+    [services[0]],
+    [services[1]],
+    [services[2]],
+    [services[3]],
+  ];
 
   useGSAP(() => {
     if (!containerRef.current || reducedMotion) return;
@@ -131,7 +134,7 @@ export function ServicesSection() {
                         href={service.link}
                         className="border-pts-gold bg-pts-gold px-10 py-4 text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90 w-fit"
                       >
-                        Read More →
+                        {t(locale, "services.read.more" as DictionaryKey)}
                       </MagneticButton>
                     </div>
 

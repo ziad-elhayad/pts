@@ -25,7 +25,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (stored === "ar" || stored === "en" || stored === "de") {
+    if (stored === "ar" || stored === "en") {
       setLocaleState(stored);
     }
   }, []);
@@ -33,12 +33,12 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
     window.localStorage.setItem(STORAGE_KEY, next);
-    document.documentElement.lang = next === "ar" ? "ar" : next === "de" ? "de" : "en";
+    document.documentElement.lang = next === "ar" ? "ar" : "en";
     document.documentElement.dir = next === "ar" ? "rtl" : "ltr";
   }, []);
 
   useEffect(() => {
-    document.documentElement.lang = locale === "ar" ? "ar" : locale === "de" ? "de" : "en";
+    document.documentElement.lang = locale === "ar" ? "ar" : "en";
     document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
   }, [locale]);
 
