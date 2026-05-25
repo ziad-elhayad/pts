@@ -1,11 +1,12 @@
 export const site = {
-  name: "PTS — Private Travel Services",
-  shortName: "PTS",
+  name: "GERVAE",
+  shortName: "GERVAE",
   tagline: "Crafting Executive Experiences Worldwide.",
   description:
     "Luxury corporate hospitality, elite MICE solutions, and VIP concierge for executives and international corporations—with a strategic presence in Saudi Arabia.",
   url: "https://pts-private-travel.com",
   email: "concierge@pts-private-travel.com",
+  enquiryEmail: "hyadz0211@gmail.com",
   phone: "+966 12 000 0000",
   whatsapp: "https://wa.me/966500000000",
   city: "Jeddah, Saudi Arabia",
@@ -18,8 +19,8 @@ export const site = {
 export const navItems = [
   { href: "/", key: "nav.home" as const },
   { href: "#about", key: "nav.about" as const, anchor: true },
-  { href: "/services", key: "nav.services" as const, dropdown: true },
-  { href: "/faq", key: "nav.faq" as const, anchor: true },
+  { href: "#services", key: "nav.services" as const, dropdown: true, anchor: true },
+  { href: "#faq", key: "nav.faq" as const, anchor: true },
   { href: "/contact", key: "nav.contact" as const },
 ] as const;
 

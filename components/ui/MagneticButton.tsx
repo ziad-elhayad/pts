@@ -11,6 +11,7 @@ type MagneticButtonProps = {
   href?: string;
   onClick?: () => void;
   type?: "button" | "submit";
+  disabled?: boolean;
 };
 
 export function MagneticButton({
@@ -19,6 +20,7 @@ export function MagneticButton({
   href,
   onClick,
   type = "button",
+  disabled = false,
 }: MagneticButtonProps) {
   const x       = useMotionValue(0);
   const y       = useMotionValue(0);
@@ -106,7 +108,8 @@ export function MagneticButton({
     <motion.button
       type={type}
       onClick={onClick}
-      className="inline-block group"
+      disabled={disabled}
+      className={clsx("inline-block group", disabled && "pointer-events-none opacity-60")}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
     >

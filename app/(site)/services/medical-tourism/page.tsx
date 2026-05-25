@@ -7,6 +7,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
+import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
+import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
+import { medicalTabImages } from "@/lib/service-category-images";
 
 type TabType = "patients" | "doctors" | "wellness";
 
@@ -14,6 +17,7 @@ export default function MedicalTourismPage() {
   const [activeTab, setActiveTab] = useState<TabType>("patients");
   const [showEnquiry, setShowEnquiry] = useState(false);
   const { locale } = useLocale();
+  const enquiry = useEnquirySubmit("medical-tourism");
 
   const tabs: { key: TabType; label: string }[] = [
     { key: "patients", label: t(locale, "medical.page.tab.patients" as DictionaryKey) },
@@ -25,17 +29,17 @@ export default function MedicalTourismPage() {
     patients: {
       title: t(locale, "medical.page.content.patients.title" as DictionaryKey),
       description: t(locale, "medical.page.content.patients.description" as DictionaryKey),
-      image: "/images/services/medical/medical-tourism-patients.webp",
+      image: medicalTabImages.patients,
     },
     doctors: {
       title: t(locale, "medical.page.content.doctors.title" as DictionaryKey),
       description: t(locale, "medical.page.content.doctors.description" as DictionaryKey),
-      image: "/images/services/medical/medical-alex-bertha.webp",
+      image: medicalTabImages.wellness,
     },
     wellness: {
       title: t(locale, "medical.page.content.wellness.title" as DictionaryKey),
       description: t(locale, "medical.page.content.wellness.description" as DictionaryKey),
-      image: "/images/services/medical/medical-whatsapp.webp",
+      image: medicalTabImages.doctors,
     },
   };
 
@@ -140,59 +144,76 @@ export default function MedicalTourismPage() {
 
       {/* Enquiry Modal */}
       {showEnquiry && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-4">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start mb-6">
-              <h3 className="font-heading text-xl uppercase tracking-[0.1em] text-pts-parchment">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-3 sm:p-4 md:p-6">
+          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto my-4">
+            <div className="flex justify-between items-start mb-4 sm:mb-6">
+              <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
                 {t(locale, "medical.page.enquiry.title" as DictionaryKey)}
               </h3>
               <button
                 type="button"
                 onClick={() => setShowEnquiry(false)}
-                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors"
+                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
               >
                 ×
               </button>
             </div>
-            <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-6">
+            <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
               {t(locale, "medical.page.enquiry.subtitle" as DictionaryKey)}
             </p>
-            <form className="space-y-4">
+            <form
+              className="space-y-3 sm:space-y-4"
+              onSubmit={async (event) => {
+                const ok = await enquiry.handleSubmit(event);
+                if (ok) {
+                  setShowEnquiry(false);
+                  enquiry.reset();
+                }
+              }}
+            >
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "medical.page.form.fullName" as DictionaryKey)}
                 </label>
                 <input
                   type="text"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  name="fullName"
+                  required
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
                   placeholder={t(locale, "medical.page.form.placeholder.name" as DictionaryKey)}
                 />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "medical.page.form.email" as DictionaryKey)}
                 </label>
                 <input
                   type="email"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  name="email"
+                  required
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
                   placeholder={t(locale, "medical.page.form.placeholder.email" as DictionaryKey)}
                 />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "medical.page.form.phone" as DictionaryKey)}
                 </label>
                 <input
                   type="tel"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  name="phone"
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
                   placeholder="+966 500 000 0000"
                 />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "medical.page.form.serviceType" as DictionaryKey)}
                 </label>
-                <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
+                <select
+                  name="serviceType"
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors"
+                >
                   <option value="">{tabs.find((t) => t.key === "patients")?.label || "Select service type"}</option>
                   <option value="patients">{tabs.find((t) => t.key === "patients")?.label}</option>
                   <option value="doctors">{tabs.find((t) => t.key === "doctors")?.label}</option>
@@ -200,18 +221,22 @@ export default function MedicalTourismPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "medical.page.form.message" as DictionaryKey)}
                 </label>
                 <textarea
+                  name="message"
                   rows={4}
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
+                  required
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
                   placeholder={t(locale, "medical.page.form.placeholder.message" as DictionaryKey)}
                 />
               </div>
+              <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
               <MagneticButton
                 type="submit"
-                className="w-full border-pts-gold bg-pts-gold px-8 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
+                disabled={enquiry.isSending}
+                className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
               >
                 {t(locale, "medical.page.form.submit" as DictionaryKey)}
               </MagneticButton>

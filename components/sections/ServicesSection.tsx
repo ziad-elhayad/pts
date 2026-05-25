@@ -46,7 +46,7 @@ export function ServicesSection() {
       title: t(locale, "services.section.sports.title" as DictionaryKey),
       subtitle: t(locale, "services.section.sports.subtitle" as DictionaryKey),
       description: t(locale, "services.section.sports.description" as DictionaryKey),
-      image: "/images/services/sports/abhinand-venugopal-1WZfzLWBSi4-unsplash.jpg",
+      image: "/images/services/sports/photo-1554068865-24cecd4e34b8 (1).jpeg",
       link: "/services/sports",
     },
   ];
@@ -76,22 +76,37 @@ export function ServicesSection() {
       },
     });
 
+    // Set initial states
+    slideElements.forEach((slide, idx) => {
+      if (idx === 0) {
+        gsap.set(slide, { yPercent: 0, opacity: 1, zIndex: slides.length });
+        gsap.set(slide, { pointerEvents: 'auto' });
+      } else {
+        gsap.set(slide, { yPercent: 100, opacity: 0, zIndex: slides.length - idx });
+        gsap.set(slide, { pointerEvents: 'none' });
+      }
+    });
+
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        gsap.set(slide, { yPercent: 100 });
-        
         const startTime = idx * 0.45;
 
+        // Animate current slide in
         tl.to(slide, {
           yPercent: 0,
+          opacity: 1,
+          zIndex: slides.length,
+          pointerEvents: 'auto',
           ease: "power2.inOut",
-        }, startTime); 
+        }, startTime);
 
         const prevSlide = slideElements[idx - 1];
         tl.to(prevSlide, {
           scale: isLowEnd ? 1 : 0.94,
           opacity: 0,
           yPercent: isLowEnd ? 0 : -8,
+          zIndex: slides.length - idx,
+          pointerEvents: 'none',
           filter: (isTouch || isLowEnd) ? "none" : "blur(8px)",
           ease: "power2.inOut"
         }, startTime);

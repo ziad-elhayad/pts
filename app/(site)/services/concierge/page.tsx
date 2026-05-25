@@ -9,28 +9,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/contexts/PerformanceContext";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
+import { buildServiceSlides } from "@/lib/service-slides";
+import { conciergeCategoryImages } from "@/lib/service-category-images";
+import { useMobileSliderView } from "@/hooks/useMobileSliderView";
+import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
+import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-const serviceImages = [
-  "/images/services/concierge/photo-1518780664697-55e3ad937233.jpeg",
-  "/images/services/concierge/photo-1489599849927-2ee91cede3ba.jpeg",
-  "/images/services/concierge/photo-1540962351504-03099e0a754b.jpeg",
-  "/images/services/concierge/photo-1566073771259-6a8506099945.jpeg",
-  "/images/services/concierge/photo-1567899378494-47b22a2ae96a.jpeg",
-  "/images/services/concierge/photo-1507525428034-b723cf961d3e.jpeg",
-  "/images/services/concierge/photo-1503220317375-aaad61436b1b.jpeg",
-  "/images/services/concierge/photo-1514362545857-3bc16c4c7d1b.jpeg",
-  "/images/services/concierge/photo-1515562141207-7a88fb7ce338.jpeg",
-  "/images/services/concierge/photo-1469334031218-e382a71b716b.jpeg",
-  "/images/services/concierge/photo-1449965408869-eaa3f722e40d.jpeg",
-  "/images/services/concierge/photo-1436491865332-7a61a109cc05.jpeg",
-  "/images/services/concierge/lai-man-nung-Td6Yy3S3Ls0-unsplash.jpg",
-  "/images/services/concierge/dx_www-XJ2NPqVcjwY-unsplash.jpg",
-  "/images/services/concierge/b2-1024x617-1.jpg",
-];
 
 export default function ConciergePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,26 +25,21 @@ export default function ConciergePage() {
   const [showEnquiry, setShowEnquiry] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
   const { locale } = useLocale();
+  const { isMobileSlider } = useMobileSliderView();
+  const enquiry = useEnquirySubmit("concierge");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Create services array dynamically based on locale
-  const services = serviceImages.map((image, index) => ({
+  const services = conciergeCategoryImages.map((image, index) => ({
     title: t(locale, `concierge.service${index + 1}.title` as DictionaryKey),
     description: t(locale, `concierge.service${index + 1}.description` as DictionaryKey),
     image,
   }));
 
-  // Group services into slides of 3 each
-  const slides = [
-    services.slice(0, 3),
-    services.slice(3, 6),
-    services.slice(6, 9),
-    services.slice(9, 12),
-    services.slice(12, 15),
-  ];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const slides = buildServiceSlides(services, isMobileSlider);
 
   useGSAP(() => {
     if (!containerRef.current || reducedMotion || !mounted) return;
@@ -80,9 +62,9 @@ export default function ConciergePage() {
     // Set initial states
     slideElements.forEach((slide, idx) => {
       if (idx === 0) {
-        gsap.set(slide, { yPercent: 0, opacity: 1, scale: 1 });
+        gsap.set(slide, { yPercent: 0, opacity: 1, scale: 1, zIndex: 1 });
       } else {
-        gsap.set(slide, { yPercent: 100, opacity: 1, scale: 1 });
+        gsap.set(slide, { yPercent: 100, opacity: 0, scale: 1, zIndex: idx + 1 });
       }
     });
 
@@ -93,6 +75,8 @@ export default function ConciergePage() {
         // Animate current slide in
         tl.to(slide, {
           yPercent: 0,
+          opacity: 1,
+          zIndex: idx + 1,
           ease: "power2.inOut",
         }, startTime);
 
@@ -102,16 +86,19 @@ export default function ConciergePage() {
           scale: isLowEnd ? 1 : 0.94,
           opacity: 0,
           yPercent: isLowEnd ? 0 : -8,
+          zIndex: idx,
           filter: (isTouch || isLowEnd) ? "none" : "blur(8px)",
           ease: "power2.inOut"
         }, startTime);
       }
     });
 
+    ScrollTrigger.refresh();
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, { scope: containerRef, dependencies: [mounted, reducedMotion, isLowEnd] });
+  }, { scope: containerRef, dependencies: [mounted, reducedMotion, isLowEnd, isMobileSlider] });
 
   return (
     <div className="bg-pts-bg min-h-screen">
@@ -136,7 +123,7 @@ export default function ConciergePage() {
       </section>
 
       {/* Services Section */}
-      <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-10 px-10 relative overflow-hidden">
+      <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-8 px-4 sm:py-10 sm:px-8 lg:px-10 relative overflow-hidden touch-pan-y">
         <div className="max-w-[1400px] mx-auto relative z-10">
           <div className="mb-12 text-center">
             <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">15 {t(locale, "services.concierge.categories" as DictionaryKey)}</p>
@@ -145,26 +132,32 @@ export default function ConciergePage() {
             </h2>
           </div>
 
-          <div className="relative min-h-[450px] overflow-hidden">
+          <div className="relative min-h-[min(72vh,680px)] sm:min-h-[450px] lg:min-h-[500px] overflow-hidden rounded-lg touch-pan-y">
             {slides.map((slideServices, slideIndex) => (
               <div
-                key={slideIndex}
+                key={`${isMobileSlider ? "m" : "d"}-${slideIndex}`}
                 className="service-slide absolute inset-0 bg-pts-black will-change-transform"
-                style={{ zIndex: slides.length - slideIndex }}
+                style={{ zIndex: slideIndex + 1, opacity: slideIndex === 0 ? 1 : 0 }}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+                <div
+                  className={
+                    isMobileSlider
+                      ? "mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4"
+                      : "grid h-full grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8"
+                  }
+                >
                   {slideServices.map((service, serviceIndex) => (
                     <div
                       key={serviceIndex}
-                      className="border border-pts-gold/40 bg-pts-deep/40 overflow-hidden hover:border-pts-gold/60 hover:bg-pts-deep/50 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                      className="w-full border border-pts-gold/40 bg-pts-deep/40 overflow-hidden hover:border-pts-gold/60 hover:bg-pts-deep/50 transition-all duration-300 shadow-lg hover:shadow-2xl"
                     >
-                      <div className="relative h-52 overflow-hidden">
+                      <div className="relative h-48 sm:h-52 overflow-hidden">
                         <Image
                           src={service.image}
                           alt={service.title}
                           fill
                           className="object-cover brightness-100 saturate-100"
-                          sizes="(max-width: 768px) 100vw, 33vw"
+                          sizes="(max-width: 767px) 100vw, 33vw"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
                       </div>
@@ -187,57 +180,74 @@ export default function ConciergePage() {
 
       {/* Enquiry Modal */}
       {showEnquiry && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-4">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start mb-6">
-              <h3 className="font-heading text-xl uppercase tracking-[0.1em] text-pts-parchment">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-3 sm:p-4 md:p-6">
+          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto my-4">
+            <div className="flex justify-between items-start mb-4 sm:mb-6">
+              <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
                 {t(locale, "services.concierge.enquiry.title" as DictionaryKey)}
               </h3>
               <button
                 type="button"
                 onClick={() => setShowEnquiry(false)}
-                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors"
+                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
               >
                 ×
               </button>
             </div>
-            <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-6">
+            <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
               {t(locale, "services.concierge.enquiry.subtitle" as DictionaryKey)}
             </p>
-            <form className="space-y-4">
+            <form
+              className="space-y-3 sm:space-y-4"
+              onSubmit={async (event) => {
+                const ok = await enquiry.handleSubmit(event);
+                if (ok) {
+                  setShowEnquiry(false);
+                  enquiry.reset();
+                }
+              }}
+            >
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
                 </label>
                 <input
                   type="text"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  name="firstName"
+                  required
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
                   placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
                 />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "services.concierge.form.email" as DictionaryKey)}
                 </label>
                 <input
                   type="email"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  name="email"
+                  required
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
                   placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
                 />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                   {t(locale, "services.concierge.form.message" as DictionaryKey)}
                 </label>
                 <textarea
+                  name="message"
                   rows={4}
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
+                  required
+                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
                   placeholder={locale === "ar" ? "أخبرنا عن متطلباتك..." : "Tell us about your requirements..."}
                 />
               </div>
+              <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
               <MagneticButton
                 type="submit"
-                className="w-full border-pts-gold bg-pts-gold px-8 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
+                disabled={enquiry.isSending}
+                className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
               >
                 {t(locale, "services.concierge.form.submit" as DictionaryKey)}
               </MagneticButton>

@@ -1,5 +1,6 @@
 import { LuxuryFooter } from "@/components/layout/LuxuryFooter";
 import { LuxuryNavbar } from "@/components/layout/LuxuryNavbar";
+import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 
 export default function SiteLayout({
   children,
@@ -13,6 +14,7 @@ export default function SiteLayout({
         {children}
       </div>
       <LuxuryFooter />
+      <WhatsAppButton />
     </>
   );
 }

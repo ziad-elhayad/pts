@@ -127,7 +127,7 @@ export function CustomCursor() {
       {/* Outer ring — slow inertia */}
       <div
         ref={ringRef}
-        className="pointer-events-none fixed z-[10000] -translate-x-1/2 -translate-y-1/2 rounded-full border"
+        className="pointer-events-none fixed z-[11000] -translate-x-1/2 -translate-y-1/2 rounded-full border"
         style={{
           width: 40,
           height: 40,
@@ -142,7 +142,7 @@ export function CustomCursor() {
       {/* Inner dot — fast */}
       <div
         ref={dotRef}
-        className="pointer-events-none fixed z-[10000] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="pointer-events-none fixed z-[11000] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           width: 6,
           height: 6,

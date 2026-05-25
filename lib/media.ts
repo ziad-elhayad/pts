@@ -1,7 +1,7 @@
 /**
- * Curated cinematic media for PTS.
+ * Curated cinematic media for GERVAE.
  * All images are stored locally in /public/images/ for optimal performance and control.
- * 
+ *
  * Folder structure:
  * /public/images/hero/ - Hero section images
  * /public/images/brand/ - Brand intro section images

@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { navItems, site } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function LuxuryFooter() {
   const { locale, setLocale } = useLocale();
-  const year = new Date().getFullYear();
 
   return (
     <footer className="relative overflow-hidden border-t border-pts-gold/10 bg-pts-deep section-transition">
@@ -29,12 +29,7 @@ export function LuxuryFooter() {
             </p>
           </div>
 
-          <p className="lux-heading text-2xl text-pts-gold-2 tracking-[0.35em] mb-3">
-            {site.shortName}
-          </p>
-          <p className="text-[0.6rem] uppercase tracking-[0.35em] text-pts-muted/50 mb-10">
-            Private Travel Services
-          </p>
+          <BrandLogo size={48} className="mb-6" variant="image" />
 
           <p className="text-[0.68rem] uppercase tracking-[0.18em] leading-[2.4] text-pts-muted/45 max-w-sm">
             {site.description}
@@ -79,31 +74,41 @@ export function LuxuryFooter() {
           {/* Contact */}
           <div>
             <p className="lux-heading text-[0.52rem] text-pts-gold tracking-[0.5em] mb-8 opacity-60">
-              Connect
+              CONTACT
             </p>
-            <ul className="space-y-5">
+            <ul className="space-y-3 mb-8">
               {[
-                { label: "Email", href: `mailto:${site.email}`, text: site.email },
-                { label: "WhatsApp", href: site.whatsapp, text: t(locale, "cta.whatsapp") },
-                { label: "LinkedIn", href: site.social.linkedin, text: "LinkedIn" },
-                { label: "Instagram", href: site.social.instagram, text: "Instagram" },
-              ].map((link) => (
-                <li key={link.label}>
+                "info@gervae.com",
+                "support@gervae.com",
+                "visa@gervae.com",
+                "hr@gervae.com",
+                "accounts@gervae.com",
+              ].map((email) => (
+                <li key={email}>
                   <a
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener noreferrer"
+                    href={`mailto:${email}`}
                     className="group flex items-center gap-3 text-[0.62rem] uppercase tracking-[0.28em] text-pts-muted/50 transition-colors duration-300 hover:text-pts-gold-2"
                   >
                     <span className="h-px w-0 bg-pts-gold/40 transition-all duration-300 group-hover:w-5" />
-                    {link.text}
+                    {email}
                   </a>
                 </li>
               ))}
             </ul>
 
+            <p className="lux-heading text-[0.52rem] text-pts-gold tracking-[0.5em] mb-4 opacity-60">
+              Phone Number
+            </p>
+            <a
+              href="tel:+201010180344"
+              className="group flex items-center gap-3 text-[0.62rem] uppercase tracking-[0.28em] text-pts-muted/50 transition-colors duration-300 hover:text-pts-gold-2 mb-10"
+            >
+              <span className="h-px w-0 bg-pts-gold/40 transition-all duration-300 group-hover:w-5" />
+              +20 101 018 0344
+            </a>
+
             {/* Language toggle */}
-            <div className="mt-10 flex gap-2">
+            <div className="flex gap-2">
               {(["en", "ar"] as const).map((lang) => (
                 <button
                   key={lang}
@@ -127,7 +132,7 @@ export function LuxuryFooter() {
       <div style={{ borderTop: "1px solid rgba(168,143,100,0.08)" }}>
         <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-10 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-14">
           <p className="text-[0.52rem] uppercase tracking-[0.28em] text-pts-muted/30">
-            © {year} {site.name}. {t(locale, "footer.rights")}
+            © 2026 Gervae. All rights reserved.
           </p>
           <div className="flex gap-6 text-[0.52rem] uppercase tracking-[0.28em] text-pts-muted/25">
             <span className="hover:text-pts-muted/50 cursor-default transition-colors">

@@ -9,14 +9,167 @@ import { navItems, serviceItems } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { BrandLogoFull } from "@/components/ui/BrandLogo";
+import { BrandLogo } from "@/components/ui/BrandLogo";
+
+const dropdownMotion = {
+  initial: { opacity: 0, y: 12, scale: 0.95 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: 8, scale: 0.95 },
+  transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] as const },
+};
+
+function ServicesDropdownLinks({
+  locale,
+  pathname,
+  onNavigate,
+}: {
+  locale: ReturnType<typeof useLocale>["locale"];
+  pathname: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <>
+      {serviceItems.map((subItem) => {
+        const subActive = pathname === subItem.href;
+        return (
+          <Link
+            key={subItem.href}
+            href={subItem.href}
+            onClick={onNavigate}
+            className={clsx(
+              "group flex w-full items-center justify-between gap-3 rounded-sm px-4 py-3 text-[0.62rem] uppercase tracking-[0.2em] transition-all duration-300",
+              subActive
+                ? "bg-pts-gold/12 text-pts-gold"
+                : "text-pts-gold-2 hover:bg-pts-gold/6 hover:text-pts-parchment"
+            )}
+          >
+            <span className="min-w-0 flex-1 text-start leading-snug">
+              {t(locale, subItem.key as DictionaryKey)}
+            </span>
+            <svg
+              className="h-3.5 w-3.5 shrink-0 text-pts-gold opacity-0 transition-all duration-300 group-hover:opacity-100 ltr:-translate-x-2 ltr:group-hover:translate-x-0 rtl:translate-x-2 rtl:group-hover:translate-x-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
+function DesktopServicesDropdown({
+  locale,
+  pathname,
+  label,
+  isOpen,
+  onOpenChange,
+}: {
+  locale: ReturnType<typeof useLocale>["locale"];
+  pathname: string;
+  label: string;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [canHover, setCanHover] = useState(false);
+  const dropdownActive = serviceItems.some((sub) => pathname === sub.href);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setCanHover(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) {
+        onOpenChange(false);
+      }
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onOpenChange(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isOpen, onOpenChange]);
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative"
+      onMouseEnter={() => canHover && onOpenChange(true)}
+      onMouseLeave={() => canHover && onOpenChange(false)}
+    >
+      <Magnetic strength={0.25}>
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          onClick={() => onOpenChange(!isOpen)}
+          className={clsx(
+            "relative flex items-center gap-1.5 border-none bg-transparent py-2 font-body text-[0.62rem] uppercase tracking-[0.32em] outline-none transition-colors duration-300",
+            dropdownActive ? "text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
+          )}
+        >
+          <span>{label}</span>
+          <svg
+            className={clsx("h-3 w-3 text-pts-gold/70 transition-transform duration-300", isOpen && "rotate-180")}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </svg>
+          {dropdownActive && (
+            <span className="absolute -bottom-1.5 start-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
+          )}
+        </button>
+      </Magnetic>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            role="menu"
+            className="absolute start-0 top-full z-[100] min-w-[16rem] max-w-[min(20rem,calc(100vw-2rem))] origin-top pt-4"
+            {...dropdownMotion}
+          >
+            <div className="space-y-1 rounded-sm border border-pts-gold/20 bg-pts-deep/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+              <ServicesDropdownLinks
+                locale={locale}
+                pathname={pathname}
+                onNavigate={() => onOpenChange(false)}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function LuxuryNavbar() {
-  const pathname        = usePathname();
+  const pathname = usePathname();
   const { locale, setLocale } = useLocale();
   const [open, setOpen] = useState(false);
   const [nav, setNav] = useState({ scrolled: false, hidden: false, progress: 0 });
-  const [servicesHovered, setServicesHovered] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
   const lastScroll = useRef(0);
   const rafRef = useRef(0);
 
@@ -51,48 +204,50 @@ export function LuxuryNavbar() {
 
   const { scrolled, hidden, progress } = nav;
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setDesktopServicesOpen(false);
+    setMobileServicesOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) setMobileServicesOpen(false);
+  }, [open]);
 
   return (
     <header
-        className={clsx(
-          "fixed inset-x-0 top-0 z-[90] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] pt-[env(safe-area-inset-top,0px)]",
-          hidden ? "-translate-y-full" : "translate-y-0"
-        )}
+      className={clsx(
+        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        desktopServicesOpen && "z-[10050]",
+        hidden ? "-translate-y-full" : "translate-y-0"
+      )}
     >
-      {/* ── Main nav bar ────────────────────────────────────────────── */}
       <div
         className={clsx(
-          "transition-[background,backdrop-filter,border-color] duration-500",
+          "relative overflow-visible transition-[background,backdrop-filter,border-color] duration-500",
           scrolled
-            ? "bg-pts-deep/95 lg:bg-pts-deep/82 lg:backdrop-blur-xl border-b border-pts-gold/10"
-            : "bg-transparent border-b border-transparent"
+            ? "border-b border-pts-gold/10 bg-pts-deep/95 lg:bg-pts-deep/82 lg:backdrop-blur-xl"
+            : "border-b border-transparent bg-transparent"
         )}
       >
-        <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 sm:px-8 sm:py-5 md:px-12">
-          {/* Logo */}
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 overflow-visible px-4 py-4 sm:px-8 sm:py-5 md:px-12">
           <Magnetic strength={0.3}>
             <Link href="/" className="group">
-              <BrandLogoFull />
+              <BrandLogo size={24} />
             </Link>
           </Magnetic>
 
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-8 lg:flex">
+          <nav className="hidden items-center gap-6 overflow-visible lg:flex lg:gap-8">
             {navItems.map((item) => {
               const isHomePage = pathname === "/";
               const isAnchor = "anchor" in item && item.anchor;
               const anchorId = item.href === "/" ? "hero" : item.href.replace(/^[\/#]+/, "");
               const navActive = isHomePage ? false : pathname === item.href;
 
-              // Handle anchor links (About and FAQ)
-              if (isAnchor) {
+              if (isAnchor && !("dropdown" in item && item.dropdown)) {
                 const handleAnchorClick = () => {
                   if (isHomePage) {
-                    const element = document.getElementById(anchorId);
-                    if (element) {
-                      element.scrollIntoView({ behavior: "smooth" });
-                    }
+                    document.getElementById(anchorId)?.scrollIntoView({ behavior: "smooth" });
                   } else {
                     window.location.href = `/#${anchorId}`;
                   }
@@ -104,10 +259,8 @@ export function LuxuryNavbar() {
                       type="button"
                       onClick={handleAnchorClick}
                       className={clsx(
-                        "relative text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300 cursor-pointer border-none bg-transparent outline-none",
-                        pathname === "/"
-                          ? "text-pts-parchment"
-                          : "text-pts-gold-2 hover:text-pts-parchment"
+                        "relative cursor-pointer border-none bg-transparent text-[0.62rem] uppercase tracking-[0.32em] outline-none transition-colors duration-300",
+                        pathname === "/" ? "text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
                       )}
                     >
                       {t(locale, item.key as DictionaryKey)}
@@ -117,79 +270,15 @@ export function LuxuryNavbar() {
               }
 
               if ("dropdown" in item && item.dropdown) {
-                const dropdownActive = serviceItems.some((sub) => pathname === sub.href);
                 return (
-                  <div
+                  <DesktopServicesDropdown
                     key={item.key}
-                    className="relative py-2"
-                    onMouseEnter={() => setServicesHovered(true)}
-                    onMouseLeave={() => setServicesHovered(false)}
-                  >
-                    <Magnetic strength={0.25}>
-                      <button
-                        type="button"
-                        className={clsx(
-                          "relative flex items-center gap-1.5 text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300 cursor-pointer border-none bg-transparent outline-none font-body",
-                          dropdownActive
-                            ? "text-pts-parchment"
-                            : "text-pts-gold-2 hover:text-pts-parchment"
-                        )}
-                      >
-                        <span>{t(locale, item.key as DictionaryKey)}</span>
-                        <svg
-                          className={clsx("w-3 h-3 transition-transform duration-300 text-pts-gold/70", servicesHovered && "rotate-180")}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                        {dropdownActive && (
-                          <span className="absolute -bottom-1.5 left-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
-                        )}
-                      </button>
-                    </Magnetic>
-
-                    <AnimatePresence>
-                      {servicesHovered && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                          className="absolute left-1/2 top-full -translate-x-1/2 pt-4 z-50 w-64"
-                        >
-                          <div className="border border-pts-gold/20 bg-pts-deep/98 backdrop-blur-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-sm space-y-1">
-                            {serviceItems.map((subItem) => {
-                              const subActive = pathname === subItem.href;
-                              return (
-                                <Link
-                                  key={subItem.href}
-                                  href={subItem.href}
-                                  className={clsx(
-                                    "group flex items-center justify-between w-full px-4 py-3 text-[0.62rem] uppercase tracking-[0.2em] rounded-sm transition-all duration-300",
-                                    subActive
-                                      ? "bg-pts-gold/12 text-pts-gold"
-                                      : "text-pts-gold-2 hover:text-pts-parchment hover:bg-pts-gold/6"
-                                  )}
-                                >
-                                  <span>{t(locale, subItem.key as DictionaryKey)}</span>
-                                  <svg
-                                    className="w-3.5 h-3.5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 text-pts-gold"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                  </svg>
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                    locale={locale}
+                    pathname={pathname}
+                    label={t(locale, item.key as DictionaryKey)}
+                    isOpen={desktopServicesOpen}
+                    onOpenChange={setDesktopServicesOpen}
+                  />
                 );
               }
 
@@ -199,14 +288,12 @@ export function LuxuryNavbar() {
                     href={item.href}
                     className={clsx(
                       "relative text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300",
-                      navActive
-                        ? "text-pts-parchment"
-                        : "text-pts-gold-2 hover:text-pts-parchment"
+                      navActive ? "text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
                     )}
                   >
                     {t(locale, item.key as DictionaryKey)}
                     {navActive && (
-                      <span className="absolute -bottom-1.5 left-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
+                      <span className="absolute -bottom-1.5 start-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
                     )}
                   </Link>
                 </Magnetic>
@@ -214,9 +301,7 @@ export function LuxuryNavbar() {
             })}
           </nav>
 
-          {/* Right: Language + CTA */}
-          <div className="hidden items-center gap-5 lg:flex">
-            {/* Language toggle */}
+          <div className="hidden items-center gap-4 lg:flex lg:gap-5">
             <div className="flex rounded-full border border-pts-line/30 bg-pts-black/30 p-1 text-[0.58rem] uppercase tracking-[0.28em]">
               {(["en", "ar"] as const).map((lang) => (
                 <button
@@ -224,9 +309,7 @@ export function LuxuryNavbar() {
                   type="button"
                   className={clsx(
                     "rounded-full px-3 py-1 transition-colors duration-300",
-                    locale === lang
-                      ? "bg-pts-gold/20 text-pts-parchment"
-                      : "text-pts-gold-2 hover:text-pts-parchment"
+                    locale === lang ? "bg-pts-gold/20 text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
                   )}
                   onClick={() => setLocale(lang)}
                 >
@@ -235,7 +318,6 @@ export function LuxuryNavbar() {
               ))}
             </div>
 
-            {/* Consult CTA */}
             <Link
               href="/contact"
               className="lux-heading border border-pts-gold/35 bg-pts-gold/8 px-5 py-2.5 text-[0.6rem] text-pts-gold-2 tracking-[0.4em] transition-all duration-400 hover:border-pts-gold hover:bg-pts-gold/18 hover:shadow-[0_0_20px_rgba(168,143,100,0.15)]"
@@ -244,10 +326,9 @@ export function LuxuryNavbar() {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
           <button
             type="button"
-            className="flex items-center justify-center text-pts-gold lg:hidden transition-all duration-300 hover:scale-110"
+            className="flex items-center justify-center text-pts-gold transition-all duration-300 hover:scale-110 lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label={open ? t(locale, "nav.close") : t(locale, "nav.menu")}
@@ -265,7 +346,6 @@ export function LuxuryNavbar() {
         </div>
       </div>
 
-      {/* ── Scroll progress bar ──────────────────────────────────────── */}
       <div
         className="h-[1.5px] origin-left transition-none will-change-transform"
         style={{
@@ -276,7 +356,6 @@ export function LuxuryNavbar() {
         }}
       />
 
-      {/* ── Mobile menu ─────────────────────────────────────────────── */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -284,38 +363,126 @@ export function LuxuryNavbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 backdrop-blur-xl sm:px-8 sm:py-10 lg:hidden max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain pb-[max(2rem,env(safe-area-inset-bottom))]"
+            className="max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 backdrop-blur-xl sm:px-8 sm:py-10 lg:hidden pb-[max(2rem,env(safe-area-inset-bottom))]"
           >
-            <div className="mx-auto flex max-w-sm flex-col gap-8">
-              {navItems.map((item, i) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.35 }}
-                >
-                  <Link
-                    href={item.href}
-                    className={clsx(
-                      "lux-heading text-[0.72rem] tracking-[0.4em] transition-colors",
-                      pathname === item.href ? "text-pts-gold" : "text-pts-parchment/80 hover:text-pts-gold-2"
-                    )}
-                  >
-                    {t(locale, item.key as DictionaryKey)}
-                  </Link>
-                </motion.div>
-              ))}
+            <div className="mx-auto flex w-full flex-col gap-6">
+              {navItems.map((item, i) => {
+                if ("dropdown" in item && item.dropdown) {
+                  const dropdownActive = serviceItems.some((sub) => pathname === sub.href);
 
-              <div className="flex gap-3 pt-4 border-t border-pts-line/15">
+                  return (
+                    <motion.div
+                      key={item.key}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.06, duration: 0.35 }}
+                      className="flex flex-col gap-3"
+                    >
+                      <button
+                        type="button"
+                        aria-expanded={mobileServicesOpen}
+                        onClick={() => setMobileServicesOpen((v) => !v)}
+                        className={clsx(
+                          "flex min-h-[44px] w-full items-center justify-between lux-heading text-[0.72rem] tracking-[0.4em] transition-colors",
+                          dropdownActive ? "text-pts-gold" : "text-pts-parchment/80 hover:text-pts-gold-2"
+                        )}
+                      >
+                        <span>{t(locale, item.key as DictionaryKey)}</span>
+                        <svg
+                          className={clsx("h-4 w-4 shrink-0 text-pts-gold/70 transition-transform duration-300", mobileServicesOpen && "rotate-180")}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {mobileServicesOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                            className="overflow-hidden"
+                          >
+                            <div className="space-y-1 border-s border-pts-gold/20 ps-4">
+                              <ServicesDropdownLinks
+                                locale={locale}
+                                pathname={pathname}
+                                onNavigate={() => {
+                                  setOpen(false);
+                                  setMobileServicesOpen(false);
+                                }}
+                              />
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                }
+
+                const isAnchor = "anchor" in item && item.anchor;
+                const anchorId = item.href.replace(/^[\/#]+/, "");
+
+                if (isAnchor) {
+                  return (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.06, duration: 0.35 }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpen(false);
+                          if (pathname === "/") {
+                            document.getElementById(anchorId)?.scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            window.location.href = `/#${anchorId}`;
+                          }
+                        }}
+                        className="lux-heading text-[0.72rem] tracking-[0.4em] text-pts-parchment/80 transition-colors hover:text-pts-gold-2"
+                      >
+                        {t(locale, item.key as DictionaryKey)}
+                      </button>
+                    </motion.div>
+                  );
+                }
+
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06, duration: 0.35 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className={clsx(
+                        "lux-heading text-[0.72rem] tracking-[0.4em] transition-colors",
+                        pathname === item.href ? "text-pts-gold" : "text-pts-parchment/80 hover:text-pts-gold-2"
+                      )}
+                    >
+                      {t(locale, item.key as DictionaryKey)}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+
+              <div className="flex gap-3 border-t border-pts-line/15 pt-4">
                 {(["en", "ar"] as const).map((lang) => (
                   <button
                     key={lang}
                     type="button"
                     className={clsx(
                       "flex-1 border py-2.5 text-[0.6rem] uppercase tracking-[0.3em] transition-colors",
-                      locale === lang
-                        ? "border-pts-gold text-pts-gold"
-                        : "border-pts-line/30 text-pts-gold-2"
+                      locale === lang ? "border-pts-gold text-pts-gold" : "border-pts-line/30 text-pts-gold-2"
                     )}
                     onClick={() => setLocale(lang)}
                   >

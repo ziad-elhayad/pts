@@ -12,14 +12,9 @@ if (typeof window !== "undefined") {
 
 const sections = [
   { id: "hero", label: "Home" },
-  { id: "intro", label: "The Brand" },
-  { id: "mice", label: "MICE Operations" },
-  { id: "vip-split", label: "VIP Concierge" },
-  { id: "itineraries", label: "Itineraries" },
-  { id: "lens", label: "Perspective" },
-  { id: "gallery", label: "The Gallery" },
-  { id: "testimonials", label: "Testimonials" },
-  { id: "cta", label: "Contact" },
+  { id: "services", label: "Services" },
+  { id: "gallery", label: "Gallery" },
+  { id: "faq", label: "FAQ" },
 ] as const;
 
 /**
@@ -57,7 +52,7 @@ export function SideDotNavigator() {
   return (
     <div
       ref={rootRef}
-      className="fixed right-8 top-1/2 z-[100] hidden -translate-y-1/2 flex-col items-end gap-6 lg:flex"
+      className="fixed right-8 top-1/2 z-[50] hidden -translate-y-1/2 flex-col items-end gap-6 lg:flex"
     >
       {sections.map((section) => (
         <button

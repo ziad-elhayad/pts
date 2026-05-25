@@ -127,7 +127,7 @@ export function LoaderScreen() {
         </div>
 
         <p data-loader-sub className="text-center text-[0.55rem] uppercase tracking-[0.4em] text-pts-muted sm:text-[0.62rem] sm:tracking-[0.5em]">
-          Private Travel Services
+          GERVAE
         </p>
 
         <div className="w-40 h-px bg-pts-line/30 overflow-hidden mt-6 sm:w-48">
