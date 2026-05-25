@@ -3,10 +3,11 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { usePerformance } from "@/contexts/PerformanceContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { usePerformance } from "@/contexts/PerformanceContext";
+import { TextScrollReveal } from "@/components/animations/TextScrollReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -16,12 +17,12 @@ const services = [
   {
     title: "Abroad Corporate Services",
     description: "Bespoke business travel, incentive programs, and executive meetings tailored for global corporate growth.",
-    image: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1565514020116-4d3c1c698725?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Medical Exhibitions & Symposium",
     description: "Premier platforms showcasing the latest breakthroughs in healthcare technology and medical equipment.",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Medical Associations Conferences",
@@ -31,12 +32,12 @@ const services = [
   {
     title: "Pharmaceutical Exhibitions",
     description: "Strategic hubs for global labs and pharma companies to launch innovations and network with industry leaders.",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Tourism Exhibitions",
     description: "Vibrant trade shows bringing together luxury brands, suppliers, and beauty industry professionals.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Building Materials Exhibitions",
@@ -46,31 +47,31 @@ const services = [
   {
     title: "Defense Exhibitions",
     description: "High-security, elite-level logistics and organization for international defense and security forums.",
-    image: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1580752300992-559f8e9cc36a?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "International Conferences",
     description: "Smart, scalable solutions for cross-border conferences that unite global experts and thought leaders.",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Davos Summit & Global Forums",
     description: "Exclusive concierge and management services for high-profile participation in the World Economic Forum and elite summits.",
-    image: "https://images.unsplash.com/photo-1565514020116-4d3c1c698725?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Political Conferences",
-    description: "Premium arrangements and VIP access to international political conferences, summits, and diplomatic events around the world. Travel coordination, luxury accommodations, secure transportation, and personalized assistance ensuring a seamless and professional experience for delegates.",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
+    description: "Premium arrangements and VIP access to international political conferences, summits, and diplomatic events around the world.",
+    image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Fashion & Jewelry Exhibitions",
-    description: "VIP experiences at the world's most prestigious fashion and jewelry events, connecting clients with renowned designers, luxury brands, private showcases, and elite networking opportunities.",
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80",
+    description: "VIP experiences at the world's most prestigious fashion and jewelry events, connecting clients with renowned designers.",
+    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800&q=80",
   },
 ];
 
-// Group services into slides of 3 each
+// Group services into slides of 3 each (last slide will have 2)
 const slides = [
   services.slice(0, 3),
   services.slice(3, 6),
@@ -87,12 +88,12 @@ const eventTypes = [
   "Building Materials Exhibitions",
   "Defense Exhibitions",
   "International Conferences",
-  "Davos Summit",
+  "Davos Summit & Global Forums",
   "Political Conferences",
   "Fashion & Jewelry Exhibitions",
 ];
 
-export default function MicePage() {
+export function MiceInternationalPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
@@ -108,12 +109,11 @@ export default function MicePage() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    const totalSlides = slideElements.length;
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${(totalSlides + 0.5) * (isLowEnd ? 30 : 40)}%`,
+        end: `+=${slideElements.length * (isLowEnd ? 30 : 40)}%`,
         pin: true,
         anticipatePin: 1,
         scrub: isLowEnd ? 0.15 : (isTouch ? 0.35 : 0.6),
@@ -124,7 +124,7 @@ export default function MicePage() {
       if (idx > 0) {
         gsap.set(slide, { yPercent: 100 });
         
-        const startTime = idx * 0.5;
+        const startTime = idx * 0.45;
 
         tl.to(slide, {
           yPercent: 0,
@@ -153,18 +153,21 @@ export default function MicePage() {
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">MICE & International Events Management</p>
-          <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6">
+          <TextScrollReveal as="p" className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">MICE & International Events</TextScrollReveal>
+          <TextScrollReveal as="h1" className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6" delay={80}>
+            MICE & International Events<br/>Management
+          </TextScrollReveal>
+          <TextScrollReveal as="p" className="lux-heading text-[0.6rem] text-pts-gold mb-8 tracking-[0.4em] uppercase" delay={160}>
             Connecting Excellence with Global Opportunities
-          </h1>
-          <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
+          </TextScrollReveal>
+          <TextScrollReveal as="p" className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10" delay={240}>
             End-to-end solutions for the MICE industry, blending logistical precision with innovative execution. From high-level diplomatic summits to specialized industrial exhibitions, every event is ensured to be a world-class experience.
-          </p>
+          </TextScrollReveal>
           <MagneticButton
             onClick={() => setShowEnquiry(true)}
             className="border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
           >
-            ENQUIRE NOW
+            Enquire Now
           </MagneticButton>
         </div>
       </section>
@@ -196,16 +199,15 @@ export default function MicePage() {
                           src={service.image}
                           alt={service.title}
                           fill
-                          className="object-cover brightness-100 saturate-100"
-                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover transition-transform duration-500 hover:scale-110"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/90 to-transparent" />
                       </div>
                       <div className="p-6">
-                        <h3 className="font-heading text-[1rem] sm:text-[1.1rem] uppercase tracking-[0.12em] text-pts-parchment mb-4">
+                        <h3 className="font-heading text-lg tracking-[0.1em] text-pts-parchment uppercase mb-3">
                           {service.title}
                         </h3>
-                        <p className="text-[0.75rem] sm:text-[0.8rem] uppercase tracking-[0.18em] text-pts-muted/70 leading-loose">
+                        <p className="text-[0.65rem] text-pts-muted/70 leading-relaxed">
                           {service.description}
                         </p>
                       </div>
@@ -218,72 +220,40 @@ export default function MicePage() {
         </div>
       </section>
 
-      {/* Enquiry Modal */}
+      {/* Enquiry Form Modal */}
       {showEnquiry && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-4">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start mb-6">
-              <h3 className="font-heading text-xl uppercase tracking-[0.1em] text-pts-parchment">
-                MICE Enquiry
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowEnquiry(false)}
-                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-6">
-              Please fill out the form below and our MICE team will get back to you shortly.
-            </p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-pts-black/90 backdrop-blur-sm">
+          <div className="bg-pts-deep border border-pts-gold/40 max-w-lg w-full p-8 relative">
+            <button
+              onClick={() => setShowEnquiry(false)}
+              className="absolute top-4 right-4 text-pts-gold hover:text-pts-parchment transition-colors"
+            >
+              ✕
+            </button>
+            <h2 className="font-heading text-2xl tracking-[0.1em] text-pts-parchment uppercase mb-6">
+              MICE Enquiry
+            </h2>
             <form className="space-y-4">
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your full name"
-                />
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Full Name</label>
+                <input type="text" className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="your@email.com"
-                />
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Email</label>
+                <input type="email" className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your company name"
-                />
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Company Name</label>
+                <input type="text" className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Company Address
-                </label>
-                <input
-                  type="text"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your company address"
-                />
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Company Address</label>
+                <input type="text" className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Nationality
-                </label>
-                <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
-                  <option value="">Select country</option>
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Nationality</label>
+                <select className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none">
+                  <option value="">Select Country</option>
                   <option value="SA">Saudi Arabia</option>
                   <option value="AE">United Arab Emirates</option>
                   <option value="QA">Qatar</option>
@@ -291,50 +261,34 @@ export default function MicePage() {
                   <option value="BH">Bahrain</option>
                   <option value="OM">Oman</option>
                   <option value="EG">Egypt</option>
-                  <option value="US">United States</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="DE">Germany</option>
-                  <option value="FR">France</option>
+                  <option value="JO">Jordan</option>
+                  <option value="LB">Lebanon</option>
                   <option value="OTHER">Other</option>
                 </select>
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Phone/Mobile
-                </label>
-                <input
-                  type="tel"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="+966 500 000 0000"
-                />
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Phone/Mobile</label>
+                <input type="tel" className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Event Type
-                </label>
-                <select className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors">
-                  <option value="">Select event type</option>
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Event Type</label>
+                <select className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none">
+                  <option value="">Select Event Type</option>
                   {eventTypes.map((type) => (
                     <option key={type} value={type}>{type}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us about your MICE event requirements..."
-                />
+                <label className="block text-[0.65rem] text-pts-gold uppercase tracking-[0.2em] mb-2">Message</label>
+                <textarea rows={4} className="w-full bg-pts-black border border-pts-gold/40 p-3 text-pts-parchment text-sm focus:border-pts-gold focus:outline-none" />
               </div>
-              <MagneticButton
+              <button
                 type="submit"
-                className="w-full border-pts-gold bg-pts-gold px-8 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
+                className="w-full bg-pts-gold text-pts-black font-bold uppercase tracking-[0.3em] py-4 hover:bg-pts-gold/90 transition-colors"
               >
                 Submit Form
-              </MagneticButton>
+              </button>
             </form>
           </div>
         </div>

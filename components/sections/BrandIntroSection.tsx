@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ParallaxImage } from "@/components/animations/ParallaxImage";
-import { LineRevealText } from "@/components/animations/LineRevealText";
+import { TextScrollReveal } from "@/components/animations/TextScrollReveal";
 import { heroMedia } from "@/lib/media";
 import { t } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
@@ -64,48 +64,6 @@ export function BrandIntroSection() {
         });
       }
 
-      /* Title words */
-      const titleWords = col.querySelectorAll<HTMLElement>(".biw");
-
-      if (isTouch) {
-        // Mobile: simple staggered fade-in
-        gsap.fromTo(
-          titleWords,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.04,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: { 
-              trigger: col, 
-              start: "top 92%", 
-              once: true, // Fire once on mobile to prevent "stuck" states during scroll
-            },
-          },
-        );
-      } else {
-        // Desktop: scrub with skew
-        gsap.fromTo(
-          titleWords,
-          { yPercent: 120, skewY: 6, opacity: 0.15 },
-          {
-            yPercent: 0,
-            skewY: 0,
-            opacity: 1,
-            ease: "none",
-            stagger: 0.08,
-            scrollTrigger: {
-              trigger: col,
-              start: "top 88%",
-              end: "top 42%",
-              scrub: 0.45,
-            },
-          },
-        );
-      }
-
       const accent = col.querySelector<HTMLElement>(".bi-accent");
       if (accent) {
         gsap.fromTo(
@@ -118,41 +76,6 @@ export function BrandIntroSection() {
             scrollTrigger: { trigger: col, start: "top 78%", once: true },
           },
         );
-      }
-
-      /* Copy block */
-      const copy = col.querySelector<HTMLElement>(".bi-copy");
-      if (copy) {
-        if (isTouch) {
-          gsap.fromTo(
-            copy,
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              ease: "power3.out",
-              scrollTrigger: { trigger: copy, start: "top 92%", once: true },
-            },
-          );
-        } else {
-          gsap.fromTo(
-            copy,
-            { rotateX: 12, y: 40, transformOrigin: "50% 0%", opacity: 0.2 },
-            {
-              rotateX: 0,
-              y: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: copy,
-                start: "top 92%",
-                end: "top 55%",
-                scrub: 0.6,
-              },
-            },
-          );
-        }
       }
 
       /* Image shell: iris reveal — desktop only (clip-path is GPU-heavy on mobile) */
@@ -223,22 +146,24 @@ export function BrandIntroSection() {
               </p>
               <div className="h-px w-8 bg-pts-gold" />
             </div>
-            <h2 className="font-heading text-[clamp(1.4rem,6vw,2.4rem)] font-bold uppercase leading-[1.2] tracking-[0.08em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]">
+            <TextScrollReveal as="h2" className="font-heading text-[clamp(1.4rem,6vw,2.4rem)] font-bold uppercase leading-[1.2] tracking-[0.08em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]">
               {titleWords.map((w, i) => (
                 <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
-                  <span className="biw inline-block will-change-transform">{w}</span>
+                  <span className="inline-block">{w}</span>
                 </span>
               ))}
-            </h2>
+            </TextScrollReveal>
             <div className="bi-accent mt-6 h-[2px] w-16 scale-x-0 bg-pts-gold will-change-transform sm:mt-8 sm:w-24" />
           </div>
 
           <div className="bi-copy mt-8 max-w-2xl [transform-style:preserve-3d] sm:mt-10">
-            <LineRevealText
-              text={t(locale, "brand.body")}
-              mode="cascade"
+            <TextScrollReveal
+              as="p"
               className="text-[0.7rem] font-bold uppercase leading-[2] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-[0.95rem] sm:leading-[2.2] sm:tracking-[0.18em]"
-            />
+              delay={90}
+            >
+              {t(locale, "brand.body")}
+            </TextScrollReveal>
           </div>
         </div>
       </div>

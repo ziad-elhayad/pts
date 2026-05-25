@@ -115,11 +115,12 @@ export default function ConciergePage() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+    const totalSlides = slideElements.length;
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${slideElements.length * (isLowEnd ? 30 : 40)}%`,
+        end: `+=${(totalSlides + 0.5) * (isLowEnd ? 30 : 40)}%`,
         pin: true,
         anticipatePin: 1,
         scrub: isLowEnd ? 0.15 : (isTouch ? 0.35 : 0.6),
@@ -130,7 +131,7 @@ export default function ConciergePage() {
       if (idx > 0) {
         gsap.set(slide, { yPercent: 100 });
         
-        const startTime = idx * 0.45;
+        const startTime = idx * 0.5;
 
         tl.to(slide, {
           yPercent: 0,
@@ -227,7 +228,7 @@ export default function ConciergePage() {
       {/* Enquiry Modal */}
       {showEnquiry && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-4">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8">
+          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
               <h3 className="font-heading text-xl uppercase tracking-[0.1em] text-pts-parchment">
                 Enquire for Concierge
@@ -246,12 +247,12 @@ export default function ConciergePage() {
             <form className="space-y-4">
               <div>
                 <label className="block text-[0.6rem] uppercase tracking-[0.3em] text-pts-gold mb-2">
-                  Name
+                  First Name
                 </label>
                 <input
                   type="text"
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="Your name"
+                  placeholder="Your first name"
                 />
               </div>
               <div>

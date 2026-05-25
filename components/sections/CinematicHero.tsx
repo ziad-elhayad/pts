@@ -139,17 +139,7 @@ export const CinematicHero = memo(function CinematicHero() {
         },
       });
 
-      gsap.to(content, {
-        autoAlpha: 0,
-        yPercent: isLowEnd ? -5 : -22,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "50% top",
-          scrub: 0,
-        },
-      });
+      // Removed fade-out animation to keep content visible during scroll
 
       ScrollTrigger.create({
         trigger: sectionRef.current,
@@ -278,11 +268,11 @@ export const CinematicHero = memo(function CinematicHero() {
             ))}
           </h1>
 
-          <p className="hero-sub mt-8 max-w-xl text-[0.68rem] sm:mt-10 sm:text-[0.85rem] font-bold uppercase leading-[1.8] tracking-[0.12em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] opacity-0 sm:leading-[2.15] sm:tracking-[0.18em]">
+          <p className="hero-sub mt-8 max-w-xl text-[0.68rem] sm:mt-10 sm:text-[0.85rem] font-bold uppercase leading-[1.8] tracking-[0.12em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] sm:leading-[2.15] sm:tracking-[0.18em]">
             {t(locale, "hero.sub")}
           </p>
 
-          <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 opacity-0 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">
+          <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">
             <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto">
               Inquire
             </MagneticButton>
@@ -294,14 +284,14 @@ export const CinematicHero = memo(function CinematicHero() {
             </MagneticButton>
           </div>
 
-          <div className="hero-scroll-hint mt-10 sm:mt-14 opacity-0">
+          <div className="hero-scroll-hint mt-10 sm:mt-14">
             <div className="hidden sm:block">
               <FloatingScrollIndicator />
             </div>
           </div>
         </div>
 
-        <div className="hero-coords absolute bottom-6 right-6 text-right opacity-0 sm:bottom-8 sm:right-10">
+        <div className="hero-coords absolute bottom-6 right-6 text-right sm:bottom-8 sm:right-10">
           <p className="lux-heading text-[0.4rem] tracking-[0.4em] text-pts-gold sm:text-[0.45rem] sm:tracking-[0.5em]">21°N 39°E</p>
           <p className="lux-heading mt-1 text-[0.35rem] tracking-[0.3em] text-pts-gold/60 sm:text-[0.4rem] sm:tracking-[0.4em]">JEDDAH · GLOBAL</p>
         </div>
@@ -309,3 +299,4 @@ export const CinematicHero = memo(function CinematicHero() {
     </section>
   );
 });
+

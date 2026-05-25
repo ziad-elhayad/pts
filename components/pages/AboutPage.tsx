@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { TextScrollReveal } from "@/components/animations/TextScrollReveal";
 import { PageTransition } from "@/components/animations/PageTransition";
 import { ParallaxImage } from "@/components/animations/ParallaxImage";
 import Image from "next/image";
@@ -34,23 +34,14 @@ export function AboutPage() {
             intensity={15}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-pts-bg via-pts-bg/40 to-transparent" />
-          <div className="absolute inset-0 flex flex-col justify-end p-10 sm:p-20">
+          <div className="absolute inset-0 flex flex-col justify-end p-16 sm:p-24">
             <div className="max-w-[1400px] mx-auto w-full">
-               <motion.p 
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 0.6, y: 0 }}
-                 className="lux-heading text-[0.6rem] text-pts-gold mb-6 tracking-[0.5em] uppercase"
-               >
+               <TextScrollReveal as="p" className="lux-heading text-[0.6rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">
                  ABOUT US
-               </motion.p>
-               <motion.h1 
-                 initial={{ opacity: 0, y: 30 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ delay: 0.2 }}
-                 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] max-w-5xl"
-               >
+               </TextScrollReveal>
+               <TextScrollReveal as="h1" className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] max-w-5xl" delay={80}>
                  WHERE EVERY JOURNEY<br/>IS HANDLED WITH PRECISION
-               </motion.h1>
+               </TextScrollReveal>
             </div>
           </div>
         </section>
