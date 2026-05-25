@@ -5,6 +5,7 @@ import { CinematicHero } from "@/components/sections/CinematicHero";
 import { BrandIntroSection } from "@/components/sections/BrandIntroSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { PerspectiveStackGallery } from "@/components/sections/PerspectiveStackGallery";
+import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SideDotNavigator } from "@/components/ui/SideDotNavigator";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
@@ -21,6 +22,10 @@ export function HomePage() {
 
       <CinematicSection id="about" mist>
         <BrandIntroSection />
+      </CinematicSection>
+
+      <CinematicSection id="services" mist>
+        <ServicesSection />
       </CinematicSection>
 
       <CinematicSection id="gallery" mist className="page-section">
