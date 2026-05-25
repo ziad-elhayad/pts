@@ -279,7 +279,7 @@ export const CinematicHero = memo(function CinematicHero() {
           </h1>
 
           <p className="hero-sub mt-8 max-w-xl text-[0.68rem] sm:mt-10 sm:text-[0.85rem] font-bold uppercase leading-[1.8] tracking-[0.12em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] opacity-0 sm:leading-[2.15] sm:tracking-[0.18em]">
-            {site.description}
+            {t(locale, "hero.sub")}
           </p>
 
           <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 opacity-0 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">

@@ -3,13 +3,10 @@
 import { CinematicSection } from "@/components/animations/CinematicSection";
 import { CinematicHero } from "@/components/sections/CinematicHero";
 import { BrandIntroSection } from "@/components/sections/BrandIntroSection";
-import { MiceOverviewSection } from "@/components/sections/MiceOverviewSection";
-import { StickySplitSection } from "@/components/sections/StickySplitSection";
-import { ExpandingItineraries } from "@/components/sections/ExpandingItineraries";
+import { VipOverviewSection } from "@/components/sections/VipOverviewSection";
+import { FaqSection } from "@/components/sections/FaqSection";
 
 import { PerspectiveStackGallery } from "@/components/sections/PerspectiveStackGallery";
-import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
-import { LuxuryCtaSection } from "@/components/sections/LuxuryCtaSection";
 import { SideDotNavigator } from "@/components/ui/SideDotNavigator";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
@@ -25,54 +22,28 @@ export function HomePage() {
         <CinematicHero />
       </CinematicSection>
 
-      <CinematicSection id="intro" mist>
+      <CinematicSection id="about" mist>
         <BrandIntroSection />
       </CinematicSection>
 
-      <CinematicSection id="mice" mist>
-        <MiceOverviewSection />
-      </CinematicSection>
-
-      <CinematicSection id="vip-split" mist className="page-section">
-        <div className="section-inner">
-          <SectionTitle number="03" subtitle="Elite Access" title="VIP Concierge" reveal="blur-in" />
-        </div>
-        <StickySplitSection />
-      </CinematicSection>
-
-      <CinematicSection id="itineraries" mist className="page-section">
-        <div className="section-inner">
-          <SectionTitle number="04" subtitle="Experiences" title="Curated Itineraries" reveal="scale-soft" />
-        </div>
-        <ExpandingItineraries />
+      <CinematicSection id="services" mist>
+        <VipOverviewSection />
       </CinematicSection>
 
       <CinematicSection id="gallery" mist className="page-section">
-        <div className="section-inner">
-          <SectionTitle number="05" subtitle="Archive" title="Experiences & Gallery" reveal="lift" />
+        <div className="section-inner flex flex-col items-center text-center">
+          <SectionTitle number="03" subtitle="Archive" title="FOLLOW THE JOURNEY" align="center" reveal="lift" />
+          <h3 className="font-heading text-2xl sm:text-3xl uppercase tracking-[0.1em] text-pts-parchment mb-6">
+            Experience the World Like Never Before
+          </h3>
+          <p className="max-w-3xl text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed">
+            Explore our handpicked, exclusive stays and create unforgettable memories across the globe. Every destination is curated for comfort, luxury, and moments you'll cherish forever.
+          </p>
         </div>
         <PerspectiveStackGallery />
       </CinematicSection>
 
-      <CinematicSection id="testimonials" mist className="page-section">
-        <div className="section-inner flex flex-col items-center">
-          <SectionTitle
-            number="06"
-            subtitle="Voices"
-            title="Experience Highlights"
-            align="center"
-            reveal="scale-soft"
-          />
-        </div>
-        <TestimonialsSection />
-      </CinematicSection>
-
-      <CinematicSection id="cta" mist scrubReveal className="page-section">
-        <div className="section-inner flex flex-col items-center">
-          <SectionTitle number="07" subtitle="Begin" title="Global Inquiry" align="center" reveal="clip-wipe" />
-        </div>
-        <LuxuryCtaSection />
-      </CinematicSection>
+      <FaqSection />
     </div>
   );
 }

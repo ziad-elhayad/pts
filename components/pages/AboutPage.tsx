@@ -7,16 +7,16 @@ import Image from "next/image";
 
 const PHILOSOPHY = [
   {
-    title: "Orchestration",
-    text: "We don't just manage travel; we compose itineraries as editorial narratives—timing, tone, and access calibrated to the principal's rhythm.",
+    title: "Our Vision",
+    text: "Founded with a clear vision, Gervae redefines elite concierge. We don't simply arrange travel — we create seamless experiences built on strategy, discretion, and precision.",
   },
   {
-    title: "Regional Fluency",
-    text: "With a strategic emphasis on Saudi Arabia and Jeddah, we pair local mastery with global standards vetted over years of discreet service.",
+    title: "Our Clients",
+    text: "Designed for professionals who move with purpose — doctors, international students, executives, and global travelers who value efficiency and exclusivity.",
   },
   {
-    title: "Exclusivity",
-    text: "Access is not a checklist—it's a relationship. We provide the invisible infrastructure that makes the impossible routine.",
+    title: "Our Promise",
+    text: "At Gervae, travel is more than pleasure. It is Clarity, Control, and Confidence from the first step. Through strong Global Connections and trusted networks across the travel ecosystem, we simplify complex processes and deliver effortless solutions.",
   },
 ];
 
@@ -41,7 +41,7 @@ export function AboutPage() {
                  animate={{ opacity: 0.6, y: 0 }}
                  className="lux-heading text-[0.6rem] text-pts-gold mb-6 tracking-[0.5em] uppercase"
                >
-                 THE MANIFESTO
+                 ABOUT US
                </motion.p>
                <motion.h1 
                  initial={{ opacity: 0, y: 30 }}
@@ -49,7 +49,7 @@ export function AboutPage() {
                  transition={{ delay: 0.2 }}
                  className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] max-w-5xl"
                >
-                 A composed presence<br/>across capitals.
+                 WHERE EVERY JOURNEY<br/>IS HANDLED WITH PRECISION
                </motion.h1>
             </div>
           </div>

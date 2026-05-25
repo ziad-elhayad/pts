@@ -17,9 +17,15 @@ export const site = {
 
 export const navItems = [
   { href: "/", key: "nav.home" as const },
-  { href: "/about", key: "nav.about" as const },
-  { href: "/mice", key: "nav.mice" as const },
-  { href: "/vip-concierge", key: "nav.vip" as const },
-  { href: "/experiences", key: "nav.experiences" as const },
+  { href: "#about", key: "nav.about" as const, anchor: true },
+  { href: "/services", key: "nav.services" as const, dropdown: true },
+  { href: "/faq", key: "nav.faq" as const, anchor: true },
   { href: "/contact", key: "nav.contact" as const },
+] as const;
+
+export const serviceItems = [
+  { href: "/services/concierge", key: "services.concierge" as const },
+  { href: "/services/mice", key: "services.mice" as const },
+  { href: "/services/medical-tourism", key: "services.medical" as const },
+  { href: "/services/sports", key: "services.sports" as const },
 ] as const;

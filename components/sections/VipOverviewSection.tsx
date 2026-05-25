@@ -1,90 +1,158 @@
 "use client";
 
-import Link from "next/link";
-import { PremiumCard } from "@/components/ui/PremiumCard";
+import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { HorizontalScrollSection } from "@/components/animations/HorizontalScrollSection";
 import { vipServiceMedia } from "@/lib/media";
-import { t } from "@/lib/dictionary";
-import { useLocale } from "@/contexts/LocaleContext";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
-const pillars = [
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const services = [
   {
-    title: "Executive lifestyle management",
-    description: "Calendars, households, and travel ecosystems—handled with quiet precision and absolute discretion.",
+    title: "Concierge",
+    subtitle: "Designed Around You and Delivered With Precision",
+    description: "Luxury transportation services providing a curated selection of chauffeur-driven vehicles and premium travel solutions tailored for comfort, privacy, and reliability. Whether for airport transfers, executive travel, or dedicated vehicles for the entire day, every journey is handled with professionalism, discretion, and exceptional attention to detail.",
+    button: "Read More →",
+    link: "/services/concierge",
   },
   {
-    title: "Luxury reservations",
-    description: "Tables, suites, and private rooms secured through relationships—not algorithms.",
+    title: "MICE & International Events Management",
+    subtitle: "",
+    description: "Connecting Excellence with Global Opportunities. Organizing professional global meetings, adhering to the highest international standards and protocols.",
+    button: "Read More →",
+    link: "/services/mice",
   },
   {
-    title: "Private transportation",
-    description: "Chauffeured fleets, aviation coordination, and arrival choreography without friction.",
+    title: "Elite Medical Tourism Concierge",
+    subtitle: "",
+    description: "Gervae makes medical journeys seamless — from arranging world-class treatment to handling travel and accommodations with precision. Every detail is managed confidentially and efficiently, so clients can focus on health and peace of mind. With Gervae, medical travel isn't just a trip — it's a worry-free experience, tailored just for you.",
+    button: "ENQUIRE NOW",
+    link: "/services/medical-tourism",
   },
   {
-    title: "Exclusive access",
-    description: "Behind-the-velvet moments: private viewings, closed venues, and curated introductions.",
-  },
-  {
-    title: "High-profile event coordination",
-    description: "From gala evenings to discreet receptions—guest experience as a signature.",
-  },
-  {
-    title: "Tailored private experiences",
-    description: "Desert horizons, coastal escapes, and urban sanctuaries—authored as one seamless arc.",
+    title: "Elite Sports Events & Hospitality",
+    subtitle: "",
+    description: "Managing premium and specialized logistics and hospitality for the world's most prestigious sporting events. Whether hosting a tournament or organizing VIP travel for athletes and supporters, Gervae delivers a front-row experience.",
+    button: "Read More →",
+    link: "/services/sports",
   },
 ] as const;
 
 export function VipOverviewSection() {
-  const { locale } = useLocale();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const { isLowEnd, reducedMotion } = usePerformance();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useGSAP(() => {
+    if (!containerRef.current || reducedMotion || !mounted) return;
+
+    const stages = containerRef.current.querySelectorAll(".service-slide");
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: `+=${stages.length * (isLowEnd ? 30 : 40)}%`,
+        pin: true,
+        anticipatePin: 1,
+        scrub: isLowEnd ? 0.15 : (isTouch ? 0.35 : 0.6),
+      },
+    });
+
+    stages.forEach((stage, idx) => {
+      if (idx > 0) {
+        // Prepare stage off-screen
+        gsap.set(stage, { yPercent: 100 });
+        
+        const startTime = idx * 0.45;
+
+        tl.to(stage, {
+          yPercent: 0,
+          ease: "power2.inOut",
+        }, startTime); 
+
+        // Push the previous stage back slightly
+        const prevStage = stages[idx - 1];
+        tl.to(prevStage, {
+          scale: isLowEnd ? 1 : 0.94,
+          opacity: isLowEnd ? 0.2 : 0.4,
+          yPercent: isLowEnd ? 0 : -8,
+          filter: (isTouch || isLowEnd) ? "none" : "blur(4px)",
+          ease: "power2.inOut"
+        }, startTime);
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, { scope: containerRef, dependencies: [mounted, reducedMotion, isLowEnd] });
 
   return (
-    <section id="vip-section" className="border-t border-pts-line bg-pts-black/25">
-      <HorizontalScrollSection
-        id="vip"
-        kicker="VIP"
-        title={t(locale, "vip.title")}
-        description={t(locale, "vip.sub")}
-        gap="0"
-      >
-        {pillars.map((item, index) => {
-          const media = vipServiceMedia[index];
-          return (
-            <PremiumCard
-              key={item.title}
-              kicker="Concierge"
-              title={item.title}
-              description={item.description}
-              image={{ src: media.src, alt: media.alt, priority: true }}
-              footer={
-                <Link
-                  href="/vip-concierge"
-                  className="lux-heading text-[0.5rem] text-pts-gold tracking-[0.3em] uppercase hover:text-pts-parchment transition"
-                >
-                  Explore VIP
-                </Link>
-              }
-            />
-          );
-        })}
-
-        <div className="w-[85vw] sm:w-[60vw] md:w-[38vw] flex-shrink-0 flex flex-col justify-center px-8 sm:px-16 bg-pts-deep/20">
-          <div className="mb-8 flex items-center gap-4">
-            <div className="h-px w-6 bg-pts-gold/40" />
-            <p className="lux-heading text-[0.44rem] text-pts-gold tracking-[0.6em] opacity-50 uppercase">Services</p>
-          </div>
-          
-          <h3 className="font-heading text-xl sm:text-2xl text-pts-gold-2 tracking-[0.15em] leading-[1.3] uppercase mb-12 max-w-sm font-light">
-            Personalized. Private. Perfect.
-          </h3>
-          
-          <MagneticButton href="/vip-concierge" className="w-fit px-10 py-5">
-            Explore VIP
-          </MagneticButton>
-          
-          <div className="mt-20 h-px w-12 bg-pts-gold/20" />
+    <section ref={containerRef} id="services-section" className="border-t border-pts-line bg-pts-black/25 py-20 px-10 relative overflow-hidden">
+      <div className="max-w-[1400px] mx-auto relative z-10">
+        <div className="mb-12">
+          <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">SERVICES</p>
+          <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">Our Services</h2>
         </div>
-      </HorizontalScrollSection>
+
+        <div className="relative min-h-[500px]">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="service-slide absolute inset-0"
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
+                {/* Left Side - Text Content */}
+                <div className="order-2 lg:order-1">
+                  {service.subtitle && (
+                    <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.4em] uppercase">
+                      {service.subtitle}
+                    </p>
+                  )}
+                  <h3 className="font-heading text-2xl sm:text-4xl uppercase tracking-[0.1em] text-pts-parchment mb-6">
+                    {service.title}
+                  </h3>
+                  <p className="text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-8">
+                    {service.description}
+                  </p>
+                  <MagneticButton
+                    href={service.link}
+                    className="border-pts-gold bg-pts-gold px-10 py-3 text-[0.6rem] uppercase tracking-[0.3em] text-pts-black hover:bg-pts-gold/90"
+                  >
+                    {service.button}
+                  </MagneticButton>
+                </div>
+
+                {/* Right Side - Image */}
+                <div className="order-1 lg:order-2">
+                  <div className="relative h-80 sm:h-96 overflow-hidden rounded-sm border border-pts-gold/30 bg-pts-black">
+                    <Image
+                      src={vipServiceMedia[index % vipServiceMedia.length].src}
+                      alt={service.title}
+                      fill
+                      className="object-cover brightness-100 saturate-100"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

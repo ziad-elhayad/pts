@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
-import { navItems } from "@/lib/site";
+import { navItems, serviceItems } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { Magnetic } from "@/components/ui/Magnetic";
@@ -79,20 +79,133 @@ export function LuxuryNavbar() {
           {/* Desktop nav */}
           <nav className="hidden items-center gap-8 lg:flex">
             {navItems.map((item) => {
-              const active = pathname === item.href;
+              const isHomePage = pathname === "/";
+              const isAnchor = "anchor" in item && item.anchor;
+              const anchorId = item.href === "/" ? "hero" : item.href.replace(/^[\/#]+/, "");
+              const navActive = isHomePage ? false : pathname === item.href;
+
+              // Handle anchor links (About and FAQ)
+              if (isAnchor) {
+                const handleAnchorClick = () => {
+                  if (isHomePage) {
+                    const element = document.getElementById(anchorId);
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth" });
+                    }
+                  } else {
+                    window.location.href = `/#${anchorId}`;
+                  }
+                };
+
+                return (
+                  <Magnetic strength={0.25} key={item.href}>
+                    <button
+                      type="button"
+                      onClick={handleAnchorClick}
+                      className={clsx(
+                        "relative text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300 cursor-pointer border-none bg-transparent outline-none",
+                        pathname === "/"
+                          ? "text-pts-parchment"
+                          : "text-pts-gold-2 hover:text-pts-parchment"
+                      )}
+                    >
+                      {t(locale, item.key as DictionaryKey)}
+                    </button>
+                  </Magnetic>
+                );
+              }
+
+              if ("dropdown" in item && item.dropdown) {
+                const [servicesHovered, setServicesHovered] = useState(false);
+                const dropdownActive = serviceItems.some((sub) => pathname === sub.href);
+                return (
+                  <div
+                    key={item.key}
+                    className="relative py-2"
+                    onMouseEnter={() => setServicesHovered(true)}
+                    onMouseLeave={() => setServicesHovered(false)}
+                  >
+                    <Magnetic strength={0.25}>
+                      <button
+                        type="button"
+                        className={clsx(
+                          "relative flex items-center gap-1.5 text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300 cursor-pointer border-none bg-transparent outline-none font-body",
+                          dropdownActive
+                            ? "text-pts-parchment"
+                            : "text-pts-gold-2 hover:text-pts-parchment"
+                        )}
+                      >
+                        <span>{t(locale, item.key as DictionaryKey)}</span>
+                        <svg
+                          className={clsx("w-3 h-3 transition-transform duration-300 text-pts-gold/70", servicesHovered && "rotate-180")}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                        {dropdownActive && (
+                          <span className="absolute -bottom-1.5 left-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
+                        )}
+                      </button>
+                    </Magnetic>
+
+                    <AnimatePresence>
+                      {servicesHovered && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                          className="absolute left-1/2 top-full -translate-x-1/2 pt-4 z-50 w-64"
+                        >
+                          <div className="border border-pts-gold/20 bg-pts-deep/98 backdrop-blur-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-sm space-y-1">
+                            {serviceItems.map((subItem) => {
+                              const subActive = pathname === subItem.href;
+                              return (
+                                <Link
+                                  key={subItem.href}
+                                  href={subItem.href}
+                                  className={clsx(
+                                    "group flex items-center justify-between w-full px-4 py-3 text-[0.62rem] uppercase tracking-[0.2em] rounded-sm transition-all duration-300",
+                                    subActive
+                                      ? "bg-pts-gold/12 text-pts-gold"
+                                      : "text-pts-gold-2 hover:text-pts-parchment hover:bg-pts-gold/6"
+                                  )}
+                                >
+                                  <span>{t(locale, subItem.key as DictionaryKey)}</span>
+                                  <svg
+                                    className="w-3.5 h-3.5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 text-pts-gold"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
+
               return (
                 <Magnetic strength={0.25} key={item.href}>
                   <Link
                     href={item.href}
                     className={clsx(
                       "relative text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300",
-                      active
+                      navActive
                         ? "text-pts-parchment"
                         : "text-pts-gold-2 hover:text-pts-parchment"
                     )}
                   >
                     {t(locale, item.key as DictionaryKey)}
-                    {active && (
+                    {navActive && (
                       <span className="absolute -bottom-1.5 left-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
                     )}
                   </Link>
@@ -105,7 +218,7 @@ export function LuxuryNavbar() {
           <div className="hidden items-center gap-5 lg:flex">
             {/* Language toggle */}
             <div className="flex rounded-full border border-pts-line/30 bg-pts-black/30 p-1 text-[0.58rem] uppercase tracking-[0.28em]">
-              {(["en", "ar"] as const).map((lang) => (
+              {(["en", "de", "ar"] as const).map((lang) => (
                 <button
                   key={lang}
                   type="button"
@@ -117,7 +230,7 @@ export function LuxuryNavbar() {
                   )}
                   onClick={() => setLocale(lang)}
                 >
-                  {t(locale, `lang.${lang}` as DictionaryKey)}
+                  {lang === "en" ? "EN" : lang === "de" ? "DE" : "AR"}
                 </button>
               ))}
             </div>

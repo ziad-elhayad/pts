@@ -210,17 +210,18 @@ export function BrandIntroSection() {
         aria-hidden
       />
 
-      <div className="relative z-20 mx-auto flex w-full max-w-[92rem] flex-col justify-center px-6 sm:px-[clamp(1.25rem,4vw,2.5rem)]">
+      <div className="relative z-20 mx-auto flex w-full max-w-[92rem] flex-col justify-center px-6 sm:px-[clamp(1.25rem,4vw,2.5rem)] items-center text-center">
         <div
           ref={colRef}
-          className="max-w-4xl [transform-style:preserve-3d]"
+          className="max-w-4xl [transform-style:preserve-3d] flex flex-col items-center"
         >
           <div className="mb-4">
-            <div className="mb-8 flex items-center gap-4 sm:mb-10">
+            <div className="mb-8 flex items-center justify-center gap-4 sm:mb-10">
               <div className="h-px w-8 bg-pts-gold" />
               <p className="lux-heading text-[0.5rem] tracking-[0.4em] text-pts-gold sm:text-[0.55rem] sm:tracking-[0.6em]">
                 {t(locale, "brand.kicker")}
               </p>
+              <div className="h-px w-8 bg-pts-gold" />
             </div>
             <h2 className="font-heading text-[clamp(1.4rem,6vw,2.4rem)] font-bold uppercase leading-[1.2] tracking-[0.08em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]">
               {titleWords.map((w, i) => (
