@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -12,15 +13,17 @@ type BrandLogoProps = {
 /**
  * GERVAE Logo.
  */
-export function BrandLogo({ className, size = 32, variant = "text" }: BrandLogoProps) {
+export const BrandLogo = memo(function BrandLogo({ className, size = 32, variant = "text" }: BrandLogoProps) {
   if (variant === "image") {
     return (
       <Image
-        src="/images/gervae-logo.png"
+        src="/images/logo image/c8cee5ff-cee7-4268-98cd-771a25792a54.png"
         alt="GERVAE"
-        width={size * 2}
-        height={size}
+        width={size * 6}
+        height={size * 2}
         className={clsx("opacity-90", className)}
+        style={{ background: "transparent" }}
+        loading="lazy"
       />
     );
   }
@@ -36,15 +39,15 @@ export function BrandLogo({ className, size = 32, variant = "text" }: BrandLogoP
       GERVAE
     </div>
   );
-}
+});
 
 /**
  * Full logo for wider contexts.
  */
-export function BrandLogoFull({ className }: { className?: string }) {
+export const BrandLogoFull = memo(function BrandLogoFull({ className }: { className?: string }) {
   return (
     <div className={clsx("flex items-center gap-4", className)}>
       <BrandLogo size={28} />
     </div>
   );
-}
+});

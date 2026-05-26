@@ -37,12 +37,6 @@ export async function submitEnquiry(
 
   // Mock mode for testing without real Web3Forms access key
   if (accessKey === "00000000-0000-0000-0000-000000000000") {
-    console.log("[MOCK FORM SUBMISSION]", {
-      source,
-      toEmail,
-      data,
-      message,
-    });
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     return { ok: true };

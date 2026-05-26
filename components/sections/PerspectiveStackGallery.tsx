@@ -13,7 +13,7 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Perspective stack — asymmetric “deck” choreography: Z-lift + yaw + drift (unique).
+ * Perspective stack — simplified deck choreography with reliable scrolling.
  */
 export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,21 +39,43 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
     const items = trackRef.current.querySelectorAll<HTMLElement>(".stack-item");
     const totalItems = items.length;
 
+    // Set initial state for all items
+    items.forEach((item) => {
+      gsap.set(item, {
+        opacity: 1,
+        scale: 1,
+        x: 0,
+        y: 0,
+        rotateY: 0,
+        rotateZ: 0,
+        z: 0,
+        backfaceVisibility: "hidden"
+      });
+    });
+
+    // Create scroll-triggered animations
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
         end: `+=${totalItems * (isLowEnd ? 40 : (isTouch ? 50 : 70))}%`,
         pin: true,
-        scrub: isLowEnd ? 0.2 : (isTouch ? 0.4 : 0.8), 
+        scrub: isLowEnd ? 0.2 : (isTouch ? 0.4 : 0.8),
         anticipatePin: 1,
-        snap: {
-          snapTo: 1 / (totalItems - 1),
-          duration: { min: 0.2, max: 0.6 },
-          delay: 0,
-          ease: "power2.inOut"
-        }
       },
+    });
+
+    // Animate each item to slide out
+    items.forEach((item, i) => {
+      if (i < totalItems - 1) {
+        tl.to(item, {
+          x: isTouch ? "60%" : "90%",
+          rotateZ: isLowEnd ? 0 : 3,
+          rotateY: isLowEnd ? 0 : 5,
+          duration: isTouch ? 1.2 : 1.5,
+          ease: "power2.inOut"
+        }, i * (isTouch ? 1.2 : 1.5));
+      }
     });
 
     if (glowRef.current && !isLowEnd) {
@@ -69,34 +91,6 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
         },
       });
     }
-
-    items.forEach((item, i) => {
-      // initial stack order: first item on top
-      gsap.set(item, { 
-        zIndex: totalItems - i,
-        opacity: 1, 
-        scale: 1, 
-        x: 0, 
-        y: 0, 
-        rotateY: 0, 
-        rotateZ: 0, 
-        z: -i * 2,
-        backfaceVisibility: "hidden"
-      });
-
-      // Exit animations: Only for items that are NOT the last one
-      if (i < totalItems - 1) {
-        tl.to(item, {
-          z: isLowEnd ? 40 : 100, 
-          x: isTouch ? "105%" : "120%", 
-          rotateZ: isLowEnd ? 0 : 8,
-          rotateY: isLowEnd ? 0 : 15,
-          opacity: 0,
-          duration: isTouch ? 1.2 : 1.5,
-          ease: "power2.inOut"
-        }, i * (isTouch ? 1.2 : 1.5));
-      }
-    });
   }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted] });
 
   return (
@@ -119,6 +113,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
           <div
             key={i}
             className="stack-item absolute left-0 top-0 h-full w-full will-change-transform transform-gpu [transform-style:preserve-3d]"
+            style={{ zIndex: 6 - i }}
           >
             <div className="relative h-full w-full overflow-hidden rounded-xl border border-pts-gold/20 bg-pts-black shadow-[0_28px_90px_-20px_rgba(0,0,0,0.85)] ring-1 ring-white/[0.04]">
               <Image
@@ -151,7 +146,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
         ))}
       </div>
 
-      <div className="float-gentle absolute bottom-6 sm:bottom-12 right-6 sm:right-12 flex flex-col items-end gap-2 opacity-25">
+      <div className="absolute bottom-6 sm:bottom-12 right-6 sm:right-12 flex flex-col items-end gap-2 opacity-25">
         <div className="h-20 w-px bg-gradient-to-t from-pts-gold to-transparent" />
         <span className="lux-heading translate-x-2 translate-y-8 origin-right rotate-90 text-[0.5rem] tracking-[0.5em] text-pts-gold">
           PTS025

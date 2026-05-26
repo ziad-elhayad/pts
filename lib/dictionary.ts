@@ -126,6 +126,7 @@ export const dictionary = {
     "sports.service9.description": "Celebrating desert heritage with professional management of traditional races, featuring high-tech robotic jockeys and authentic cultural experiences.",
 
     // Services Section
+    "services.section.heading": "Our Services",
     "services.section.concierge.title": "Concierge",
     "services.section.concierge.subtitle": "Designed Around You and Delivered With Precision",
     "services.section.concierge.description": "Luxury transportation services providing a curated selection of chauffeur-driven vehicles and premium travel solutions tailored for comfort, privacy, and reliability. Whether for airport transfers, executive travel, or dedicated vehicles for the entire day, every journey is handled with professionalism, discretion, and exceptional attention to detail.",
@@ -424,6 +425,7 @@ export const dictionary = {
     "sports.service9.description": "الاحتفال بالتراث الصحراوي مع إدارة احترافية للسباقات التقليدية، مع فرسان آليين عالي التقنية وتجارب ثقافية أصيلة.",
 
     // Services Section
+    "services.section.heading": "خدماتنا",
     "services.section.concierge.title": "الكونسيرج",
     "services.section.concierge.subtitle": "مصممة خصيصاً لك ومُقدمة بدقة متناهية",
     "services.section.concierge.description": "تقدم خدماتنا للنقل الفاخر تشكيلة مختارة من المركبات مع سائقين وحلول سفر متميزة مصممة للراحة والخصوصية والموثوقية. سواء كنت بحاجة إلى نقل من المطار أو سفر تنفيذي أو مركبات مخصصة ليوم كامل، كل رحلة تُعالج باحترافية وسرية واهتمام استثنائي بالتفاصيل.",

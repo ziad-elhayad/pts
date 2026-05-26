@@ -14,6 +14,9 @@ import { sportsCategoryImages } from "@/lib/service-category-images";
 import { useMobileSliderView } from "@/hooks/useMobileSliderView";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
+import { CountrySelect } from "@/components/forms/CountrySelect";
+import { LuxurySelect } from "@/components/forms/LuxurySelect";
+import { Modal } from "@/components/ui/Modal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -96,7 +99,8 @@ export default function SportsPage() {
     ScrollTrigger.refresh();
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      tl.scrollTrigger?.kill();
+      tl.kill();
     };
   }, { scope: containerRef, dependencies: [mounted, reducedMotion, isLowEnd, isMobileSlider] });
 
@@ -143,11 +147,7 @@ export default function SportsPage() {
                 style={{ zIndex: slideIndex + 1, opacity: slideIndex === 0 ? 1 : 0 }}
               >
                 <div
-                  className={
-                    isMobileSlider
-                      ? "mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4"
-                      : "grid h-full grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8"
-                  }
+                  className="mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-8"
                 >
                   {slideServices.map((service, serviceIndex) => (
                     <div
@@ -182,133 +182,115 @@ export default function SportsPage() {
       </section>
 
       {/* Enquiry Modal */}
-      {showEnquiry && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-3 sm:p-4 md:p-6">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto my-4">
-            <div className="flex justify-between items-start mb-4 sm:mb-6">
-              <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
-                {t(locale, "sports.page.enquiry.title" as DictionaryKey)}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowEnquiry(false)}
-                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
-              {t(locale, "sports.page.enquiry.subtitle" as DictionaryKey)}
-            </p>
-            <form
-              className="space-y-3 sm:space-y-4"
-              onSubmit={async (event) => {
-                const ok = await enquiry.handleSubmit(event);
-                if (ok) {
-                  setShowEnquiry(false);
-                  enquiry.reset();
-                }
-              }}
+      <Modal isOpen={showEnquiry} onClose={() => setShowEnquiry(false)}>
+        <div className="p-5 sm:p-6 md:p-8 flex-shrink-0">
+          <div className="flex justify-between items-start mb-4 sm:mb-6">
+            <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
+              {t(locale, "sports.page.enquiry.title" as DictionaryKey)}
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowEnquiry(false)}
+              className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
             >
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "services.concierge.form.email" as DictionaryKey)}
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "sports.page.form.nationality" as DictionaryKey)}
-                </label>
-                <select
-                  name="nationality"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors"
-                >
-                  <option value="">{t(locale, "sports.page.form.selectCountry" as DictionaryKey)}</option>
-                  <option value="SA">Saudi Arabia</option>
-                  <option value="AE">United Arab Emirates</option>
-                  <option value="QA">Qatar</option>
-                  <option value="KW">Kuwait</option>
-                  <option value="BH">Bahrain</option>
-                  <option value="OM">Oman</option>
-                  <option value="EG">Egypt</option>
-                  <option value="US">United States</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="DE">Germany</option>
-                  <option value="FR">France</option>
-                  <option value="JP">Japan</option>
-                  <option value="CN">China</option>
-                  <option value="IN">India</option>
-                  <option value="OTHER">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "sports.page.form.phone" as DictionaryKey)}
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="+966 500 000 0000"
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "sports.page.form.sportType" as DictionaryKey)}
-                </label>
-                <select
-                  name="sportType"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors"
-                >
-                  <option value="">{t(locale, "sports.page.form.selectSport" as DictionaryKey)}</option>
-                  {sportTypes.map((type) => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "sports.page.form.message" as DictionaryKey)}
-                </label>
-                <textarea
-                  name="message"
-                  rows={4}
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                  placeholder={t(locale, "sports.page.form.placeholder.message" as DictionaryKey)}
-                />
-              </div>
-              <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
-              <MagneticButton
-                type="submit"
-                disabled={enquiry.isSending}
-                className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
-              >
-                {t(locale, "sports.page.form.submit" as DictionaryKey)}
-              </MagneticButton>
-            </form>
+              ×
+            </button>
           </div>
+          <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
+            {t(locale, "sports.page.enquiry.subtitle" as DictionaryKey)}
+          </p>
         </div>
-      )}
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-6 md:px-8 pb-5 sm:pb-6 md:pb-8" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <form
+            className="space-y-3 sm:space-y-4"
+            onSubmit={async (event) => {
+              const ok = await enquiry.handleSubmit(event);
+              if (ok) {
+                setShowEnquiry(false);
+                enquiry.reset();
+              }
+            }}
+          >
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "services.concierge.form.email" as DictionaryKey)}
+              </label>
+              <input
+                type="email"
+                name="email"
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "sports.page.form.nationality" as DictionaryKey)}
+              </label>
+              <CountrySelect
+                name="nationality"
+                required
+                placeholder={t(locale, "sports.page.form.selectCountry" as DictionaryKey)}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "sports.page.form.phone" as DictionaryKey)}
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                placeholder="+966 500 000 0000"
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "sports.page.form.sportType" as DictionaryKey)}
+              </label>
+              <LuxurySelect
+                name="sportType"
+                required
+                placeholder={t(locale, "sports.page.form.selectSport" as DictionaryKey)}
+                options={sportTypes.map((type) => ({ value: type, label: type }))}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "sports.page.form.message" as DictionaryKey)}
+              </label>
+              <textarea
+                name="message"
+                rows={4}
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
+                placeholder={t(locale, "sports.page.form.placeholder.message" as DictionaryKey)}
+              />
+            </div>
+            <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
+            <MagneticButton
+              type="submit"
+              disabled={enquiry.isSending}
+              className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
+            >
+              {t(locale, "sports.page.form.submit" as DictionaryKey)}
+            </MagneticButton>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 }

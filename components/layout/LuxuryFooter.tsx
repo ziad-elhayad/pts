@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { navItems, site } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
@@ -22,13 +21,6 @@ export function LuxuryFooter() {
 
         {/* Brand column */}
         <div>
-          <div className="mb-8 flex items-center gap-4">
-            <div className="h-px w-8 bg-pts-gold/40" />
-            <p className="lux-heading text-[0.5rem] text-pts-gold tracking-[0.5em] opacity-50">
-              EST. 2010
-            </p>
-          </div>
-
           <BrandLogo size={48} className="mb-6" variant="image" />
 
           <p className="text-[0.68rem] uppercase tracking-[0.18em] leading-[2.4] text-pts-muted/45 max-w-sm">
@@ -51,13 +43,9 @@ export function LuxuryFooter() {
               Navigate
             </p>
             <ul className="space-y-5">
-              {navItems.map((item, i) => (
-                <motion.li
+              {navItems.map((item) => (
+                <li
                   key={item.href}
-                  initial={{ opacity: 0, x: locale === "ar" ? 10 : -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.06, duration: 0.5 }}
                 >
                   <Link
                     href={item.href}
@@ -66,7 +54,7 @@ export function LuxuryFooter() {
                     <span className="h-px w-0 bg-pts-gold/40 transition-all duration-300 group-hover:w-5" />
                     {t(locale, item.key as DictionaryKey)}
                   </Link>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </div>

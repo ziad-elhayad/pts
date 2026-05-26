@@ -5,8 +5,8 @@ export const site = {
   description:
     "Luxury corporate hospitality, elite MICE solutions, and VIP concierge for executives and international corporations—with a strategic presence in Saudi Arabia.",
   url: "https://pts-private-travel.com",
-  email: "concierge@pts-private-travel.com",
-  enquiryEmail: "hyadz0211@gmail.com",
+  email: "info@gervae.com",
+  enquiryEmail: "info@gervae.com",
   phone: "+966 12 000 0000",
   whatsapp: "https://wa.me/966500000000",
   city: "Jeddah, Saudi Arabia",

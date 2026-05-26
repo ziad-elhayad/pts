@@ -15,8 +15,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const STATS = (_locale: string) => [] as const; // Stats labels now come from dictionary
-
 /**
  * Brand intro — scroll-scrubbed “editorial depth” + kinetic stats (unique vs other sections).
  */

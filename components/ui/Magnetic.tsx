@@ -1,52 +1,48 @@
 "use client";
 
-import { useRef, useCallback, useEffect } from "react";
-import { motion, useSpring } from "framer-motion";
+import { memo, useCallback, useRef } from "react";
 
 interface MagneticProps {
   children: React.ReactNode;
   strength?: number;
 }
 
-/**
- * Magnetic — A premium utility to make elements "attract" the cursor.
- * Uses spring physics for a smooth, high-end feel.
- */
-export function Magnetic({ children, strength = 0.5 }: MagneticProps) {
+export const Magnetic = memo(function Magnetic({ children, strength = 0.5 }: MagneticProps) {
   const ref = useRef<HTMLDivElement>(null);
-  
-  const x = useSpring(0, { stiffness: 150, damping: 15, mass: 0.1 });
-  const y = useSpring(0, { stiffness: 150, damping: 15, mass: 0.1 });
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
-    
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    
-    const distanceX = clientX - centerX;
-    const distanceY = clientY - centerY;
-    
-    // Check if mouse is within a reasonable range (100px)
-    if (Math.abs(distanceX) < 100 && Math.abs(distanceY) < 100) {
-      x.set(distanceX * strength);
-      y.set(distanceY * strength);
-    } else {
-      x.set(0);
-      y.set(0);
+  const handlePointerMove = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType !== "mouse") return;
+      const node = ref.current;
+      if (!node) return;
+
+      const { left, top, width, height } = node.getBoundingClientRect();
+      const distanceX = event.clientX - (left + width / 2);
+      const distanceY = event.clientY - (top + height / 2);
+
+      if (Math.abs(distanceX) < 100 && Math.abs(distanceY) < 100) {
+        node.style.transform = `translate3d(${distanceX * strength}px, ${distanceY * strength}px, 0)`;
+      } else {
+        node.style.transform = "translate3d(0, 0, 0)";
+      }
+    },
+    [strength]
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    if (ref.current) {
+      ref.current.style.transform = "translate3d(0, 0, 0)";
     }
-  }, [x, y, strength]);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [handleMouseMove]);
+  }, []);
 
   return (
-    <motion.div ref={ref} style={{ x, y }}>
+    <div
+      ref={ref}
+      className="transform-gpu transition-transform duration-300 ease-out"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
       {children}
-    </motion.div>
+    </div>
   );
-}
+});

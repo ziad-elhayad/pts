@@ -1,11 +1,11 @@
 "use client";
 
+import { memo, useRef } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -20,7 +20,7 @@ type ParallaxImageProps = {
   zoomScrub?: boolean;
 };
 
-export function ParallaxImage({
+export const ParallaxImage = memo(function ParallaxImage({
   src,
   alt,
   className,
@@ -106,4 +106,4 @@ export function ParallaxImage({
       </div>
     </div>
   );
-}
+});

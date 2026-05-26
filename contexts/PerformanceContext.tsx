@@ -4,6 +4,10 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from "
 
 type PerformanceTier = "Elite" | "Standard" | "Eco";
 
+type NavigatorWithDeviceMemory = Navigator & {
+  deviceMemory?: number;
+};
+
 interface PerformanceContextType {
   tier: PerformanceTier;
   isLowEnd: boolean;
@@ -36,7 +40,7 @@ export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ c
     // 2. Hardware Detection
     const checkPerformance = () => {
       // Brave/Privacy browsers often block deviceMemory or cap hardwareConcurrency
-      const memory = (navigator as any).deviceMemory || 4; // Assume 4 if blocked
+      const memory = (navigator as NavigatorWithDeviceMemory).deviceMemory || 4; // Assume 4 if blocked
       const cores = navigator.hardwareConcurrency || 4;
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 

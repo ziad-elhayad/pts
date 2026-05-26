@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { memo, type ReactNode, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 interface TextScrollRevealProps {
@@ -10,7 +10,7 @@ interface TextScrollRevealProps {
   delay?: number;
 }
 
-export function TextScrollReveal({
+export const TextScrollReveal = memo(function TextScrollReveal({
   as: Component = "div",
   children,
   className,
@@ -51,4 +51,4 @@ export function TextScrollReveal({
       {children}
     </Component>
   );
-}
+});

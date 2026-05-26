@@ -87,7 +87,7 @@ export const StickySplitSection = memo(function StickySplitSection() {
       }
     });
 
-  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted] });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted, pillars] });
 
   return (
     <section

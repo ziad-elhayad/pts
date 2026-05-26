@@ -26,7 +26,7 @@ export function LoaderScreen() {
         hasSeenLoader = true;
       }
     } catch {
-      console.warn("Session storage access denied");
+      hasSeenLoader = true;
     }
 
     if (hasSeenLoader) {
@@ -59,7 +59,7 @@ export function LoaderScreen() {
         try {
           sessionStorage.setItem(SESSION_KEY, "1");
         } catch {
-          console.warn("Session storage not available");
+          // Storage may be blocked in privacy modes; the loader still completes.
         }
         document.documentElement.style.overflow = "";
         document.body.style.overflow = ""; // Safety for some mobile browsers
@@ -123,7 +123,7 @@ export function LoaderScreen() {
 
       <div className="relative flex flex-col items-center gap-8">
         <div data-loader-label className="flex flex-col items-center gap-6">
-          <BrandLogo size={54} className="text-pts-gold sm:size-64" />
+          <BrandLogo size={54} className="text-pts-gold sm:size-64" variant="image" />
         </div>
 
         <p data-loader-sub className="text-center text-[0.55rem] uppercase tracking-[0.4em] text-pts-muted sm:text-[0.62rem] sm:tracking-[0.5em]">

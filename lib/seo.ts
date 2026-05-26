@@ -20,6 +20,14 @@ export const defaultMetadata: Metadata = {
     "executive travel",
   ],
   authors: [{ name: site.shortName }],
+  alternates: {
+    canonical: site.url,
+    languages: {
+      en: site.url,
+      ar: `${site.url}/?lang=ar`,
+    },
+  },
+  category: "travel",
   openGraph: {
     type: "website",
     locale: "en_US",

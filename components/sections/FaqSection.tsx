@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useCallback } from "react";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 
@@ -9,17 +8,17 @@ export function FaqSection() {
   const { locale } = useLocale();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const faqs = [
+  const faqs = useMemo(() => [
     { question: t(locale, "faq.q1" as DictionaryKey), answer: t(locale, "faq.a1" as DictionaryKey) },
     { question: t(locale, "faq.q2" as DictionaryKey), answer: t(locale, "faq.a2" as DictionaryKey) },
     { question: t(locale, "faq.q3" as DictionaryKey), answer: t(locale, "faq.a3" as DictionaryKey) },
     { question: t(locale, "faq.q4" as DictionaryKey), answer: t(locale, "faq.a4" as DictionaryKey) },
     { question: t(locale, "faq.q5" as DictionaryKey), answer: t(locale, "faq.a5" as DictionaryKey) },
-  ];
+  ], [locale]);
 
-  const toggleFaq = (index: number) => {
+  const toggleFaq = useCallback((index: number) => {
     setOpenIndex(openIndex === index ? null : index);
-  };
+  }, [openIndex]);
 
   return (
     <section id="faq" className="border-t border-pts-line bg-pts-black/25 py-20 px-10">
@@ -45,35 +44,37 @@ export function FaqSection() {
                 <span className="font-heading text-[0.7rem] sm:text-[0.8rem] uppercase tracking-[0.15em] text-pts-parchment pr-4">
                   {faq.question}
                 </span>
-                <motion.span
-                  animate={{ rotate: openIndex === index ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-pts-gold text-xl"
+                <span
+                  className={clsx(
+                    "text-xl text-pts-gold transition-transform duration-300",
+                    openIndex === index && "rotate-45"
+                  )}
                 >
                   +
-                </motion.span>
+                </span>
               </button>
-              <AnimatePresence>
-                {openIndex === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-6 pb-5 pt-2">
-                      <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </motion.div>
+              <div
+                className={clsx(
+                  "grid transition-[grid-template-rows,opacity] duration-300 ease-out",
+                  openIndex === index ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                 )}
-              </AnimatePresence>
+              >
+                <div className="overflow-hidden">
+                  <div className="px-6 pb-5 pt-2">
+                    <p className="text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
     </section>
   );
+}
+
+function clsx(...args: Array<string | false>) {
+  return args.filter(Boolean).join(" ");
 }

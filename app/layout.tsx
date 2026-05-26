@@ -3,6 +3,8 @@ import { Cinzel, Tajawal } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata } from "@/lib/seo";
 import { ClientProviders } from "@/components/layout/ClientProviders";
+import { heroMedia } from "@/lib/media";
+import { site } from "@/lib/site";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -31,13 +33,34 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: site.url,
+    logo: `${site.url}/images/logo%20image/c8cee5ff-cee7-4268-98cd-771a25792a54.png`,
+    email: site.email,
+    telephone: site.phone,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: site.city,
+    },
+    sameAs: [site.social.instagram, site.social.linkedin],
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.cdnfonts.com" crossOrigin="anonymous" />
         <link
-          rel="stylesheet"
-          href="https://fonts.cdnfonts.com/css/glacial-indifference"
+          rel="preload"
+          as="image"
+          href={heroMedia.poster}
+          type="image/webp"
+          fetchPriority="high"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
       <body

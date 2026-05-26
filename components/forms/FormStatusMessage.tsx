@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import clsx from "clsx";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
@@ -9,7 +10,7 @@ type FormStatusMessageProps = {
   errorMessage?: string;
 };
 
-export function FormStatusMessage({ status, errorMessage }: FormStatusMessageProps) {
+export const FormStatusMessage = memo(function FormStatusMessage({ status, errorMessage }: FormStatusMessageProps) {
   const { locale } = useLocale();
 
   if (status === "idle") return null;
@@ -30,4 +31,4 @@ export function FormStatusMessage({ status, errorMessage }: FormStatusMessagePro
         (errorMessage || t(locale, "form.submit.error" as DictionaryKey))}
     </p>
   );
-}
+});

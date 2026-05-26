@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
+import { CountrySelect } from "@/components/forms/CountrySelect";
+import { LuxurySelect } from "@/components/forms/LuxurySelect";
+import { Modal } from "@/components/ui/Modal";
 import { medicalTabImages } from "@/lib/service-category-images";
 
 type TabType = "patients" | "doctors" | "wellness";
@@ -95,15 +97,10 @@ export default function MedicalTourismPage() {
 
           {/* Tab Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                className="space-y-6 order-2 lg:order-1"
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 30 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              >
+            <div
+              key={activeTab}
+              className="order-2 space-y-6 animate-tab-content-in lg:order-1"
+            >
                 <h3 className="font-heading text-2xl sm:text-3xl uppercase tracking-[0.1em] text-pts-parchment">
                   {content[activeTab].title}
                 </h3>
@@ -118,17 +115,11 @@ export default function MedicalTourismPage() {
                     {t(locale, "medical.page.learn.more" as DictionaryKey)}
                   </MagneticButton>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`img-${activeTab}`}
-                className="relative h-[400px] lg:h-[500px] overflow-hidden rounded-sm border border-pts-gold/20 order-1 lg:order-2"
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
+            </div>
+            <div
+              key={`img-${activeTab}`}
+              className="relative order-1 h-[400px] overflow-hidden rounded-sm border border-pts-gold/20 animate-tab-image-in lg:order-2 lg:h-[500px]"
+            >
                 <Image
                   src={content[activeTab].image}
                   alt={content[activeTab].title}
@@ -136,114 +127,121 @@ export default function MedicalTourismPage() {
                   className="object-cover transition-transform duration-700 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-pts-black/60 via-transparent to-transparent" />
-              </motion.div>
-            </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Enquiry Modal */}
-      {showEnquiry && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-3 sm:p-4 md:p-6">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto my-4">
-            <div className="flex justify-between items-start mb-4 sm:mb-6">
-              <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
-                {t(locale, "medical.page.enquiry.title" as DictionaryKey)}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowEnquiry(false)}
-                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
-              {t(locale, "medical.page.enquiry.subtitle" as DictionaryKey)}
-            </p>
-            <form
-              className="space-y-3 sm:space-y-4"
-              onSubmit={async (event) => {
-                const ok = await enquiry.handleSubmit(event);
-                if (ok) {
-                  setShowEnquiry(false);
-                  enquiry.reset();
-                }
-              }}
+      <Modal isOpen={showEnquiry} onClose={() => setShowEnquiry(false)}>
+        <div className="p-5 sm:p-6 md:p-8 flex-shrink-0">
+          <div className="flex justify-between items-start mb-4 sm:mb-6">
+            <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
+              {t(locale, "medical.page.enquiry.title" as DictionaryKey)}
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowEnquiry(false)}
+              className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
             >
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "medical.page.form.fullName" as DictionaryKey)}
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder={t(locale, "medical.page.form.placeholder.name" as DictionaryKey)}
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "medical.page.form.email" as DictionaryKey)}
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder={t(locale, "medical.page.form.placeholder.email" as DictionaryKey)}
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "medical.page.form.phone" as DictionaryKey)}
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder="+966 500 000 0000"
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "medical.page.form.serviceType" as DictionaryKey)}
-                </label>
-                <select
-                  name="serviceType"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment focus:border-pts-gold focus:outline-none transition-colors"
-                >
-                  <option value="">{tabs.find((t) => t.key === "patients")?.label || "Select service type"}</option>
-                  <option value="patients">{tabs.find((t) => t.key === "patients")?.label}</option>
-                  <option value="doctors">{tabs.find((t) => t.key === "doctors")?.label}</option>
-                  <option value="wellness">{tabs.find((t) => t.key === "wellness")?.label}</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "medical.page.form.message" as DictionaryKey)}
-                </label>
-                <textarea
-                  name="message"
-                  rows={4}
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                  placeholder={t(locale, "medical.page.form.placeholder.message" as DictionaryKey)}
-                />
-              </div>
-              <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
-              <MagneticButton
-                type="submit"
-                disabled={enquiry.isSending}
-                className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
-              >
-                {t(locale, "medical.page.form.submit" as DictionaryKey)}
-              </MagneticButton>
-            </form>
+              ×
+            </button>
           </div>
+          <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
+            {t(locale, "medical.page.enquiry.subtitle" as DictionaryKey)}
+          </p>
         </div>
-      )}
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-6 md:px-8 pb-5 sm:pb-6 md:pb-8" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <form
+            className="space-y-3 sm:space-y-4"
+          onSubmit={async (event) => {
+            const ok = await enquiry.handleSubmit(event);
+            if (ok) {
+              setShowEnquiry(false);
+              enquiry.reset();
+            }
+          }}
+        >
+          <div>
+            <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+              {t(locale, "medical.page.form.fullName" as DictionaryKey)}
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              required
+              className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+              placeholder={t(locale, "medical.page.form.placeholder.name" as DictionaryKey)}
+            />
+          </div>
+          <div>
+            <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+              {t(locale, "medical.page.form.email" as DictionaryKey)}
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                  placeholder={t(locale, "medical.page.form.placeholder.email" as DictionaryKey)}
+            />
+          </div>
+          <div>
+            <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+              {locale === "ar" ? "الجنسية" : "Nationality"}
+            </label>
+            <CountrySelect
+              name="nationality"
+              required
+              placeholder={locale === "ar" ? "اختر جنسيتك" : "Select your nationality"}
+            />
+          </div>
+          <div>
+            <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              required
+              className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+              placeholder="+966 500 000 0000"
+            />
+          </div>
+          <div>
+            <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+              {t(locale, "medical.page.form.serviceType" as DictionaryKey)}
+            </label>
+            <LuxurySelect
+              name="serviceType"
+              required
+              placeholder={tabs.find((tab) => tab.key === "patients")?.label || "Select service type"}
+              options={tabs.map((tab) => ({ value: tab.key, label: tab.label }))}
+            />
+          </div>
+          <div>
+            <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+              {t(locale, "medical.page.form.message" as DictionaryKey)}
+            </label>
+            <textarea
+              name="message"
+              rows={4}
+              required
+              className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
+              placeholder={t(locale, "medical.page.form.placeholder.message" as DictionaryKey)}
+            />
+          </div>
+          <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
+          <MagneticButton
+            type="submit"
+            disabled={enquiry.isSending}
+            className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
+          >
+            {t(locale, "medical.page.form.submit" as DictionaryKey)}
+          </MagneticButton>
+        </form>
+        </div>
+      </Modal>
     </div>
   );
 }

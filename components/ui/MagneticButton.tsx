@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { memo } from "react";
 import Link from "next/link";
-import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import clsx from "clsx";
 
 type MagneticButtonProps = {
@@ -14,7 +14,27 @@ type MagneticButtonProps = {
   disabled?: boolean;
 };
 
-export function MagneticButton({
+function moveMagneticGlow(event: React.MouseEvent<HTMLElement>) {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  const rect = event.currentTarget.getBoundingClientRect();
+  const relX = event.clientX - rect.left - rect.width / 2;
+  const relY = event.clientY - rect.top - rect.height / 2;
+
+  event.currentTarget.style.setProperty("--magnetic-x", `${relX * 0.1}px`);
+  event.currentTarget.style.setProperty("--magnetic-y", `${relY * 0.1}px`);
+  event.currentTarget.style.setProperty("--glow-x", `${((event.clientX - rect.left) / rect.width) * 100}%`);
+  event.currentTarget.style.setProperty("--glow-y", `${((event.clientY - rect.top) / rect.height) * 100}%`);
+}
+
+function resetMagneticGlow(event: React.MouseEvent<HTMLElement>) {
+  event.currentTarget.style.setProperty("--magnetic-x", "0px");
+  event.currentTarget.style.setProperty("--magnetic-y", "0px");
+  event.currentTarget.style.setProperty("--glow-x", "50%");
+  event.currentTarget.style.setProperty("--glow-y", "50%");
+}
+
+export const MagneticButton = memo(function MagneticButton({
   children,
   className,
   href,
@@ -22,67 +42,37 @@ export function MagneticButton({
   type = "button",
   disabled = false,
 }: MagneticButtonProps) {
-  const x       = useMotionValue(0);
-  const y       = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 200, damping: 18, mass: 0.3 });
-  const springY = useSpring(y, { stiffness: 200, damping: 18, mass: 0.3 });
-  const transform = useMotionTemplate`translate3d(${springX}px, ${springY}px, 0)`;
-
-  // Glow position follows mouse
-  const glowX = useMotionValue(50);
-  const glowY = useMotionValue(50);
-  const glowBg = useMotionTemplate`radial-gradient(circle at ${glowX}% ${glowY}%, rgba(168,143,100,0.18) 0%, transparent 70%)`;
-
-  const onMove = (event: React.MouseEvent<HTMLElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const relX = event.clientX - rect.left - rect.width / 2;
-    const relY = event.clientY - rect.top - rect.height / 2;
-    x.set(relX * 0.14);
-    y.set(relY * 0.14);
-    glowX.set(((event.clientX - rect.left) / rect.width) * 100);
-    glowY.set(((event.clientY - rect.top) / rect.height) * 100);
-  };
-
-  const onLeave = () => {
-    x.set(0);
-    y.set(0);
-    glowX.set(50);
-    glowY.set(50);
-  };
-
   const inner = (
-    <motion.span
-      style={{ transform }}
-      whileHover={{ scale: 1.04 }}
-      whileTap={{ scale: 0.98 }}
+    <span
       className={clsx(
-        "relative inline-flex items-center justify-center gap-2 overflow-hidden",
+        "relative inline-flex transform-gpu items-center justify-center gap-2 overflow-hidden",
+        "translate-x-[var(--magnetic-x,0px)] translate-y-[var(--magnetic-y,0px)]",
         "border border-pts-gold/40 bg-pts-gold/8 px-7 py-3.5",
         "text-[0.66rem] uppercase tracking-[0.36em] text-pts-gold-2",
-        "transition-[border-color,box-shadow,transform] duration-500",
-        "hover:border-pts-gold hover:shadow-[0_0_40px_rgba(168,143,100,0.22),0_0_100px_rgba(168,143,100,0.08)]",
-        className,
+        "transition-[border-color,box-shadow,transform] duration-300 ease-out",
+        "hover:scale-[1.02] hover:border-pts-gold hover:shadow-[0_0_40px_rgba(168,143,100,0.22),0_0_100px_rgba(168,143,100,0.08)] active:scale-[0.98]",
+        className
       )}
     >
-      {/* Hover glow */}
-      <motion.span
+      <span
         className="pointer-events-none absolute inset-0"
-        style={{ background: glowBg }}
+        style={{
+          background:
+            "radial-gradient(circle at var(--glow-x,50%) var(--glow-y,50%), rgba(168,143,100,0.18) 0%, transparent 70%)",
+        }}
       />
-      {/* Shimmer sweep */}
-      <span className="pointer-events-none absolute inset-0 gold-shimmer opacity-0 group-hover:opacity-100 transition-opacity" />
-      {/* Content */}
+      <span className="pointer-events-none absolute inset-0 gold-shimmer opacity-0 transition-opacity group-hover:opacity-100" />
       <span className="relative z-10">{children}</span>
-    </motion.span>
+    </span>
   );
 
   if (href?.startsWith("/")) {
     return (
       <Link
         href={href}
-        className="inline-block group"
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
+        className="group inline-block"
+        onMouseMove={moveMagneticGlow}
+        onMouseLeave={resetMagneticGlow}
       >
         {inner}
       </Link>
@@ -91,29 +81,29 @@ export function MagneticButton({
 
   if (href) {
     return (
-      <motion.a
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block group"
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
+        className="group inline-block"
+        onMouseMove={moveMagneticGlow}
+        onMouseLeave={resetMagneticGlow}
       >
         {inner}
-      </motion.a>
+      </a>
     );
   }
 
   return (
-    <motion.button
+    <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={clsx("inline-block group", disabled && "pointer-events-none opacity-60")}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      className={clsx("group inline-block", disabled && "pointer-events-none opacity-60")}
+      onMouseMove={moveMagneticGlow}
+      onMouseLeave={resetMagneticGlow}
     >
       {inner}
-    </motion.button>
+    </button>
   );
-}
+});

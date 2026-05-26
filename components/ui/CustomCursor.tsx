@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import gsap from "gsap";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 /**
  * PTS Luxury Custom Cursor.
  * Two-layer: a fast outer ring + a slow inner dot.
  * Morphs on hover over links/buttons: ring expands, dot hides.
+ * Disabled on touch devices and low-end performance tier.
  */
-export function CustomCursor() {
+export const CustomCursor = memo(function CustomCursor() {
   const ringRef  = useRef<HTMLDivElement>(null);
   const dotRef   = useRef<HTMLDivElement>(null);
   const [isTouch, setIsTouch] = useState(false);
+  const { isLowEnd } = usePerformance();
 
   useEffect(() => {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
@@ -19,7 +22,7 @@ export function CustomCursor() {
 
   useEffect(() => {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouch) return;
+    if (isTouch || isLowEnd) return;
 
     const ring  = ringRef.current;
     const dot   = dotRef.current;
@@ -118,9 +121,10 @@ export function CustomCursor() {
       document.removeEventListener("mouseleave", onLeaveWindow);
       document.removeEventListener("mouseenter", onEnterWindow);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTouch]);
 
-  if (isTouch) return null;
+  if (isTouch || isLowEnd) return null;
 
   return (
     <>
@@ -154,4 +158,4 @@ export function CustomCursor() {
       />
     </>
   );
-}
+});

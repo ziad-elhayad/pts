@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { testimonialBackdrop } from "@/lib/media";
 import { prefersReducedMotion } from "@/lib/motionPref";
-import { Quote, Briefcase, Globe, CalendarDays } from "lucide-react";
+import { Briefcase, Globe, CalendarDays } from "lucide-react";
 import { LineRevealText } from "@/components/animations/LineRevealText";
 
 if (typeof window !== "undefined") {

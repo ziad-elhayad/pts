@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { useGSAP } from "@gsap/react";
@@ -18,7 +18,6 @@ export function ServicesSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { reducedMotion, isLowEnd } = usePerformance();
   const { locale } = useLocale();
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const services = [
     {
@@ -114,12 +113,24 @@ export function ServicesSection() {
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      tl.scrollTrigger?.kill();
+      tl.kill();
     };
-  }, { scope: containerRef, dependencies: [reducedMotion, isLowEnd] });
+  }, { scope: containerRef, dependencies: [reducedMotion, isLowEnd, slides] });
 
   return (
     <section ref={containerRef} className="relative min-h-screen bg-pts-bg">
+      {/* Section Heading */}
+      <div className="absolute top-8 left-0 right-0 z-50 flex flex-col items-start px-6 md:px-12 pointer-events-none">
+        <p className="lux-heading text-[0.65rem] tracking-[0.4em] text-pts-gold/70 uppercase mb-2">
+          GERVAE
+        </p>
+        <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl tracking-[0.15em] text-pts-parchment uppercase">
+          {t(locale, "services.section.heading" as DictionaryKey)}
+        </h2>
+        <div className="mt-3 w-12 h-px bg-pts-gold/50" />
+      </div>
+
       <div className="relative min-h-screen overflow-hidden">
         {slides.map((slideServices, slideIndex) => (
           <div

@@ -63,6 +63,19 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
 
     const getScrollDistance = () => track.scrollWidth - window.innerWidth;
 
+    // Dynamically set wrapper height based on scroll distance
+    const updateHeight = () => {
+      const distance = getScrollDistance();
+      const baseHeight = isTouch ? document.documentElement.clientHeight : window.innerHeight;
+      wrapper.style.height = distance > 0 ? `${baseHeight + distance}px` : "100svh";
+    };
+
+    const ro = new ResizeObserver(updateHeight);
+    ro.observe(track);
+
+    // Initial height calculation
+    updateHeight();
+
     const slideTween = gsap.to(track, {
       x: () => -getScrollDistance(),
       ease: "none",
@@ -75,12 +88,6 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         invalidateOnRefresh: true,
         fastScrollEnd: true,
         anticipatePin: 1,
-        snap: {
-          snapTo: 1 / (flatChildren.length - 1),
-          duration: { min: 0.1, max: 0.3 },
-          delay: 0,
-          ease: "power1.inOut"
-        },
         onUpdate: (self) => {
           if (progress) {
             progress.style.transform = `scaleX(${self.progress}) translateZ(0)`;
@@ -201,17 +208,19 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
     }
     // Refresh on content changes (images loading, etc.) — debounced to avoid ScrollTrigger thrash
     let refreshT: ReturnType<typeof setTimeout> | undefined;
-    const ro = new ResizeObserver(() => {
+    const ro2 = new ResizeObserver(() => {
       if (refreshT) clearTimeout(refreshT);
       refreshT = setTimeout(() => {
         refreshT = undefined;
+        updateHeight();
         ScrollTrigger.refresh();
       }, 200);
     });
-    ro.observe(track);
+    ro2.observe(track);
 
     return () => {
       ro.disconnect();
+      ro2.disconnect();
       if (refreshT) clearTimeout(refreshT);
       velocitySt?.kill();
     };
@@ -223,7 +232,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
     <div 
       ref={wrapperRef} 
       id={id} 
-      className="relative w-full bg-pts-bg transition-colors duration-1000 h-[100svh] overflow-hidden"
+      className="relative w-full bg-pts-bg transition-colors duration-1000 overflow-hidden"
     >
       <div className="flex h-[100dvh] w-full flex-col [perspective:1400px]">
 

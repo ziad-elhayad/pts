@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { usePerformance } from "@/contexts/PerformanceContext";
 
@@ -100,9 +101,14 @@ export function VideoSection({
           <source src={src} type="video/mp4" />
         </video>
       ) : (
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-opacity transform-gpu"
-          style={{ backgroundImage: `url(${poster})`, transform: "translate3d(0,0,0)" }}
+        <Image
+          src={poster}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="absolute inset-0 object-cover object-center"
+          aria-hidden
         />
       )}
       {overlayClassName !== "none" && (

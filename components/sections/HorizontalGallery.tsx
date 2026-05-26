@@ -53,7 +53,7 @@ export const HorizontalGallery = memo(function HorizontalGallery() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef   = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const { tier, isLowEnd, reducedMotion } = usePerformance();
+  const { isLowEnd, reducedMotion } = usePerformance();
 
   useGSAP(() => {
     const wrapper  = wrapperRef.current;

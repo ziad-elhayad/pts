@@ -1,14 +1,39 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
+import { CountrySelect } from "@/components/forms/CountrySelect";
+import { LuxurySelect } from "@/components/forms/LuxurySelect";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
+import {
+  getContactServiceCategoryOptions,
+  getContactServiceOptions,
+} from "@/lib/contact-service-options";
 
 export default function ContactPage() {
   const { locale } = useLocale();
   const { status, errorMessage, isSending, handleSubmit } = useEnquirySubmit("contact");
+  const [selectedService, setSelectedService] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+
+  const serviceOptions = useMemo(() => getContactServiceOptions(locale), [locale]);
+  const typeOptions = useMemo(
+    () => getContactServiceCategoryOptions(locale, selectedService),
+    [locale, selectedService]
+  );
+  const hasSelectedService = selectedService.length > 0;
+
+  const handleServiceChange = useCallback((value: string) => {
+    setSelectedService(value);
+    setSelectedType("");
+  }, []);
+
+  const handleTypeChange = useCallback((value: string) => {
+    setSelectedType(value);
+  }, []);
 
   return (
     <div className="bg-pts-bg min-h-screen">
@@ -60,11 +85,23 @@ export default function ContactPage() {
 
               <div>
                 <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
-                  {t(locale, "contact.page.form.phone" as DictionaryKey)}
+                  Nationality
+                </label>
+                <CountrySelect
+                  name="nationality"
+                  required
+                  placeholder="Select your nationality"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
+                  Phone
                 </label>
                 <input
                   type="tel"
                   name="phone"
+                  required
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-[0.7rem] sm:text-[0.72rem] md:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors rounded-none"
                   placeholder="+966 500 000 0000"
                 />
@@ -72,15 +109,33 @@ export default function ContactPage() {
 
               <div>
                 <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
-                  {t(locale, "contact.page.form.company" as DictionaryKey)}
+                  Choose Service
                 </label>
-                <input
-                  type="text"
-                  name="company"
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-[0.7rem] sm:text-[0.72rem] md:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors rounded-none"
-                  placeholder="Your company name"
+                <LuxurySelect
+                  name="enquiryType"
+                  value={selectedService}
+                  onChange={handleServiceChange}
+                  required
+                  placeholder="Choose service"
+                  options={serviceOptions}
                 />
               </div>
+
+              {hasSelectedService ? (
+                <div>
+                  <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
+                    Type
+                  </label>
+                  <LuxurySelect
+                    name="type"
+                    value={selectedType}
+                    onChange={handleTypeChange}
+                    required
+                    placeholder="Select type"
+                    options={typeOptions}
+                  />
+                </div>
+              ) : null}
 
               <div>
                 <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">

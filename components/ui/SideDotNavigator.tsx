@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -67,7 +66,7 @@ export function SideDotNavigator() {
             {section.label}
           </span>
           <div className="relative h-2 w-2">
-            <motion.div 
+            <div
               className={clsx(
                 "absolute inset-0 rounded-full border border-pts-gold/30 transition-all duration-500",
                 activeSection === section.id ? "scale-150 border-pts-gold" : "scale-100"

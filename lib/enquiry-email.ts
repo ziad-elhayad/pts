@@ -1,5 +1,5 @@
 export const ENQUIRY_TO_EMAIL =
-  process.env.ENQUIRY_TO_EMAIL ?? "hyadz0211@gmail.com";
+  process.env.ENQUIRY_TO_EMAIL ?? "info@gervae.com";
 
 export type EnquiryPayload = {
   source: string;

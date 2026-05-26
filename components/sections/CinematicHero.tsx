@@ -8,7 +8,6 @@ import { VideoSection } from "@/components/VideoSection";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { FloatingScrollIndicator } from "@/components/ui/FloatingCTA";
 import { heroMedia } from "@/lib/media";
-import { site } from "@/lib/site";
 import { t } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { usePerformance } from "@/contexts/PerformanceContext";
@@ -31,7 +30,7 @@ export const CinematicHero = memo(function CinematicHero() {
   const botLineRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
-  const { tier, isLowEnd, reducedMotion } = usePerformance();
+  const { isLowEnd, reducedMotion } = usePerformance();
 
   useEffect(() => {
     setMounted(true);

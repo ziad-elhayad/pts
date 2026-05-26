@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePerformance } from "@/contexts/PerformanceContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -18,6 +19,8 @@ export function SmoothScrollProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { isLowEnd, reducedMotion } = usePerformance();
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -26,9 +29,16 @@ export function SmoothScrollProvider({
 
     const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
+    if (isLowEnd || reducedMotion) {
+      const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 500);
+      return () => window.clearTimeout(refreshTimer);
+    }
+
     if (isTouch) {
       // Normalize scroll on touch to prevent pinning jank and erratic behavior
-      const normalized = ScrollTrigger.normalizeScroll(true);
+      const normalized = ScrollTrigger.normalizeScroll({
+        allowNestedScroll: true,
+      });
       
       const timer = window.setTimeout(() => {
         ScrollTrigger.refresh();
@@ -49,6 +59,7 @@ export function SmoothScrollProvider({
       touchMultiplier: 1.6,
       smoothWheel: true,
       syncTouch: false,
+      allowNestedScroll: true,
     });
 
     lenis.on("scroll", () => {
@@ -81,7 +92,7 @@ export function SmoothScrollProvider({
       delete (window as Window & { __lenis?: Lenis }).__lenis;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
     };
-  }, []);
+  }, [isLowEnd, reducedMotion]);
 
   return <>{children}</>;
 }

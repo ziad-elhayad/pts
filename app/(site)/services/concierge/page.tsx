@@ -14,6 +14,9 @@ import { conciergeCategoryImages } from "@/lib/service-category-images";
 import { useMobileSliderView } from "@/hooks/useMobileSliderView";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
+import { CountrySelect } from "@/components/forms/CountrySelect";
+import { LuxurySelect } from "@/components/forms/LuxurySelect";
+import { Modal } from "@/components/ui/Modal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -40,6 +43,9 @@ export default function ConciergePage() {
   }));
 
   const slides = buildServiceSlides(services, isMobileSlider);
+
+  // Create conciergeTypes array dynamically based on locale
+  const conciergeTypes = services.map((service) => service.title);
 
   useGSAP(() => {
     if (!containerRef.current || reducedMotion || !mounted) return;
@@ -96,7 +102,8 @@ export default function ConciergePage() {
     ScrollTrigger.refresh();
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      tl.scrollTrigger?.kill();
+      tl.kill();
     };
   }, { scope: containerRef, dependencies: [mounted, reducedMotion, isLowEnd, isMobileSlider] });
 
@@ -140,11 +147,7 @@ export default function ConciergePage() {
                 style={{ zIndex: slideIndex + 1, opacity: slideIndex === 0 ? 1 : 0 }}
               >
                 <div
-                  className={
-                    isMobileSlider
-                      ? "mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4"
-                      : "grid h-full grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8"
-                  }
+                  className="mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-8"
                 >
                   {slideServices.map((service, serviceIndex) => (
                     <div
@@ -179,82 +182,115 @@ export default function ConciergePage() {
       </section>
 
       {/* Enquiry Modal */}
-      {showEnquiry && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pts-black/80 backdrop-blur-sm p-3 sm:p-4 md:p-6">
-          <div className="bg-pts-deep border border-pts-gold/30 max-w-md w-full p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto my-4">
-            <div className="flex justify-between items-start mb-4 sm:mb-6">
-              <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
-                {t(locale, "services.concierge.enquiry.title" as DictionaryKey)}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowEnquiry(false)}
-                className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
-              {t(locale, "services.concierge.enquiry.subtitle" as DictionaryKey)}
-            </p>
-            <form
-              className="space-y-3 sm:space-y-4"
-              onSubmit={async (event) => {
-                const ok = await enquiry.handleSubmit(event);
-                if (ok) {
-                  setShowEnquiry(false);
-                  enquiry.reset();
-                }
-              }}
+      <Modal isOpen={showEnquiry} onClose={() => setShowEnquiry(false)}>
+        <div className="p-5 sm:p-6 md:p-8 flex-shrink-0">
+          <div className="flex justify-between items-start mb-4 sm:mb-6">
+            <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
+              {t(locale, "services.concierge.enquiry.title" as DictionaryKey)}
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowEnquiry(false)}
+              className="text-pts-gold text-2xl hover:text-pts-parchment transition-colors flex-shrink-0"
             >
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "services.concierge.form.email" as DictionaryKey)}
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                  placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
-                />
-              </div>
-              <div>
-                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                  {t(locale, "services.concierge.form.message" as DictionaryKey)}
-                </label>
-                <textarea
-                  name="message"
-                  rows={4}
-                  required
-                  className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                  placeholder={locale === "ar" ? "أخبرنا عن متطلباتك..." : "Tell us about your requirements..."}
-                />
-              </div>
-              <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
-              <MagneticButton
-                type="submit"
-                disabled={enquiry.isSending}
-                className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
-              >
-                {t(locale, "services.concierge.form.submit" as DictionaryKey)}
-              </MagneticButton>
-            </form>
+              ×
+            </button>
           </div>
+          <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
+            {t(locale, "services.concierge.enquiry.subtitle" as DictionaryKey)}
+          </p>
         </div>
-      )}
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-6 md:px-8 pb-5 sm:pb-6 md:pb-8" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <form
+            className="space-y-3 sm:space-y-4"
+            onSubmit={async (event) => {
+              const ok = await enquiry.handleSubmit(event);
+              if (ok) {
+                setShowEnquiry(false);
+                enquiry.reset();
+              }
+            }}
+          >
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "services.concierge.form.email" as DictionaryKey)}
+              </label>
+              <input
+                type="email"
+                name="email"
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {locale === "ar" ? "الجنسية" : "Nationality"}
+              </label>
+              <CountrySelect
+                name="nationality"
+                required
+                placeholder={locale === "ar" ? "اختر جنسيتك" : "Select your nationality"}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                Phone
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
+                placeholder="+966 500 000 0000"
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {locale === "ar" ? "نوع الخدمة" : "Service Type"}
+              </label>
+              <LuxurySelect
+                name="serviceType"
+                required
+                placeholder={locale === "ar" ? "اختر نوع الخدمة" : "Select service type"}
+                options={conciergeTypes.map((type) => ({ value: type, label: type }))}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "services.concierge.form.message" as DictionaryKey)}
+              </label>
+              <textarea
+                name="message"
+                rows={4}
+                required
+                className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
+                placeholder={locale === "ar" ? "أخبرنا عن متطلباتك..." : "Tell us about your requirements..."}
+              />
+            </div>
+            <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
+            <MagneticButton
+              type="submit"
+              disabled={enquiry.isSending}
+              className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
+            >
+              {t(locale, "services.concierge.form.submit" as DictionaryKey)}
+            </MagneticButton>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 }

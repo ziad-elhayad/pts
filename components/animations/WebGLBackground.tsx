@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { usePerformance } from "@/contexts/PerformanceContext";
@@ -26,7 +28,6 @@ export function WebGLBackground() {
         preserveDrawingBuffer: false
       });
     } catch {
-      console.warn("WebGL not supported or blocked by browser.");
       return;
     }
     if (!gl) return;

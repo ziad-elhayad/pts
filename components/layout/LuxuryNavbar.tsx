@@ -3,20 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 import { navItems, serviceItems } from "@/lib/site";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { BrandLogo } from "@/components/ui/BrandLogo";
-
-const dropdownMotion = {
-  initial: { opacity: 0, y: 12, scale: 0.95 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: 8, scale: 0.95 },
-  transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] as const },
-};
 
 function ServicesDropdownLinks({
   locale,
@@ -142,12 +134,10 @@ function DesktopServicesDropdown({
         </button>
       </Magnetic>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
+      {isOpen ? (
+          <div
             role="menu"
-            className="absolute start-0 top-full z-[100] min-w-[16rem] max-w-[min(20rem,calc(100vw-2rem))] origin-top pt-4"
-            {...dropdownMotion}
+            className="absolute start-0 top-full z-[100] min-w-[16rem] max-w-[min(20rem,calc(100vw-2rem))] origin-top pt-4 animate-navbar-dropdown"
           >
             <div className="space-y-1 rounded-sm border border-pts-gold/20 bg-pts-deep/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
               <ServicesDropdownLinks
@@ -156,9 +146,8 @@ function DesktopServicesDropdown({
                 onNavigate={() => onOpenChange(false)}
               />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        ) : null}
     </div>
   );
 }
@@ -356,14 +345,9 @@ export function LuxuryNavbar() {
         }}
       />
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 backdrop-blur-xl sm:px-8 sm:py-10 lg:hidden pb-[max(2rem,env(safe-area-inset-bottom))]"
+      {open ? (
+          <div
+            className="max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 backdrop-blur-xl sm:px-8 sm:py-10 lg:hidden pb-[max(2rem,env(safe-area-inset-bottom))] animate-mobile-menu"
           >
             <div className="mx-auto flex w-full flex-col gap-6">
               {navItems.map((item, i) => {
@@ -371,12 +355,10 @@ export function LuxuryNavbar() {
                   const dropdownActive = serviceItems.some((sub) => pathname === sub.href);
 
                   return (
-                    <motion.div
+                    <div
                       key={item.key}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.06, duration: 0.35 }}
-                      className="flex flex-col gap-3"
+                      className="flex flex-col gap-3 animate-mobile-menu-item"
+                      style={{ animationDelay: `${i * 45}ms` }}
                     >
                       <button
                         type="button"
@@ -399,14 +381,9 @@ export function LuxuryNavbar() {
                         </svg>
                       </button>
 
-                      <AnimatePresence initial={false}>
-                        {mobileServicesOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                            className="overflow-hidden"
+                      {mobileServicesOpen ? (
+                          <div
+                            className="grid overflow-hidden animate-accordion-open"
                           >
                             <div className="space-y-1 border-s border-pts-gold/20 ps-4">
                               <ServicesDropdownLinks
@@ -418,10 +395,9 @@ export function LuxuryNavbar() {
                                 }}
                               />
                             </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
+                          </div>
+                        ) : null}
+                    </div>
                   );
                 }
 
@@ -430,11 +406,10 @@ export function LuxuryNavbar() {
 
                 if (isAnchor) {
                   return (
-                    <motion.div
+                    <div
                       key={item.href}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.06, duration: 0.35 }}
+                      className="animate-mobile-menu-item"
+                      style={{ animationDelay: `${i * 45}ms` }}
                     >
                       <button
                         type="button"
@@ -450,16 +425,15 @@ export function LuxuryNavbar() {
                       >
                         {t(locale, item.key as DictionaryKey)}
                       </button>
-                    </motion.div>
+                    </div>
                   );
                 }
 
                 return (
-                  <motion.div
+                  <div
                     key={item.href}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06, duration: 0.35 }}
+                    className="animate-mobile-menu-item"
+                    style={{ animationDelay: `${i * 45}ms` }}
                   >
                     <Link
                       href={item.href}
@@ -471,7 +445,7 @@ export function LuxuryNavbar() {
                     >
                       {t(locale, item.key as DictionaryKey)}
                     </Link>
-                  </motion.div>
+                  </div>
                 );
               })}
 
@@ -491,9 +465,8 @@ export function LuxuryNavbar() {
                 ))}
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        ) : null}
     </header>
   );
 }

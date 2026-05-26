@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { SectionReveal } from "@/components/animations/SectionReveal";
 import { t } from "@/lib/dictionary";
 import { useLocale } from "@/contexts/LocaleContext";
@@ -63,10 +62,8 @@ export function ExperiencesPreviewSection() {
           <div className="mt-14 grid auto-rows-fr grid-cols-1 gap-4 md:grid-cols-3">
             {tiles.map((tile, index) => (
               <div key={tile.src} data-reveal>
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className={`group relative overflow-hidden border border-pts-line ${tile.className}`}
+                <div
+                  className={`group relative overflow-hidden border border-pts-line transition-transform duration-500 hover:scale-[1.02] ${tile.className}`}
                 >
                   <Image
                     src={tile.src}
@@ -80,7 +77,7 @@ export function ExperiencesPreviewSection() {
                   <span className="absolute bottom-4 left-4 text-[0.58rem] uppercase tracking-[0.35em] text-pts-parchment/90">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                </motion.div>
+                </div>
               </div>
             ))}
           </div>

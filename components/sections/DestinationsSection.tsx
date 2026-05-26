@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { HorizontalScrollSection } from "@/components/animations/HorizontalScrollSection";
 import { destinationTiles } from "@/lib/media";
 import { t } from "@/lib/dictionary";
@@ -21,10 +20,8 @@ export function DestinationsSection() {
       >
         {destinationTiles.map((tile, i) => (
           <div key={tile.city} className="w-[85vw] sm:w-[480px] aspect-[16/11] flex-shrink-0">
-            <motion.div
-              whileHover={{ y: -10, scale: 1.02 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative h-full w-full overflow-hidden border border-pts-gold/20 shadow-2xl transition-colors duration-500 hover:border-pts-gold/60 hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(168,143,100,0.15)]"
+            <div
+              className="group relative h-full w-full overflow-hidden border border-pts-gold/20 shadow-2xl transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-pts-gold/60 hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(168,143,100,0.15)]"
             >
               <Image
                 src={tile.src}
@@ -44,7 +41,7 @@ export function DestinationsSection() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
-            </motion.div>
+            </div>
           </div>
         ))}
         
