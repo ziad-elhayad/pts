@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { site } from "./site";
 
 const ogImage = "/og-pts.svg";
+const logoImage = "/images/logo image/c8cee5ff-cee7-4268-98cd-771a25792a54.png";
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -45,4 +46,9 @@ export const defaultMetadata: Metadata = {
     images: [ogImage],
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: logoImage,
+    shortcut: logoImage,
+    apple: logoImage,
+  },
 };
