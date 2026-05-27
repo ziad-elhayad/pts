@@ -139,7 +139,7 @@ function DesktopServicesDropdown({
             role="menu"
             className="absolute start-0 top-full z-[100] min-w-[16rem] max-w-[min(20rem,calc(100vw-2rem))] origin-top pt-4 animate-navbar-dropdown"
           >
-            <div className="space-y-1 rounded-sm border border-pts-gold/20 bg-pts-deep/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+            <div className="space-y-1 rounded-sm border border-pts-gold/20 bg-pts-deep/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">
               <ServicesDropdownLinks
                 locale={locale}
                 pathname={pathname}
@@ -159,10 +159,32 @@ export function LuxuryNavbar() {
   const [nav, setNav] = useState({ scrolled: false, hidden: false, progress: 0 });
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const lastScroll = useRef(0);
   const rafRef = useRef(0);
 
   useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  useEffect(() => {
+    // On mobile, use simpler scroll behavior to prevent jitter
+    if (isTouch) {
+      const onScroll = () => {
+        const y = window.scrollY;
+        const scrolled = y > 60;
+        setNav((prev) => {
+          if (prev.scrolled === scrolled) return prev;
+          return { scrolled, hidden: false, progress: 0 };
+        });
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+      return () => window.removeEventListener("scroll", onScroll);
+    }
+
+    // Desktop: full scroll behavior with RAF
     const onScroll = () => {
       if (rafRef.current) return;
       rafRef.current = requestAnimationFrame(() => {
@@ -189,7 +211,7 @@ export function LuxuryNavbar() {
       window.removeEventListener("scroll", onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [isTouch]);
 
   const { scrolled, hidden, progress } = nav;
 
@@ -206,17 +228,19 @@ export function LuxuryNavbar() {
   return (
     <header
       className={clsx(
-        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)]",
+        !isTouch && "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
         desktopServicesOpen && "z-[10050]",
-        hidden ? "-translate-y-full" : "translate-y-0"
+        !isTouch && hidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
       <div
         className={clsx(
-          "relative overflow-visible transition-[background,backdrop-filter,border-color] duration-500",
+          "relative overflow-visible transition-[background,border-color] duration-500",
           scrolled
-            ? "border-b border-pts-gold/10 bg-pts-deep/95 lg:bg-pts-deep/82 lg:backdrop-blur-xl"
-            : "border-b border-transparent bg-transparent"
+            ? "border-b border-pts-gold/10 bg-pts-deep/95"
+            : "border-b border-transparent bg-transparent",
+          !isTouch && scrolled && "lg:bg-pts-deep/82 lg:backdrop-blur-xl"
         )}
       >
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 overflow-visible px-4 py-4 sm:px-8 sm:py-5 md:px-12">
@@ -336,7 +360,7 @@ export function LuxuryNavbar() {
       </div>
 
       <div
-        className="h-[1.5px] origin-left transition-none will-change-transform"
+        className="h-[1.5px] origin-left will-change-transform"
         style={{
           transform: `scaleX(${progress})`,
           background: "linear-gradient(90deg, var(--pts-gold), var(--pts-gold-2))",
@@ -347,7 +371,7 @@ export function LuxuryNavbar() {
 
       {open ? (
           <div
-            className="max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 backdrop-blur-xl sm:px-8 sm:py-10 lg:hidden pb-[max(2rem,env(safe-area-inset-bottom))] animate-mobile-menu"
+            className="max-h-[min(85vh,calc(100dvh-5rem))] overflow-y-auto overscroll-y-contain border-t border-pts-line/15 bg-pts-deep/95 px-4 py-8 sm:px-8 sm:py-10 lg:hidden pb-[max(2rem,env(safe-area-inset-bottom))] animate-mobile-menu"
           >
             <div className="mx-auto flex w-full flex-col gap-6">
               {navItems.map((item, i) => {
