@@ -5,6 +5,7 @@ import { PerformanceProvider, usePerformance } from "@/contexts/PerformanceConte
 import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
 import { ScrollLayoutSync } from "@/components/layout/ScrollLayoutSync";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -76,10 +77,10 @@ function TunnelEffect() {
   return <div className="tunnel-vignette" aria-hidden="true" />;
 }
 
-function GlobalEffects() {
+function GlobalEffects({ disabled = false }: { disabled?: boolean }) {
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
-  if (reducedMotion || isLowEnd) {
+  if (disabled || reducedMotion || isLowEnd) {
     return null;
   }
 
@@ -92,8 +93,10 @@ function GlobalEffects() {
 }
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(true);
+  const isContactPage = pathname === "/contact";
 
   useEffect(() => {
     setMounted(true);
@@ -143,9 +146,9 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
     <PerformanceProvider>
       <LocaleProvider>
-        {mounted && <TunnelEffect />}
-        <SmoothScrollProvider>
-          <GlobalEffects />
+        {mounted && !isContactPage && <TunnelEffect />}
+        <SmoothScrollProvider disabled={isContactPage}>
+          <GlobalEffects disabled={isContactPage} />
           <Suspense fallback={null}>
             <ScrollLayoutSync />
           </Suspense>

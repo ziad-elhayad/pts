@@ -20,8 +20,10 @@ if (typeof window !== "undefined") {
  */
 export function SmoothScrollProvider({
   children,
+  disabled = false,
 }: {
   children: React.ReactNode;
+  disabled?: boolean;
 }) {
   const { isLowEnd, reducedMotion } = usePerformance();
 
@@ -32,6 +34,11 @@ export function SmoothScrollProvider({
     gsap.registerPlugin(ScrollTrigger);
 
     const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    if (disabled) {
+      requestScrollTriggerRefresh(120);
+      return () => cancelScheduledScrollTriggerRefresh();
+    }
 
     if (isLowEnd || reducedMotion) {
       requestScrollTriggerRefresh(180);
@@ -89,7 +96,7 @@ export function SmoothScrollProvider({
       delete (window as Window & { __lenis?: Lenis }).__lenis;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
     };
-  }, [isLowEnd, reducedMotion]);
+  }, [disabled, isLowEnd, reducedMotion]);
 
   return <>{children}</>;
 }

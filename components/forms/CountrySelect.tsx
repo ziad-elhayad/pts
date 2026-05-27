@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import countryList from "react-select-country-list";
-import { LuxurySelect, type LuxurySelectOption } from "@/components/forms/LuxurySelect";
+import clsx from "clsx";
 
 type CountrySelectProps = {
   name: string;
@@ -26,7 +26,7 @@ export function CountrySelect({
   placeholder = "Select your nationality",
   required = false,
 }: CountrySelectProps) {
-  const options = useMemo<LuxurySelectOption[]>(
+  const options = useMemo<CountryListOption[]>(
     () =>
       (countryList().getData() as CountryListOption[]).map((country) => ({
         value: country.label,
@@ -34,17 +34,27 @@ export function CountrySelect({
       })),
     []
   );
+  const selectValueProps = value === undefined ? { defaultValue: "" } : { value };
 
   return (
-    <LuxurySelect
+    <select
       name={name}
-      value={value}
-      onChange={onChange}
-      options={options}
-      className={className}
-      placeholder={placeholder}
+      {...selectValueProps}
+      onChange={(event) => onChange?.(event.target.value)}
+      className={clsx(
+        "w-full rounded-lg border border-pts-gold/20 bg-pts-black/50 px-4 py-3 text-[0.7rem] uppercase tracking-[0.14em] text-pts-gold-2 outline-none transition-colors duration-200 focus:border-pts-gold sm:px-5 sm:py-3.5 md:px-6 md:py-4 md:text-[0.75rem]",
+        className
+      )}
       required={required}
-      searchable
-    />
+    >
+      <option value="" disabled>
+        {placeholder}
+      </option>
+      {options.map((country) => (
+        <option key={country.value} value={country.value}>
+          {country.label}
+        </option>
+      ))}
+    </select>
   );
 }
