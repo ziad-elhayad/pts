@@ -77,16 +77,16 @@ function TunnelEffect() {
   return <div className="tunnel-vignette" aria-hidden="true" />;
 }
 
-function GlobalEffects({ disabled = false }: { disabled?: boolean }) {
+function GlobalEffects({ disableWebGL = false }: { disableWebGL?: boolean }) {
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
-  if (disabled || reducedMotion || isLowEnd) {
+  if (reducedMotion || isLowEnd) {
     return null;
   }
 
   return (
     <>
-      {tier === "Elite" ? <WebGLBackground /> : null}
+      {!disableWebGL && tier === "Elite" ? <WebGLBackground /> : null}
       <CustomCursor />
     </>
   );
@@ -148,7 +148,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
       <LocaleProvider>
         {mounted && !isContactPage && <TunnelEffect />}
         <SmoothScrollProvider disabled={isContactPage}>
-          <GlobalEffects disabled={isContactPage} />
+          <GlobalEffects disableWebGL={isContactPage} />
           <Suspense fallback={null}>
             <ScrollLayoutSync />
           </Suspense>
