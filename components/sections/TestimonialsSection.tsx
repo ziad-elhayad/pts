@@ -113,7 +113,7 @@ export function TestimonialsSection() {
           {quotes.map((item) => (
             <blockquote
               key={item.index}
-              className="testimonial-card relative border border-pts-gold/10 bg-pts-black/40 p-7 sm:p-10 transition-all duration-500 hover:border-pts-gold/30 hover:bg-pts-black/60 shadow-lux backdrop-blur-sm"
+              className="testimonial-card relative border border-pts-gold/10 bg-pts-black/40 p-7 sm:p-10 transition-all duration-500 hover:border-pts-gold/30 hover:bg-pts-black/60 shadow-lux sm:backdrop-blur-sm"
             >
               <div className="mb-5 flex items-center justify-between sm:mb-6">
                 <span className="lux-heading text-[0.4rem] tracking-[0.4em] text-pts-gold sm:text-[0.44rem] sm:tracking-[0.5em]">{item.index}</span>

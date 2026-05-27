@@ -19,6 +19,7 @@ if (typeof window !== "undefined") {
 export function LuxuryCtaSection() {
   const { locale } = useLocale();
   const [mounted, setMounted] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -28,6 +29,7 @@ export function LuxuryCtaSection() {
 
   useEffect(() => {
     setMounted(true);
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useGSAP(
@@ -60,7 +62,8 @@ export function LuxuryCtaSection() {
         },
       );
 
-      if (orbA && orbB) {
+      // Disable orb animations on mobile for performance
+      if (orbA && orbB && !isTouch) {
         gsap.to(orbA, {
           xPercent: 22,
           yPercent: -14,
@@ -89,25 +92,40 @@ export function LuxuryCtaSection() {
         },
       });
 
-      tl.fromTo(
-        text.querySelectorAll("[data-cta-reveal]"),
-        { opacity: 0, y: 70, rotateX: 22, transformOrigin: "50% 100%", filter: "blur(8px)" },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          filter: "blur(0px)",
-          duration: 1.2,
-          stagger: 0.14,
-          ease: "power4.out",
-        },
-      );
+      // Remove blur on mobile for better performance
+      if (isTouch) {
+        tl.fromTo(
+          text.querySelectorAll("[data-cta-reveal]"),
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.12,
+            ease: "power3.out",
+          },
+        );
+      } else {
+        tl.fromTo(
+          text.querySelectorAll("[data-cta-reveal]"),
+          { opacity: 0, y: 70, rotateX: 22, transformOrigin: "50% 100%", filter: "blur(8px)" },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            filter: "blur(0px)",
+            duration: 1.2,
+            stagger: 0.14,
+            ease: "power4.out",
+          },
+        );
+      }
 
       if (div) {
         tl.fromTo(div, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.1, ease: "power3.inOut" }, 0.35);
       }
     },
-    { scope: sectionRef, dependencies: [mounted] },
+    { scope: sectionRef, dependencies: [mounted, isTouch] },
   );
 
   return (
@@ -128,16 +146,21 @@ export function LuxuryCtaSection() {
         <div className="absolute inset-0 bg-pts-black/30" />
       </div>
 
-      <div
-        ref={orbARef}
-        className="pointer-events-none absolute -left-[10%] top-1/4 z-[1] h-[55vh] w-[55vh] rounded-full bg-pts-gold/8 blur-[100px] will-change-transform"
-        aria-hidden
-      />
-      <div
-        ref={orbBRef}
-        className="pointer-events-none absolute -right-[8%] bottom-0 z-[1] h-[45vh] w-[45vh] rounded-full bg-pts-gold-2/6 blur-[90px] will-change-transform"
-        aria-hidden
-      />
+      {/* Disable blur orbs on mobile */}
+      {!isTouch && (
+        <>
+          <div
+            ref={orbARef}
+            className="pointer-events-none absolute -left-[10%] top-1/4 z-[1] h-[55vh] w-[55vh] rounded-full bg-pts-gold/8 blur-[100px] will-change-transform"
+            aria-hidden
+          />
+          <div
+            ref={orbBRef}
+            className="pointer-events-none absolute -right-[8%] bottom-0 z-[1] h-[45vh] w-[45vh] rounded-full bg-pts-gold-2/6 blur-[90px] will-change-transform"
+            aria-hidden
+          />
+        </>
+      )}
 
       <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden>
         <div className="gold-glow absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 opacity-20" />

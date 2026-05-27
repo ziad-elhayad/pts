@@ -84,7 +84,7 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pin: true,
-        scrub: isLowEnd ? 0.1 : (isTouch ? 0.5 : 0.8),
+        scrub: isLowEnd ? 0.1 : (isTouch ? 0.3 : 0.8), // Reduced scrub on mobile
         invalidateOnRefresh: true,
         fastScrollEnd: true,
         anticipatePin: 1,

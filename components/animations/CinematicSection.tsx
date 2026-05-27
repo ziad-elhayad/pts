@@ -48,6 +48,9 @@ export function CinematicSection({
         gsap.set(scrubLineRef.current, { scaleX: 1, transformOrigin: "left center" });
         return;
       }
+      // Disable scrub reveal on mobile for better performance
+      if (isTouch) return;
+      
       gsap.fromTo(
         scrubLineRef.current,
         { scaleX: 0.08, opacity: 0.35 },
@@ -65,12 +68,12 @@ export function CinematicSection({
         }
       );
     },
-    { scope: root, dependencies: [scrubReveal, mounted] }
+    { scope: root, dependencies: [scrubReveal, mounted, isTouch] }
   );
 
   return (
     <div ref={root} id={id} className={clsx("section-bridge relative z-10 bg-pts-bg", className)}>
-      {scrubReveal && (
+      {scrubReveal && !isTouch && (
         <div
           ref={scrubLineRef}
           className="pointer-events-none absolute bottom-0 left-[8%] right-[8%] z-[3] h-px origin-left scale-x-[0.08] opacity-35"
