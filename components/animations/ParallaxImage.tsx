@@ -83,7 +83,7 @@ export const ParallaxImage = memo(function ParallaxImage({
         }
       );
     },
-    { scope: wrap, dependencies: [intensity, zoomScrub] }
+    { scope: wrap, dependencies: [intensity, zoomScrub], revertOnUpdate: true }
   );
 
   return (

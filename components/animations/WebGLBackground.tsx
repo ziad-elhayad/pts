@@ -157,6 +157,7 @@ export function WebGLBackground() {
 
     const start = performance.now();
     const tick  = () => {
+      if (document.visibilityState !== "visible") return;
       const timeScale = reducedMotion ? 0.2 : 1.0;
       gl.uniform1f(uTime, (performance.now() - start) * 0.001 * timeScale);
       gl.drawArrays(gl.TRIANGLES, 0, 6);

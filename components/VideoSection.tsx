@@ -12,6 +12,7 @@ type VideoSectionProps = {
   className?: string;
   overlayClassName?: string;
   lazyVideo?: boolean;
+  imagePriority?: boolean;
 };
 
 export function VideoSection({
@@ -21,6 +22,7 @@ export function VideoSection({
   className,
   overlayClassName,
   lazyVideo = true,
+  imagePriority = false,
 }: VideoSectionProps) {
   const [mountVideo, setMountVideo] = useState(false);
   const [useVideo, setUseVideo] = useState(true);
@@ -39,23 +41,10 @@ export function VideoSection({
       return;
     }
 
-    // Touch + capable device: allow muted inline video after idle (keeps cinematic hero on phones)
-    if (isTouch && !isLowEnd && !reducedMotion) {
-      if (!lazyVideo) {
-        setMountVideo(true);
-        return;
-      }
-      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
-        .requestIdleCallback;
-      const cancel = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
-      if (typeof ric === "function") {
-        const id = ric(() => setMountVideo(true), { timeout: 2800 });
-        return () => {
-          if (typeof cancel === "function") cancel(id);
-        };
-      }
-      const t = window.setTimeout(() => setMountVideo(true), 900);
-      return () => window.clearTimeout(t);
+    // Touch devices: poster-first for smoother scroll and lower battery/network cost.
+    if (isTouch) {
+      setUseVideo(false);
+      return;
     }
 
     // Desktop
@@ -105,7 +94,7 @@ export function VideoSection({
           src={poster}
           alt=""
           fill
-          priority
+          priority={imagePriority}
           sizes="100vw"
           className="absolute inset-0 object-cover object-center"
           aria-hidden

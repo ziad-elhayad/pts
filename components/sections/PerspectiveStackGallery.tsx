@@ -20,14 +20,16 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
   const trackRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const { tier, isLowEnd, reducedMotion } = usePerformance();
 
   useEffect(() => {
     setMounted(true);
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useGSAP(() => {
-    if (!containerRef.current || !trackRef.current || !mounted) return;
+    if (!containerRef.current || !trackRef.current || !mounted || isTouch) return;
 
     if (reducedMotion) {
       const items = trackRef.current.querySelectorAll(".stack-item");
@@ -35,7 +37,6 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
       return;
     }
 
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const items = trackRef.current.querySelectorAll<HTMLElement>(".stack-item");
     const totalItems = items.length;
 
@@ -91,7 +92,34 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
         },
       });
     }
-  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted] });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted, isTouch], revertOnUpdate: true });
+
+  if (isTouch) {
+    return (
+      <section className="relative w-full bg-pts-bg px-4 py-10 sm:px-6">
+        <div className="mx-auto grid max-w-[1020px] gap-6">
+          {galleryItems.slice(0, 6).map((img, i) => (
+            <div key={i} className="overflow-hidden rounded-xl border border-pts-gold/20 bg-pts-black">
+              <div className="relative h-[300px] w-full">
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  className="object-cover object-center"
+                  sizes="100vw"
+                  quality={isLowEnd ? 72 : 84}
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              </div>
+              <div className="bg-gradient-to-t from-pts-black via-pts-black/90 to-transparent p-6">
+                <span className="font-heading text-base uppercase tracking-[0.1em] text-pts-parchment">{img.caption}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -123,8 +151,7 @@ export const PerspectiveStackGallery = memo(function PerspectiveStackGallery() {
                 className="object-cover object-center brightness-[1] transition-all duration-700 hover:brightness-110"
                 sizes="(max-width: 640px) 90vw, 1020px"
                 quality={isLowEnd ? 75 : 92}
-                priority={i < 2}
-                loading={i < 2 ? "eager" : "lazy"}
+                loading="lazy"
               />
 
               <div className="absolute inset-x-0 bottom-0 flex flex-col items-start justify-between bg-gradient-to-t from-pts-black via-pts-black/90 to-transparent p-6 gap-3 sm:flex-row sm:items-end sm:p-10 sm:gap-0 sm:via-pts-black/80">

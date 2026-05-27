@@ -228,7 +228,8 @@ export function LuxuryNavbar() {
   return (
     <header
       className={clsx(
-        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)]",
+        "inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)]",
+        isTouch ? "relative" : "fixed",
         !isTouch && "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
         desktopServicesOpen && "z-[10050]",
         !isTouch && hidden ? "-translate-y-full" : "translate-y-0"

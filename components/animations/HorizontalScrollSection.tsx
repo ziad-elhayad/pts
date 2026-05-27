@@ -224,9 +224,34 @@ export const HorizontalScrollSection = memo(function HorizontalScrollSection({
       if (refreshT) clearTimeout(refreshT);
       velocitySt?.kill();
     };
-  }, { scope: wrapperRef, dependencies: [tier, reducedMotion, isTouch, isLowEnd, mounted] });
+  }, { scope: wrapperRef, dependencies: [tier, reducedMotion, isTouch, isLowEnd, mounted], revertOnUpdate: true });
 
   const flatChildren = Children.toArray(children);
+
+  if (isTouch) {
+    return (
+      <div ref={wrapperRef} id={id} className="relative w-full bg-pts-bg overflow-hidden">
+        <div className="relative z-10 px-5 pb-6 pt-10">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="h-px w-6 bg-pts-gold/50" />
+            <p className="lux-heading text-[0.5rem] tracking-[0.45em] text-pts-gold/65">{kicker}</p>
+          </div>
+          <h2 className="font-heading text-[clamp(1.25rem,6vw,2rem)] uppercase leading-[1.1] tracking-[0.11em] text-pts-gold-2">
+            {title}
+          </h2>
+        </div>
+        <div className="overflow-x-auto overscroll-x-contain px-5 pb-8 snap-x snap-mandatory" style={{ WebkitOverflowScrolling: "touch" }}>
+          <div className="flex w-max gap-4">
+            {flatChildren.map((child, i) => (
+              <div key={i} className="snap-start w-[82vw] max-w-[500px] min-h-[340px]">
+                {child}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 

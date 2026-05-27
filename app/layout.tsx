@@ -51,6 +51,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var l = localStorage.getItem('pts-locale');
+                  var next = l === 'ar' ? 'ar' : 'en';
+                  document.documentElement.lang = next;
+                  document.documentElement.dir = next === 'ar' ? 'rtl' : 'ltr';
+                } catch (_) {}
+              })();
+            `,
+          }}
+        />
         <link
           rel="preload"
           as="image"

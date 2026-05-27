@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import { CinematicSection } from "@/components/animations/CinematicSection";
 import { CinematicHero } from "@/components/sections/CinematicHero";
@@ -34,6 +34,8 @@ const SideDotNavigator = dynamic(
  * HomePage — cinematic flow with consistent section rhythm and varied title reveals.
  */
 export function HomePage() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
   const handleHashChange = useCallback(() => {
     const hash = window.location.hash.replace("#", "");
     if (hash) {
@@ -52,9 +54,17 @@ export function HomePage() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, [handleHashChange]);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setIsDesktop(mediaQuery.matches);
+    sync();
+    mediaQuery.addEventListener("change", sync);
+    return () => mediaQuery.removeEventListener("change", sync);
+  }, []);
+
   return (
     <div className="bg-pts-bg">
-      <SideDotNavigator />
+      {isDesktop ? <SideDotNavigator /> : null}
       <CinematicSection id="hero" mist={false}>
         <CinematicHero />
       </CinematicSection>

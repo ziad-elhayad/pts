@@ -25,11 +25,13 @@ export function LuxuryGalleryGrid() {
   const ringRef = useRef<HTMLDivElement>(null);
   const h2Line1Ref = useRef<HTMLSpanElement>(null);
   const h2Line2Ref = useRef<HTMLSpanElement>(null);
+  const ringTweenRef = useRef<gsap.core.Tween | null>(null);
 
   useGSAP(() => {
     if (!containerRef.current || !lensRef.current || !contentRef.current || !lensImgRef.current) return;
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-    if (prefersReducedMotion()) {
+    if (prefersReducedMotion() || isTouch) {
       gsap.set(lensRef.current, { width: "100%", height: "100%", borderRadius: 0 });
       gsap.set(contentRef.current, { opacity: 1, y: 0 });
       gsap.set(lensImgRef.current, { scale: 1.15 });
@@ -38,8 +40,15 @@ export function LuxuryGalleryGrid() {
 
     gsap.set(contentRef.current, { opacity: 0, y: 72 });
 
+    let onVisibility: (() => void) | null = null;
     if (ringRef.current) {
-      gsap.to(ringRef.current, { rotation: 360, duration: 32, repeat: -1, ease: "none" });
+      ringTweenRef.current = gsap.to(ringRef.current, { rotation: 360, duration: 32, repeat: -1, ease: "none" });
+      onVisibility = () => {
+        if (!ringTweenRef.current) return;
+        ringTweenRef.current.paused(document.visibilityState !== "visible");
+      };
+      document.addEventListener("visibilitychange", onVisibility);
+      onVisibility();
     }
 
     const lineA = h2Line1Ref.current;
@@ -105,7 +114,14 @@ export function LuxuryGalleryGrid() {
         },
       },
     );
-  }, { scope: containerRef });
+    return () => {
+      if (onVisibility) {
+        document.removeEventListener("visibilitychange", onVisibility);
+      }
+      ringTweenRef.current?.kill();
+      ringTweenRef.current = null;
+    };
+  }, { scope: containerRef, revertOnUpdate: true });
 
   return (
     <section 

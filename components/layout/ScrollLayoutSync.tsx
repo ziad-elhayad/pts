@@ -4,6 +4,10 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  cancelScheduledScrollTriggerRefresh,
+  requestScrollTriggerRefresh,
+} from "@/lib/scrollTriggerRefresh";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -17,11 +21,9 @@ export function ScrollLayoutSync() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Add a small delay to ensure the DOM is stable and avoid main-thread jank during route transitions
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 400);
-    return () => clearTimeout(timer);
+    // Debounced refresh avoids repeated global geometry work during transitions.
+    requestScrollTriggerRefresh(260);
+    return () => cancelScheduledScrollTriggerRefresh();
   }, [pathname]);
 
   return null;

@@ -68,7 +68,7 @@ export function CinematicSection({
         }
       );
     },
-    { scope: root, dependencies: [scrubReveal, mounted, isTouch] }
+    { scope: root, dependencies: [scrubReveal, mounted, isTouch], revertOnUpdate: true }
   );
 
   return (

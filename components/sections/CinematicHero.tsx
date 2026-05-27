@@ -30,14 +30,15 @@ export const CinematicHero = memo(function CinematicHero() {
   const botLineRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
 
   useEffect(() => {
     setMounted(true);
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useEffect(() => {
-    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     if (isTouch || isLowEnd) return;
 
     const onMove = (e: MouseEvent) => {
@@ -49,10 +50,9 @@ export const CinematicHero = memo(function CinematicHero() {
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, [isLowEnd]);
+  }, [isLowEnd, isTouch]);
 
   useEffect(() => {
-    const isTouch = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     if (isTouch || isLowEnd) return;
 
     const setL1X = gsap.quickSetter(layer1Ref.current, "x", "px");
@@ -75,7 +75,7 @@ export const CinematicHero = memo(function CinematicHero() {
 
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);
-  }, [isLowEnd]);
+  }, [isLowEnd, isTouch]);
 
   const tagline = t(locale, "hero.tagline");
   const words = tagline.split(" ");
@@ -89,7 +89,7 @@ export const CinematicHero = memo(function CinematicHero() {
       const scrollEl = sectionRef.current?.querySelector(".hero-scroll-hint");
       const coords = sectionRef.current?.querySelector(".hero-coords");
 
-      if (reducedMotion) {
+      if (reducedMotion || isTouch) {
         gsap.set([kicker, wordInners, sub, ctas, scrollEl, coords, topLineRef.current, botLineRef.current], {
           opacity: 1,
           clearProps: "transform,filter",
@@ -119,12 +119,12 @@ export const CinematicHero = memo(function CinematicHero() {
 
 
 
-      if (auroraRef.current && !isLowEnd) {
+      if (auroraRef.current && !isLowEnd && !isTouch) {
         gsap.to(auroraRef.current, { rotate: 360, duration: 60, repeat: -1, ease: "none" });
 
       }
     },
-    { scope: sectionRef, dependencies: [locale, isLowEnd, reducedMotion, mounted] },
+    { scope: sectionRef, dependencies: [locale, isLowEnd, reducedMotion, mounted, isTouch], revertOnUpdate: true },
   );
 
   useGSAP(
@@ -134,9 +134,10 @@ export const CinematicHero = memo(function CinematicHero() {
       const overlay = overlayRef.current;
       if (!media || !content || !mounted) return;
 
-      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-      gsap.to(media, {
+      if (isTouch) {
+        gsap.set(media, { clearProps: "transform" });
+      } else {
+        gsap.to(media, {
         yPercent: isLowEnd || isTouch ? 15 : 32,
         scale: isLowEnd || isTouch ? 1 : 1.12,
         rotateY: isLowEnd || isTouch ? 0 : -4,
@@ -147,19 +148,22 @@ export const CinematicHero = memo(function CinematicHero() {
           end: "bottom top",
           scrub: isLowEnd ? 0.1 : (isTouch ? 0.3 : 0),
         },
-      });
+        });
+      }
 
       // Removed fade-out animation to keep content visible during scroll
 
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "bottom top",
-        pin: true,
-        pinSpacing: false,
-        scrub: true,
-        anticipatePin: 1,
-      });
+      if (!isTouch) {
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          pin: true,
+          pinSpacing: false,
+          scrub: true,
+          anticipatePin: 1,
+        });
+      }
 
       if (overlay) {
         gsap.to(overlay, {
@@ -174,7 +178,7 @@ export const CinematicHero = memo(function CinematicHero() {
         });
       }
     },
-    { scope: sectionRef, dependencies: [isLowEnd, mounted] },
+    { scope: sectionRef, dependencies: [isLowEnd, mounted, isTouch], revertOnUpdate: true },
   );
 
   return (
@@ -182,7 +186,7 @@ export const CinematicHero = memo(function CinematicHero() {
       ref={sectionRef}
       className="relative h-[100svh] min-h-[500px] sm:min-h-[700px] w-full overflow-hidden bg-pts-deep [perspective:1600px] touch-pan-y"
     >
-      {mounted && !isLowEnd && (
+      {mounted && !isLowEnd && !isTouch && (
         <div
           ref={auroraRef}
           className="pointer-events-none absolute -left-1/2 top-1/2 z-[1] h-[180%] w-[200%] -translate-y-1/2 opacity-30 will-change-transform"
@@ -203,13 +207,14 @@ export const CinematicHero = memo(function CinematicHero() {
           poster={heroMedia.poster}
           src={heroMedia.videoHd}
           srcLarge={heroMedia.videoUhd}
+          imagePriority
           className="h-full w-full"
           overlayClassName="none"
           lazyVideo
         />
       </div>
 
-      {mounted && !isLowEnd && (
+      {mounted && !isLowEnd && !isTouch && (
         <>
           <div
             ref={layer1Ref}
@@ -240,10 +245,12 @@ export const CinematicHero = memo(function CinematicHero() {
         aria-hidden
       />
 
-      <div className="pointer-events-none absolute inset-0 z-[5] mix-blend-soft-light" aria-hidden>
-        <div className="mist-drift absolute -left-1/4 top-0 h-[120%] w-[150%] opacity-30" />
-        <div className="mist-drift-slow absolute -right-1/3 top-1/4 h-full w-[140%] opacity-20" />
-      </div>
+      {!isTouch && (
+        <div className="pointer-events-none absolute inset-0 z-[5] mix-blend-soft-light" aria-hidden>
+          <div className="mist-drift absolute -left-1/4 top-0 h-[120%] w-[150%] opacity-30" />
+          <div className="mist-drift-slow absolute -right-1/3 top-1/4 h-full w-[140%] opacity-20" />
+        </div>
+      )}
 
       <div
         ref={topLineRef}

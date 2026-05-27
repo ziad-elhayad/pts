@@ -3,13 +3,8 @@
 import { useEffect, useState } from "react";
 import { SERVICE_SLIDER_MOBILE_MAX } from "@/lib/service-slides";
 
-function getIsMobileSlider() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia(`(max-width: ${SERVICE_SLIDER_MOBILE_MAX}px)`).matches;
-}
-
 export function useMobileSliderView() {
-  const [isMobileSlider, setIsMobileSlider] = useState(getIsMobileSlider);
+  const [isMobileSlider, setIsMobileSlider] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${SERVICE_SLIDER_MOBILE_MAX}px)`);

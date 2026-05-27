@@ -9,6 +9,10 @@ import { Suspense, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import {
+  cancelScheduledScrollTriggerRefresh,
+  requestScrollTriggerRefresh,
+} from "@/lib/scrollTriggerRefresh";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -93,21 +97,17 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
 
-    const refresh = () => {
-      ScrollTrigger.refresh();
-    };
-
     const scheduleRefresh = () => {
       const idle = (window as Window & {
         requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
       }).requestIdleCallback;
 
       if (typeof idle === "function") {
-        idle(refresh, { timeout: 1200 });
+        idle(() => requestScrollTriggerRefresh(0), { timeout: 1200 });
         return;
       }
 
-      window.setTimeout(refresh, 350);
+      requestScrollTriggerRefresh(220);
     };
 
     window.addEventListener("load", scheduleRefresh, { once: true });
@@ -115,6 +115,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
 
     return () => {
       window.removeEventListener("load", scheduleRefresh);
+      cancelScheduledScrollTriggerRefresh();
     };
   }, []);
 

@@ -37,7 +37,7 @@ export function SideDotNavigator() {
         });
       });
     },
-    { scope: rootRef },
+    { scope: rootRef, revertOnUpdate: true },
   );
 
   const scrollTo = (id: string) => {

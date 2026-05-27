@@ -19,6 +19,7 @@ if (typeof window !== "undefined") {
 export const StickySplitSection = memo(function StickySplitSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const { tier, isLowEnd, reducedMotion } = usePerformance();
   const { locale } = useLocale();
 
@@ -32,13 +33,13 @@ export const StickySplitSection = memo(function StickySplitSection() {
 
   useEffect(() => {
     setMounted(true);
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useGSAP(() => {
-    if (!containerRef.current || reducedMotion || !mounted) return;
+    if (!containerRef.current || reducedMotion || !mounted || isTouch) return;
 
     const stages = containerRef.current.querySelectorAll(".split-stage");
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -87,7 +88,42 @@ export const StickySplitSection = memo(function StickySplitSection() {
       }
     });
 
-  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted, pillars] });
+  }, { scope: containerRef, dependencies: [tier, reducedMotion, mounted, pillars, isTouch], revertOnUpdate: true });
+
+  if (isTouch) {
+    return (
+      <section className="relative w-full bg-pts-black px-4 py-10 sm:px-6 md:px-12">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+          {pillars.map((item, i) => (
+            <div
+              key={i}
+              className="overflow-hidden rounded-sm border border-pts-gold/15 bg-pts-black shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
+            >
+              <div className="relative h-[280px] w-full">
+                <Image
+                  src={vipServiceMedia[i].src}
+                  alt={vipServiceMedia[i].alt}
+                  fill
+                  className="object-cover brightness-[0.88] saturate-[0.92]"
+                  sizes="100vw"
+                  quality={isLowEnd ? 72 : 82}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-pts-black/90 via-transparent to-transparent" />
+              </div>
+              <div className="p-6">
+                <h3 className="mb-4 font-heading text-xl uppercase tracking-[0.06em] text-pts-parchment">
+                  {item.title}
+                </h3>
+                <p className="text-[0.66rem] uppercase leading-[2.1] tracking-[0.16em] text-pts-muted/75">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

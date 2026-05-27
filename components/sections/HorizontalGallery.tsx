@@ -180,7 +180,8 @@ export const HorizontalGallery = memo(function HorizontalGallery() {
                     alt={item.title}
                     fill
                     className="object-cover brightness-[0.7] saturate-[0.85] transition-[filter] duration-[3s] ease-out group-hover:brightness-[0.85] group-hover:saturate-[1]"
-                    priority
+                    sizes="(max-width: 768px) 85vw, (max-width: 1024px) 60vw, 42vw"
+                    loading="lazy"
                     quality={isLowEnd ? 75 : 85}
                   />
                 </div>

@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useState, useEffect } from "react";
+import { requestScrollTriggerRefresh } from "@/lib/scrollTriggerRefresh";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -41,10 +42,7 @@ export function SectionReveal({
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Force a refresh after a short delay to catch any layout shifts
-      const timeoutId = setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 1500);
+      requestScrollTriggerRefresh(260);
 
       if (variant === "scrub") {
         // Mobile: remove blur filter for better performance
@@ -132,9 +130,9 @@ export function SectionReveal({
         }
       }
 
-      return () => clearTimeout(timeoutId);
+      return;
     },
-    { scope: root, dependencies: [delay, variant, mounted, isTouch] }
+    { scope: root, dependencies: [delay, variant, mounted, isTouch], revertOnUpdate: true }
   );
 
   return (

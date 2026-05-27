@@ -5,6 +5,10 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import {
+  cancelScheduledScrollTriggerRefresh,
+  requestScrollTriggerRefresh,
+} from "@/lib/scrollTriggerRefresh";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -30,25 +34,15 @@ export function SmoothScrollProvider({
     const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
     if (isLowEnd || reducedMotion) {
-      const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 500);
-      return () => window.clearTimeout(refreshTimer);
+      requestScrollTriggerRefresh(180);
+      return () => cancelScheduledScrollTriggerRefresh();
     }
 
     if (isTouch) {
-      // Normalize scroll on touch to prevent pinning jank and erratic behavior
-      const normalized = ScrollTrigger.normalizeScroll({
-        allowNestedScroll: true,
-      });
-      
-      const timer = window.setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 1000);
-      
+      // Keep native scrolling untouched on touch devices.
+      requestScrollTriggerRefresh(220);
       return () => {
-        clearTimeout(timer);
-        if (normalized && 'kill' in normalized) {
-          (normalized as { kill: () => void }).kill();
-        }
+        cancelScheduledScrollTriggerRefresh();
       };
     }
 
@@ -75,20 +69,23 @@ export function SmoothScrollProvider({
     (window as Window & { __lenis?: Lenis }).__lenis = lenis;
     document.documentElement.classList.add("lenis", "lenis-smooth");
 
-    // Force a refresh after a delay to ensure all assets are loaded
-    const refresh = () => ScrollTrigger.refresh();
-    const refreshTimer = setTimeout(refresh, 1500);
+    // One deferred refresh after initial render settles.
+    requestScrollTriggerRefresh(320);
 
     // Refresh on focus/visibility (Fixes Chrome/Brave background tab throttling)
-    window.addEventListener("focus", refresh);
-    document.addEventListener("visibilitychange", refresh);
+    const onFocus = () => requestScrollTriggerRefresh(0);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") requestScrollTriggerRefresh(0);
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       gsap.ticker.remove(onTick);
       lenis.destroy();
-      clearTimeout(refreshTimer);
-      window.removeEventListener("focus", refresh);
-      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+      cancelScheduledScrollTriggerRefresh();
       delete (window as Window & { __lenis?: Lenis }).__lenis;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
     };

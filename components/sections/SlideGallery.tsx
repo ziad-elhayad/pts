@@ -74,8 +74,7 @@ export const SlideGallery = memo(function SlideGallery() {
                 className="object-cover brightness-[0.85] contrast-[1.1] saturate-[0.85]"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 60vw"
                 quality={isLowEnd ? 70 : 85}
-                priority={index === 0}
-                loading={index === 0 ? "eager" : "lazy"}
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
             </div>

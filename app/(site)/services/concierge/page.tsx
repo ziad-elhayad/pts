@@ -11,7 +11,7 @@ import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { buildServiceSlides } from "@/lib/service-slides";
 import { conciergeCategoryImages } from "@/lib/service-category-images";
-import { useMobileSliderView } from "@/hooks/useMobileSliderView";
+import { useClientLayoutMode } from "@/hooks/useClientLayoutMode";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
 import { CountrySelect } from "@/components/forms/CountrySelect";
@@ -24,34 +24,52 @@ if (typeof window !== "undefined") {
 
 export default function ConciergePage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
   const { locale } = useLocale();
-  const { isMobileSlider } = useMobileSliderView();
+  const { ready, useMobileSlides } = useClientLayoutMode();
   const enquiry = useEnquirySubmit("concierge");
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Create services array dynamically based on locale
   const services = conciergeCategoryImages.map((image, index) => ({
     title: t(locale, `concierge.service${index + 1}.title` as DictionaryKey),
     description: t(locale, `concierge.service${index + 1}.description` as DictionaryKey),
     image,
   }));
 
-  const slides = buildServiceSlides(services, isMobileSlider);
-
-  // Create conciergeTypes array dynamically based on locale
+  const slides = buildServiceSlides(services, useMobileSlides);
   const conciergeTypes = services.map((service) => service.title);
 
+  useEffect(() => {
+    if (!useMobileSlides || reducedMotion || !containerRef.current) return;
+    const slideEls = Array.from(containerRef.current.querySelectorAll<HTMLElement>(".service-slide"));
+    if (!slideEls.length) return;
+
+    slideEls.forEach((slide) => {
+      gsap.set(slide, { opacity: 0.01, y: 20 });
+      slide.dataset.revealed = "false";
+    });
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const slide = entry.target as HTMLElement;
+          if (slide.dataset.revealed === "true") return;
+          slide.dataset.revealed = "true";
+          gsap.to(slide, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", overwrite: true });
+        });
+      },
+      { threshold: 0.45 },
+    );
+
+    slideEls.forEach((slide) => io.observe(slide));
+    return () => io.disconnect();
+  }, [useMobileSlides, reducedMotion, services.length]);
+
   useGSAP(() => {
-    if (!containerRef.current || reducedMotion || !mounted) return;
+    if (!containerRef.current || reducedMotion || !ready || useMobileSlides) return;
 
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     const totalSlides = slideElements.length;
     const tl = gsap.timeline({
@@ -61,7 +79,7 @@ export default function ConciergePage() {
         end: `+=${(totalSlides + 0.5) * (isLowEnd ? 30 : 40)}%`,
         pin: true,
         anticipatePin: 1,
-        scrub: isLowEnd ? 0.15 : (isTouch ? 0.35 : 0.6),
+        scrub: isLowEnd ? 0.15 : 0.6,
       },
     });
 
@@ -93,19 +111,17 @@ export default function ConciergePage() {
           opacity: 0,
           yPercent: isLowEnd ? 0 : -8,
           zIndex: idx,
-          filter: (isTouch || isLowEnd) ? "none" : "blur(8px)",
+          filter: isLowEnd ? "none" : "blur(8px)",
           ease: "power2.inOut"
         }, startTime);
       }
     });
 
-    ScrollTrigger.refresh();
-
     return () => {
       tl.scrollTrigger?.kill();
       tl.kill();
     };
-  }, { scope: containerRef, dependencies: [mounted, reducedMotion, isLowEnd, isMobileSlider] });
+  }, { scope: containerRef, dependencies: [ready, reducedMotion, isLowEnd, useMobileSlides], revertOnUpdate: true });
 
   return (
     <div className="bg-pts-bg min-h-screen">
@@ -139,12 +155,16 @@ export default function ConciergePage() {
             </h2>
           </div>
 
-          <div className="relative min-h-[min(72vh,680px)] sm:min-h-[450px] lg:min-h-[500px] overflow-hidden rounded-lg touch-pan-y">
+          <div className={`relative ${useMobileSlides ? "min-h-0" : "min-h-[min(72vh,680px)] sm:min-h-[450px] lg:min-h-[500px]"} overflow-hidden rounded-lg touch-pan-y`}>
             {slides.map((slideServices, slideIndex) => (
               <div
-                key={`${isMobileSlider ? "m" : "d"}-${slideIndex}`}
-                className="service-slide absolute inset-0 bg-pts-black will-change-transform"
-                style={{ zIndex: slideIndex + 1, opacity: slideIndex === 0 ? 1 : 0 }}
+                key={`slide-${slideIndex}`}
+                className={`service-slide bg-pts-black will-change-transform ${useMobileSlides ? "relative mb-6 min-h-[78svh] flex items-center" : "absolute inset-0"}`}
+                style={
+                  useMobileSlides
+                    ? undefined
+                    : { zIndex: slideIndex + 1, opacity: slideIndex === 0 ? 1 : 0 }
+                }
               >
                 <div
                   className="mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-8"

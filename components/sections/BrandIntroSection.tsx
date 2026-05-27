@@ -108,7 +108,6 @@ export function BrandIntroSection() {
           <ParallaxImage
             src={heroMedia.poster}
             alt="Aircraft wing over clouds"
-            priority={false}
             intensity={16}
             zoomScrub
           />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { useGSAP } from "@gsap/react";
@@ -16,6 +16,8 @@ if (typeof window !== "undefined") {
 
 export function ServicesSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const { reducedMotion, isLowEnd } = usePerformance();
   const { locale } = useLocale();
 
@@ -58,11 +60,49 @@ export function ServicesSection() {
     [services[3]],
   ];
 
+  useEffect(() => {
+    setReady(true);
+    setIsTouch(typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0));
+  }, []);
+
+  useEffect(() => {
+    if (!isTouch || reducedMotion || !containerRef.current) return;
+
+    const slides = Array.from(containerRef.current.querySelectorAll<HTMLElement>(".mobile-service-slide"));
+    if (!slides.length) return;
+
+    slides.forEach((slide) => {
+      gsap.set(slide, { opacity: 0.01, y: 24 });
+      slide.dataset.revealed = "false";
+    });
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const slide = entry.target as HTMLElement;
+          if (slide.dataset.revealed === "true") return;
+          slide.dataset.revealed = "true";
+          gsap.to(slide, {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+            overwrite: true,
+          });
+        });
+      },
+      { threshold: 0.5 },
+    );
+
+    slides.forEach((slide) => io.observe(slide));
+    return () => io.disconnect();
+  }, [isTouch, reducedMotion, services.length]);
+
   useGSAP(() => {
-    if (!containerRef.current || reducedMotion) return;
+    if (!containerRef.current || reducedMotion || isTouch) return;
 
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -116,7 +156,51 @@ export function ServicesSection() {
       tl.scrollTrigger?.kill();
       tl.kill();
     };
-  }, { scope: containerRef, dependencies: [reducedMotion, isLowEnd, slides] });
+  }, { scope: containerRef, dependencies: [reducedMotion, isLowEnd, slides, isTouch], revertOnUpdate: true });
+
+  if (ready && isTouch) {
+    return (
+      <section ref={containerRef} className="relative w-full bg-pts-bg">
+        <div className="mx-auto w-full max-w-7xl px-6 py-10 md:px-12">
+          <p className="lux-heading mb-2 text-[0.65rem] uppercase tracking-[0.4em] text-pts-gold/70">GERVAE</p>
+          <h2 className="font-heading text-3xl uppercase tracking-[0.15em] text-pts-parchment">
+            {t(locale, "services.section.heading" as DictionaryKey)}
+          </h2>
+          <div className="mt-3 h-px w-12 bg-pts-gold/50" />
+        </div>
+
+        <div className="mx-auto w-full max-w-7xl px-6 pb-8 md:px-12">
+          {services.map((service) => (
+            <div key={service.link} className="mobile-service-slide min-h-[84svh] flex items-center py-6">
+              <div className="w-full overflow-hidden rounded-lg border border-pts-gold/15 bg-pts-black">
+                <div className="relative h-[42svh]">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                    sizes="100vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/90 via-pts-deep/50 to-transparent" />
+                </div>
+                <div className="p-6">
+                  <h3 className="mb-3 font-heading text-2xl uppercase tracking-[0.1em] text-pts-gold">{service.title}</h3>
+                  <p className="mb-4 lux-heading text-[0.66rem] uppercase tracking-[0.28em] text-pts-parchment/80">{service.subtitle}</p>
+                  <p className="mb-6 text-[0.7rem] uppercase leading-relaxed tracking-[0.16em] text-pts-muted/70">{service.description}</p>
+                  <MagneticButton
+                    href={service.link}
+                    className="w-fit border-pts-gold bg-pts-gold px-8 py-3.5 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-pts-black hover:bg-pts-gold/90"
+                  >
+                    {t(locale, "services.read.more" as DictionaryKey)}
+                  </MagneticButton>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={containerRef} className="relative min-h-screen bg-pts-bg">
@@ -172,7 +256,8 @@ export function ServicesSection() {
                           alt={service.title}
                           fill
                           className="object-cover rounded-lg shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]"
-                          priority={slideIndex === 0}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/90 via-pts-deep/50 to-transparent rounded-lg" />
                       </div>

@@ -29,7 +29,7 @@ export function DestinationsSection() {
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover brightness-[0.85] contrast-[1.1] saturate-[0.85] transition duration-[1200ms] ease-out group-hover:scale-[1.1] group-hover:brightness-100"
-                priority
+                loading="lazy"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-pts-black/70 via-transparent to-transparent" />
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-6 pb-6 pt-24 sm:px-8 sm:pb-8">

@@ -22,7 +22,7 @@
   --color-pts-line:      var(--pts-line);
   --color-pts-deep:      var(--pts-deep);
   --font-heading: var(--font-cinzel), ui-serif, Georgia, serif;
-  --font-body: "Glacial Indifference", ui-sans-serif, system-ui, sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-arabic: var(--font-tajawal), "Tajawal", ui-sans-serif, system-ui, sans-serif;
   --shadow-lux:  0 40px 100px rgba(0, 0, 0, 0.6);
   --shadow-gold: 0 0 80px rgba(168, 143, 100, 0.12);
@@ -89,6 +89,12 @@ textarea {
   animation: grain-drift 8s steps(10, end) infinite;
 }
 
+@media (max-width: 1024px), (prefers-reduced-motion: reduce) {
+  .grain-overlay {
+    display: none;
+  }
+}
+
 @keyframes grain-drift {
   0%, 100% { transform: translate(0, 0); }
   10%       { transform: translate(-2%, -3%); }
@@ -118,7 +124,7 @@ textarea {
   z-index: 91;
   background: radial-gradient(circle at center, transparent 20%, rgba(13, 13, 15, 0.95) 100%);
   opacity: 0;
-  will-change: opacity, transform;
+  will-change: auto;
 }
 
 /* ─── SECTION CLARITY ───────────────────────────────────────────────────── */
@@ -453,7 +459,7 @@ html.lenis, html.lenis body {
 
 .ambient-orb {
   animation: ambient-drift 22s ease-in-out infinite;
-  will-change: transform, opacity;
+  will-change: auto;
 }
 
 @keyframes float-gentle {
@@ -571,8 +577,7 @@ html.lenis, html.lenis body {
   }
 
   .grain-overlay {
-    opacity: 0.012;
-    animation-duration: 12s;
+    display: none;
   }
 
   /* Force all page sections to respect the viewport width */
@@ -607,6 +612,12 @@ html.lenis, html.lenis body {
     padding-left: 1.25rem !important;
     padding-right: 1.25rem !important;
   }
+
+  .glass-panel,
+  .glass-deep {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
 /* Reduce animation complexity on weak hardware */
@@ -618,8 +629,11 @@ html.lenis, html.lenis body {
   opacity: 0.1 !important;
 }
 
-/* Global snappier transitions for weak devices */
-.eco-mode * {
+/* Targeted snappier transitions for weak devices */
+.eco-mode .lux-heading,
+.eco-mode .btn-gold-glow,
+.eco-mode a,
+.eco-mode button {
   transition-duration: 0.2s !important;
 }
 

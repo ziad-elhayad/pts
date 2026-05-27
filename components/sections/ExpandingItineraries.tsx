@@ -119,7 +119,7 @@ export function ExpandingItineraries() {
         });
       }
     },
-    { scope: sectionRef, dependencies: [mounted] },
+    { scope: sectionRef, dependencies: [mounted], revertOnUpdate: true },
   );
 
   useEffect(() => {
@@ -130,6 +130,7 @@ export function ExpandingItineraries() {
       const tag = panel.querySelector<HTMLElement>(".exp-tag");
       if (!detail || !tag) return;
       const active = i === activeIndex;
+      gsap.killTweensOf([tag, detail]);
       if (active) {
         gsap.fromTo(
           tag,
@@ -194,7 +195,7 @@ export function ExpandingItineraries() {
                     "object-cover object-center transition-[filter] duration-[1.4s] ease-out",
                     isActive ? "saturate-100 brightness-[0.7] sm:brightness-100" : "saturate-[0.2] brightness-[0.4]",
                   )}
-                  priority={index === 0}
+                loading="lazy"
                 />
               </div>
 
