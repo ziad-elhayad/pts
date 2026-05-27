@@ -21,7 +21,7 @@ export function LuxuryFooter() {
 
         {/* Brand column */}
         <div>
-          <BrandLogo size={48} className="mb-6" variant="image" />
+          <BrandLogo size={200} className="mb-6" variant="image" />
 
           <p className="text-[0.68rem] uppercase tracking-[0.18em] leading-[2.4] text-pts-muted/45 max-w-sm">
             {site.description}

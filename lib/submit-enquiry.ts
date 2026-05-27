@@ -16,7 +16,7 @@ export async function submitEnquiry(
   data: Record<string, string>
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "00000000-0000-0000-0000-000000000000";
-  const toEmail = process.env.NEXT_PUBLIC_ENQUIRY_TO_EMAIL ?? "hyadz0211@gmail.com";
+  const toEmail = process.env.NEXT_PUBLIC_ENQUIRY_TO_EMAIL ?? "info@gervae.com";
 
   // Format email body
   const lines = [

@@ -293,12 +293,6 @@ export const CinematicHero = memo(function CinematicHero() {
             <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto">
               {t(locale, "hero.cta.inquire")}
             </MagneticButton>
-            <MagneticButton
-              href="/mice"
-              className="border-pts-parchment bg-pts-black/80 px-12 py-4 text-[0.65rem] font-bold text-pts-parchment hover:bg-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto"
-            >
-              {t(locale, "hero.cta.begin")}
-            </MagneticButton>
           </div>
 
           <div className="hero-scroll-hint mt-10 sm:mt-14">

@@ -93,6 +93,7 @@ function GlobalEffects() {
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
+  const [loaderVisible, setLoaderVisible] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -113,9 +114,29 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
     window.addEventListener("load", scheduleRefresh, { once: true });
     scheduleRefresh();
 
+    // Detect when loader is removed from DOM
+    const observer = new MutationObserver(() => {
+      const loader = document.querySelector('[style*="z-[200]"]');
+      if (!loader) {
+        setLoaderVisible(false);
+        observer.disconnect();
+      }
+    });
+
+    // Start observing after a short delay to ensure loader is rendered
+    setTimeout(() => {
+      const loader = document.querySelector('[style*="z-[200]"]');
+      if (loader) {
+        observer.observe(document.body, { childList: true, subtree: true });
+      } else {
+        setLoaderVisible(false);
+      }
+    }, 100);
+
     return () => {
       window.removeEventListener("load", scheduleRefresh);
       cancelScheduledScrollTriggerRefresh();
+      observer.disconnect();
     };
   }, []);
 
@@ -128,8 +149,8 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
           <Suspense fallback={null}>
             <ScrollLayoutSync />
           </Suspense>
-          {mounted ? <LoaderScreen /> : null}
-          {children}
+          {mounted && <LoaderScreen />}
+          <div className={loaderVisible ? "opacity-0 pointer-events-none" : "opacity-100"}>{children}</div>
         </SmoothScrollProvider>
       </LocaleProvider>
     </PerformanceProvider>

@@ -36,7 +36,7 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <div className="bg-pts-bg min-h-screen">
+    <div className="bg-pts-bg min-h-screen" style={{ scrollBehavior: 'smooth' }}>
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center border-b border-pts-line/20">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
