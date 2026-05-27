@@ -3,6 +3,8 @@
 import { memo, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import { useLocale } from "@/contexts/LocaleContext";
+import { t } from "@/lib/dictionary";
 
 const SLIDES = [
   {
@@ -30,6 +32,7 @@ const SLIDES = [
 export const SlideGallery = memo(function SlideGallery() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { isLowEnd, reducedMotion } = usePerformance();
+  const { locale } = useLocale();
 
   const handleDotClick = useCallback((index: number) => {
     setCurrentIndex(index);
@@ -47,13 +50,13 @@ export const SlideGallery = memo(function SlideGallery() {
     <div className="relative w-full h-[100svh] flex flex-col items-center justify-center bg-pts-bg p-6 sm:p-8 md:p-12">
       <div className="text-center mb-8">
         <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl tracking-[0.2em] text-pts-gold uppercase mb-6">
-          Follow the Journey
+          {t(locale, "home.gallery.title")}
         </h2>
         <p className="max-w-3xl text-lg sm:text-xl md:text-2xl font-heading tracking-[0.15em] text-pts-parchment leading-relaxed mb-4">
-          Experience the World Like Never Before
+          {t(locale, "home.gallery.tagline")}
         </p>
         <p className="max-w-3xl text-[0.65rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed">
-          Explore our handpicked, exclusive stays and create unforgettable memories across the globe. Every destination is curated for comfort, luxury, and moments you&apos;ll cherish forever.
+          {t(locale, "home.gallery.description")}
         </p>
       </div>
       <div className="relative w-full h-full max-w-[1600px] flex-1">

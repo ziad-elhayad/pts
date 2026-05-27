@@ -157,6 +157,7 @@ export const dictionary = {
     // Home Page - Gallery Section
     "home.gallery.subtitle": "Archive",
     "home.gallery.title": "FOLLOW THE JOURNEY",
+    "home.gallery.tagline": "Experience the World Like Never Before",
     "home.gallery.description": "Explore our handpicked, exclusive stays and create unforgettable memories across the globe. Every destination is curated for comfort, luxury, and moments you'll cherish forever.",
 
     // Hero CTA buttons
@@ -456,6 +457,7 @@ export const dictionary = {
     // Home Page - Gallery Section
     "home.gallery.subtitle": "الأرشيف",
     "home.gallery.title": "اتبع الرحلة",
+    "home.gallery.tagline": "اختبر العالم كما لم تره من قبل",
     "home.gallery.description": "استكشف إقاماتنا الحصرية المختارة وأنشئ ذكريات لا تُنسى في جميع أنحاء العالم. كل وجهة مُعدة بعناية للراحة والفخامة واللحظات التي ستعتز بها للأبد.",
 
     // Hero CTA buttons
