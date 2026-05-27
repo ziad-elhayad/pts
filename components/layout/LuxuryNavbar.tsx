@@ -159,43 +159,48 @@ export function LuxuryNavbar() {
   const [nav, setNav] = useState({ scrolled: false, hidden: false, progress: 0 });
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
   const lastScroll = useRef(0);
   const rafRef = useRef(0);
+  const hiddenRef = useRef(false);
+  const menuOpenRef = useRef(false);
 
   useEffect(() => {
-    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
-  }, []);
+    hiddenRef.current = nav.hidden;
+  }, [nav.hidden]);
 
   useEffect(() => {
-    // On mobile, use simpler scroll behavior to prevent jitter
-    if (isTouch) {
-      const onScroll = () => {
-        const y = window.scrollY;
-        const scrolled = y > 60;
-        setNav((prev) => {
-          if (prev.scrolled === scrolled) return prev;
-          return { scrolled, hidden: false, progress: 0 };
-        });
-      };
-
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
-      return () => window.removeEventListener("scroll", onScroll);
+    menuOpenRef.current = open || mobileServicesOpen || desktopServicesOpen;
+    if (menuOpenRef.current) {
+      setNav((prev) => (prev.hidden ? { ...prev, hidden: false } : prev));
     }
+  }, [open, mobileServicesOpen, desktopServicesOpen]);
 
-    // Desktop: full scroll behavior with RAF
+  useEffect(() => {
+    const hideOffset = 96;
+    const revealOffset = 24;
+    const directionThreshold = 8;
+
     const onScroll = () => {
       if (rafRef.current) return;
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = 0;
-        const y = window.scrollY;
+        const y = Math.max(window.scrollY, 0);
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const scrolled = y > 60;
         const progress = max > 0 ? y / max : 0;
         const prev = lastScroll.current;
-        const hidden = y > prev && y > 100;
+        const delta = y - prev;
+
+        let hidden = hiddenRef.current;
+        if (menuOpenRef.current || y <= revealOffset || delta < -directionThreshold) {
+          hidden = false;
+        } else if (delta > directionThreshold && y > hideOffset) {
+          hidden = true;
+        }
+
         lastScroll.current = y;
+        hiddenRef.current = hidden;
+
         setNav((prev) => {
           if (prev.scrolled === scrolled && prev.hidden === hidden && Math.abs(prev.progress - progress) < 0.002) {
             return prev;
@@ -211,7 +216,7 @@ export function LuxuryNavbar() {
       window.removeEventListener("scroll", onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [isTouch]);
+  }, []);
 
   const { scrolled, hidden, progress } = nav;
 
@@ -228,11 +233,9 @@ export function LuxuryNavbar() {
   return (
     <header
       className={clsx(
-        "inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)]",
-        isTouch ? "relative" : "fixed",
-        !isTouch && "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
         desktopServicesOpen && "z-[10050]",
-        !isTouch && hidden ? "-translate-y-full" : "translate-y-0"
+        hidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
       <div
@@ -241,7 +244,7 @@ export function LuxuryNavbar() {
           scrolled
             ? "border-b border-pts-gold/10 bg-pts-deep/95"
             : "border-b border-transparent bg-transparent",
-          !isTouch && scrolled && "lg:bg-pts-deep/82 lg:backdrop-blur-xl"
+          scrolled && "lg:bg-pts-deep/82 lg:backdrop-blur-xl"
         )}
       >
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 overflow-visible px-4 py-4 sm:px-8 sm:py-5 md:px-12">
