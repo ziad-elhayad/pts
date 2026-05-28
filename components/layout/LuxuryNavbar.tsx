@@ -29,7 +29,8 @@ function ServicesDropdownLinks({
             href={subItem.href}
             onClick={onNavigate}
             className={clsx(
-              "group flex w-full items-center justify-between gap-3 rounded-sm px-4 py-3 text-[0.62rem] uppercase tracking-[0.2em] transition-all duration-300",
+              "group flex w-full items-center justify-between gap-3 rounded-sm px-4 py-3 font-bold uppercase tracking-[0.2em] transition-all duration-300",
+              "text-[0.7rem]",
               subActive
                 ? "bg-pts-gold/12 text-pts-gold"
                 : "text-pts-gold-2 hover:bg-pts-gold/6 hover:text-pts-parchment"
@@ -114,7 +115,8 @@ function DesktopServicesDropdown({
           aria-haspopup="true"
           onClick={() => onOpenChange(!isOpen)}
           className={clsx(
-            "relative flex items-center gap-1.5 border-none bg-transparent py-2 font-body text-[0.62rem] uppercase tracking-[0.32em] outline-none transition-colors duration-300",
+            "relative flex items-center gap-1.5 border-none bg-transparent py-2 font-body font-bold uppercase tracking-[0.4em] outline-none transition-colors duration-300",
+            "text-[0.7rem]",
             dropdownActive ? "text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
           )}
         >
@@ -159,14 +161,7 @@ export function LuxuryNavbar() {
   const [nav, setNav] = useState({ scrolled: false, hidden: false, progress: 0 });
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
-  const lastScroll = useRef(0);
-  const rafRef = useRef(0);
-  const hiddenRef = useRef(false);
   const menuOpenRef = useRef(false);
-
-  useEffect(() => {
-    hiddenRef.current = nav.hidden;
-  }, [nav.hidden]);
 
   useEffect(() => {
     menuOpenRef.current = open || mobileServicesOpen || desktopServicesOpen;
@@ -176,45 +171,67 @@ export function LuxuryNavbar() {
   }, [open, mobileServicesOpen, desktopServicesOpen]);
 
   useEffect(() => {
-    const hideOffset = 96;
-    const revealOffset = 24;
-    const directionThreshold = 8;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
 
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = 0;
-        const y = Math.max(window.scrollY, 0);
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const scrolled = y > 60;
-        const progress = max > 0 ? y / max : 0;
-        const prev = lastScroll.current;
-        const delta = y - prev;
+    const updateNavbar = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+      const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+      
+      // Calculate scrolled and progress
+      const scrolled = currentScrollY > 60;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? currentScrollY / max : 0;
+      
+      // Hide navbar when scrolling down past 100px
+      const shouldHide = scrollDirection === 'down' && currentScrollY > 100;
+      
+      // Show navbar when scrolling up or at top
+      const shouldShow = scrollDirection === 'up' || currentScrollY <= 50;
 
-        let hidden = hiddenRef.current;
-        if (menuOpenRef.current || y <= revealOffset || delta < -directionThreshold) {
-          hidden = false;
-        } else if (delta > directionThreshold && y > hideOffset) {
-          hidden = true;
-        }
-
-        lastScroll.current = y;
-        hiddenRef.current = hidden;
-
+      // Don't hide if any menu is open
+      const isMenuOpen = menuOpenRef.current;
+      
+      console.log('Scroll update:', { currentScrollY, scrollDirection, shouldHide, shouldShow, isMenuOpen });
+      
+      if (isMenuOpen) {
+        setNav((prev) => ({ ...prev, hidden: false, scrolled, progress }));
+      } else if (shouldHide && scrollDelta > 5) {
+        console.log('Hiding navbar');
+        setNav((prev) => ({ ...prev, hidden: true, scrolled, progress }));
+      } else if (shouldShow && scrollDelta > 5) {
+        console.log('Showing navbar');
+        setNav((prev) => ({ ...prev, hidden: false, scrolled, progress }));
+      } else {
+        // Update scrolled and progress even if hidden state doesn't change
         setNav((prev) => {
-          if (prev.scrolled === scrolled && prev.hidden === hidden && Math.abs(prev.progress - progress) < 0.002) {
+          if (prev.scrolled === scrolled && Math.abs(prev.progress - progress) < 0.002) {
             return prev;
           }
-          return { scrolled, hidden, progress };
+          return { ...prev, scrolled, progress };
         });
-      });
+      }
+
+      lastScrollY = currentScrollY;
+      ticking = false;
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateNavbar();
+        });
+        ticking = true;
+      }
+    };
+
+    console.log('Attaching scroll listener');
+    window.addEventListener('scroll', onScroll, { passive: true });
+    
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      console.log('Removing scroll listener');
+      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -233,9 +250,9 @@ export function LuxuryNavbar() {
   return (
     <header
       className={clsx(
-        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
+        "fixed inset-x-0 top-0 z-[90] pt-[env(safe-area-inset-top,0px)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
         desktopServicesOpen && "z-[10050]",
-        hidden ? "-translate-y-full" : "translate-y-0"
+        hidden ? "-translate-y-[120%] opacity-0" : "translate-y-0 opacity-100"
       )}
     >
       <div
@@ -276,11 +293,12 @@ export function LuxuryNavbar() {
                       type="button"
                       onClick={handleAnchorClick}
                       className={clsx(
-                        "relative cursor-pointer border-none bg-transparent text-[0.62rem] uppercase tracking-[0.32em] outline-none transition-colors duration-300",
+                        "relative cursor-pointer border-none bg-transparent font-bold uppercase tracking-[0.4em] outline-none transition-colors duration-300",
+                        "text-[0.7rem]",
                         pathname === "/" ? "text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
                       )}
                     >
-                      {t(locale, item.key as DictionaryKey)}
+                      <span suppressHydrationWarning>{t(locale, item.key as DictionaryKey)}</span>
                     </button>
                   </Magnetic>
                 );
@@ -304,11 +322,12 @@ export function LuxuryNavbar() {
                   <Link
                     href={item.href}
                     className={clsx(
-                      "relative text-[0.62rem] uppercase tracking-[0.32em] transition-colors duration-300",
+                      "relative uppercase font-bold tracking-[0.2em] transition-colors duration-300",
+                      "text-[0.7rem]",
                       navActive ? "text-pts-parchment" : "text-pts-gold-2 hover:text-pts-parchment"
                     )}
                   >
-                    {t(locale, item.key as DictionaryKey)}
+                    <span suppressHydrationWarning>{t(locale, item.key as DictionaryKey)}</span>
                     {navActive && (
                       <span className="absolute -bottom-1.5 start-0 h-px w-full bg-gradient-to-r from-pts-gold via-pts-gold-2 to-transparent" />
                     )}
@@ -319,7 +338,10 @@ export function LuxuryNavbar() {
           </nav>
 
           <div className="hidden items-center gap-4 lg:flex lg:gap-5">
-            <div className="flex rounded-full border border-pts-line/30 bg-pts-black/30 p-1 text-[0.58rem] uppercase tracking-[0.28em]">
+            <div className={clsx(
+              "flex rounded-full border border-pts-line/30 bg-pts-black/30 p-1 font-bold uppercase tracking-[0.28em]",
+              "text-[0.58rem]"
+            )}>
               {(["en", "ar"] as const).map((lang) => (
                 <button
                   key={lang}
@@ -337,9 +359,12 @@ export function LuxuryNavbar() {
 
             <Link
               href="/contact"
-              className="lux-heading border border-pts-gold/35 bg-pts-gold/8 px-5 py-2.5 text-[0.6rem] text-pts-gold-2 tracking-[0.4em] transition-all duration-400 hover:border-pts-gold hover:bg-pts-gold/18 hover:shadow-[0_0_20px_rgba(168,143,100,0.15)]"
+              className={clsx(
+                "lux-heading border border-pts-gold/35 bg-pts-gold/8 px-5 py-2.5 font-bold text-pts-gold-2 tracking-[0.4em] transition-all duration-400 hover:border-pts-gold hover:bg-pts-gold/18 hover:shadow-[0_0_20px_rgba(168,143,100,0.15)]",
+                "text-[0.6rem]"
+              )}
             >
-              {t(locale, "cta.consult")}
+              <span suppressHydrationWarning>{t(locale, "cta.consult")}</span>
             </Link>
           </div>
 
@@ -397,7 +422,7 @@ export function LuxuryNavbar() {
                           dropdownActive ? "text-pts-gold" : "text-pts-parchment/80 hover:text-pts-gold-2"
                         )}
                       >
-                        <span>{t(locale, item.key as DictionaryKey)}</span>
+                        <span><span suppressHydrationWarning>{t(locale, item.key as DictionaryKey)}</span></span>
                         <svg
                           className={clsx("h-4 w-4 shrink-0 text-pts-gold/70 transition-transform duration-300", mobileServicesOpen && "rotate-180")}
                           fill="none"
@@ -451,7 +476,7 @@ export function LuxuryNavbar() {
                         }}
                         className="lux-heading text-[0.72rem] tracking-[0.4em] text-pts-parchment/80 transition-colors hover:text-pts-gold-2"
                       >
-                        {t(locale, item.key as DictionaryKey)}
+                        <span suppressHydrationWarning>{t(locale, item.key as DictionaryKey)}</span>
                       </button>
                     </div>
                   );
@@ -471,7 +496,7 @@ export function LuxuryNavbar() {
                         pathname === item.href ? "text-pts-gold" : "text-pts-parchment/80 hover:text-pts-gold-2"
                       )}
                     >
-                      {t(locale, item.key as DictionaryKey)}
+                      <span suppressHydrationWarning>{t(locale, item.key as DictionaryKey)}</span>
                     </Link>
                   </div>
                 );

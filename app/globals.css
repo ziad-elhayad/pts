@@ -663,7 +663,6 @@ html[dir="rtl"] {
 
 html[dir="rtl"] body {
   font-family: var(--font-arabic);
-  letter-spacing: 0;
 }
 
 html[dir="rtl"] .lux-heading {
@@ -671,20 +670,133 @@ html[dir="rtl"] .lux-heading {
   letter-spacing: 0.05em;
 }
 
-/* Arabic text improvements */
-html[dir="rtl"] * {
+/* Arabic text improvements - but keep service pages consistent with English */
+html[dir="rtl"] *:not(.service-slide):not([class*="service"]):not(.service-slide *) {
   letter-spacing: 0 !important;
 }
 
-/* Better line height for Arabic */
-html[dir="rtl"] p,
-html[dir="rtl"] h1,
-html[dir="rtl"] h2,
-html[dir="rtl"] h3,
-html[dir="rtl"] h4,
-html[dir="rtl"] h5,
-html[dir="rtl"] h6 {
+/* Better line height for Arabic - but keep service pages consistent with English */
+html[dir="rtl"] p:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h1:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h2:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h3:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h4:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h5:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h6:not(.service-slide):not([class*="service"]):not(.service-slide *) {
   line-height: 1.6;
+}
+
+/* Increase Arabic paragraph text size for better readability */
+html[dir="rtl"] p:not(.service-slide):not([class*="service"]):not(.service-slide *) {
+  font-size: 1.25em;
+}
+
+/* Increase Arabic heading text size */
+html[dir="rtl"] h1:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h2:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h3:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h4:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h5:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] h6:not(.service-slide):not([class*="service"]):not(.service-slide *) {
+  font-size: 1.15em;
+}
+
+/* Increase Arabic button text size */
+html[dir="rtl"] button:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] a:not(.service-slide):not([class*="service"]):not(.service-slide *) {
+  font-size: 1.1em;
+}
+
+/* Increase Arabic label and category text size */
+html[dir="rtl"] label:not(.service-slide):not([class*="service"]):not(.service-slide *),
+html[dir="rtl"] span:not(.service-slide):not([class*="service"]):not(.service-slide *) {
+  font-size: 1.1em;
+}
+
+/* Increase Arabic hero section text sizes */
+html[dir="rtl"] .hero-kicker {
+  font-size: 1.2em !important;
+}
+
+html[dir="rtl"] .hero-sub {
+  font-size: 1.3em !important;
+}
+
+html[dir="rtl"] .hero-cta {
+  font-size: 1.15em !important;
+}
+
+html[dir="rtl"] .hero-coords {
+  font-size: 1.2em !important;
+}
+
+/* Increase Arabic service description text sizes */
+html[dir="rtl"] .service-slide p,
+html[dir="rtl"] [class*="service"] p {
+  font-size: 1.2em !important;
+}
+
+/* Increase Arabic service description text in ServicesSection */
+html[dir="rtl"] .text-\[0\.7rem\] {
+  font-size: 1.3em !important;
+}
+
+html[dir="rtl"] .text-\[0\.8rem\] {
+  font-size: 1.25em !important;
+}
+
+/* Increase Arabic button text sizes further */
+html[dir="rtl"] button,
+html[dir="rtl"] a {
+  font-size: 1.2em !important;
+}
+
+/* Increase Arabic small text sizes */
+html[dir="rtl"] .text-\[0\.65rem\],
+html[dir="rtl"] .text-\[0\.66rem\] {
+  font-size: 1.4em !important;
+}
+
+html[dir="rtl"] .text-\[0\.68rem\] {
+  font-size: 1.35em !important;
+}
+
+html[dir="rtl"] .text-\[0\.7rem\] {
+  font-size: 1.3em !important;
+}
+
+html[dir="rtl"] .text-\[0\.85rem\] {
+  font-size: 1.25em !important;
+}
+
+/* Ensure service pages maintain English-style styling in RTL mode */
+html[dir="rtl"] .service-slide,
+html[dir="rtl"] [class*="service"] {
+  letter-spacing: normal !important;
+}
+
+html[dir="rtl"] .service-slide h3,
+html[dir="rtl"] [class*="service"] h3 {
+  letter-spacing: 0.12em !important;
+}
+
+html[dir="rtl"] .service-slide p,
+html[dir="rtl"] [class*="service"] p {
+  letter-spacing: 0.18em !important;
+  line-height: normal !important;
+}
+
+/* Center service cards vertically in Arabic mode */
+html[dir="rtl"] .service-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Reduce padding top for service cards */
+.service-slide {
+  padding-top: 0 !important;
+  padding-bottom: 2rem !important;
 }
 
 /* Arabic font weights */
@@ -724,4 +836,5 @@ html[dir="rtl"] .progress-line {
     left: 20px;
   }
 }
+
 

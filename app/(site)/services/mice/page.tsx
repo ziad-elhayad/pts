@@ -75,14 +75,30 @@ export default function MicePage() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
 
     const totalSlides = slideElements.length;
+    // Build snap points: one per slide except last slide to allow scrolling past it
+    const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
+      i === 0 ? 0 : i / (totalSlides - 2)
+    );
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${(totalSlides + 0.5) * (isLowEnd ? 30 : 40)}%`,
+        // Reduce scroll distance further
+        end: `+=${(totalSlides + 1) * (isLowEnd ? 120 : 150)}%`,
         pin: true,
         anticipatePin: 1,
-        scrub: isLowEnd ? 0.15 : 0.6,
+        // Lower scrub value for faster scroll response
+        scrub: isLowEnd ? 1 : 2,
+        // Disable snap to allow free scrolling past last slide
+        // snap: {
+        //   snapTo: snapPoints,
+        //   duration: { min: 0.8, max: 1.2 },
+        //   delay: 0.3,
+        //   ease: "power2.inOut",
+        //   inertia: false,
+        // },
+        fastScrollEnd: true,
       },
     });
 
@@ -97,7 +113,7 @@ export default function MicePage() {
 
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        const startTime = idx * 0.5;
+        const startTime = idx * 0.8;
 
         // Animate current slide in
         tl.to(slide, {
@@ -107,7 +123,7 @@ export default function MicePage() {
           ease: "power2.inOut",
         }, startTime);
 
-        // Animate previous slide out
+        // Animate previous slide out with consistent spacing
         const prevSlide = slideElements[idx - 1];
         tl.to(prevSlide, {
           scale: isLowEnd ? 1 : 0.94,
@@ -128,8 +144,8 @@ export default function MicePage() {
 
   return (
     <div className="bg-pts-bg min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20">
+      {/* Hero Section — pt clears the fixed navbar on mobile/tablet (lg already has layout-level offset) */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "mice.page.hero" as DictionaryKey)}</p>
@@ -149,10 +165,9 @@ export default function MicePage() {
       </section>
 
       {/* Services Section */}
-      <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-8 px-4 sm:py-10 sm:px-8 lg:px-10 relative overflow-hidden touch-pan-y">
+      <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-8 px-4 sm:py-10 sm:px-8 lg:px-10 relative overflow-hidden touch-pan-y pt-[2rem] sm:pt-[3rem] lg:pt-[4rem]">
         <div className="max-w-[1400px] mx-auto relative z-10">
-          <div className="mb-12 text-center">
-            <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">11 {t(locale, "mice.page.categories" as DictionaryKey)}</p>
+          <div className="mb-12 text-center pt-8">
             <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
               {t(locale, "mice.page.categories" as DictionaryKey)}
             </h2>
@@ -203,6 +218,9 @@ export default function MicePage() {
           </div>
         </div>
       </section>
+
+      {/* Spacer to create space between slider and footer */}
+      <div className="h-[20vh] lg:h-[30vh]"></div>
 
       {/* Enquiry Modal */}
       <Modal isOpen={showEnquiry} onClose={() => setShowEnquiry(false)}>

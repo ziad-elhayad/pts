@@ -271,7 +271,7 @@ export const CinematicHero = memo(function CinematicHero() {
           <div className="hero-kicker mb-6 flex items-center gap-4 sm:mb-8 sm:gap-5">
             <div className="h-px w-8 bg-pts-gold sm:w-12" />
             <p className="lux-heading text-[0.5rem] sm:text-[0.52rem] tracking-[0.4em] sm:tracking-[0.55em] text-pts-gold">
-              {t(locale, "hero.kicker")}
+              <span suppressHydrationWarning>{t(locale, "hero.kicker")}</span>
             </p>
           </div>
 
@@ -279,19 +279,19 @@ export const CinematicHero = memo(function CinematicHero() {
             {words.map((word, wi) => (
               <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-1 align-top sm:py-2">
                 <span className="hero-word-inner relative inline-block will-change-transform">
-                  {word}
+                  <span suppressHydrationWarning>{word}</span>
                 </span>
               </span>
             ))}
           </h1>
 
           <p className="hero-sub mt-8 max-w-xl text-[0.68rem] sm:mt-10 sm:text-[0.85rem] font-bold uppercase leading-[1.8] tracking-[0.12em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] sm:leading-[2.15] sm:tracking-[0.18em]">
-            {t(locale, "hero.sub")}
+            <span suppressHydrationWarning>{t(locale, "hero.sub")}</span>
           </p>
 
           <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">
             <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto">
-              {t(locale, "hero.cta.inquire")}
+              <span suppressHydrationWarning>{t(locale, "hero.cta.inquire")}</span>
             </MagneticButton>
           </div>
 

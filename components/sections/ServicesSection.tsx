@@ -104,14 +104,31 @@ export function ServicesSection() {
 
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
 
+    const totalSlides = slideElements.length;
+    // Build snap points: one per slide except last slide to allow scrolling past it
+    const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
+      i === 0 ? 0 : i / (totalSlides - 2)
+    );
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${slideElements.length * (isLowEnd ? 30 : 40)}%`,
+        // Reduce scroll distance further
+        end: `+=${(totalSlides + 1) * (isLowEnd ? 120 : 150)}%`,
         pin: true,
         anticipatePin: 1,
-        scrub: isLowEnd ? 0.15 : (isTouch ? 0.35 : 0.6),
+        // Lower scrub value for faster scroll response
+        scrub: isLowEnd ? 1 : 2,
+        // Snap to each slide after scrolling stops
+        snap: {
+          snapTo: snapPoints,
+          duration: { min: 0.8, max: 1.2 },
+          delay: 0.3,
+          ease: "power2.inOut",
+          inertia: false,
+        },
+        fastScrollEnd: true,
       },
     });
 
@@ -128,7 +145,7 @@ export function ServicesSection() {
 
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        const startTime = idx * 0.45;
+        const startTime = idx * 0.8;
 
         // Animate current slide in
         tl.to(slide, {
@@ -160,7 +177,8 @@ export function ServicesSection() {
 
   if (ready && isTouch) {
     return (
-      <section ref={containerRef} className="relative w-full bg-pts-bg">
+      <>
+        <section ref={containerRef} className="relative w-full bg-pts-bg">
         <div className="mx-auto w-full max-w-7xl px-6 py-10 md:px-12">
           <p className="lux-heading mb-2 text-[0.65rem] uppercase tracking-[0.4em] text-pts-gold/70">GERVAE</p>
           <h2 className="font-heading text-3xl uppercase tracking-[0.15em] text-pts-parchment">
@@ -199,13 +217,18 @@ export function ServicesSection() {
           ))}
         </div>
       </section>
+
+      {/* Spacer to create space between slider and footer */}
+      <div className="h-[20vh] lg:h-[30vh]"></div>
+      </>
     );
   }
 
   return (
-    <section ref={containerRef} className="relative min-h-screen bg-pts-bg">
-      {/* Section Heading */}
-      <div className="absolute top-8 left-0 right-0 z-50 flex flex-col items-start px-6 md:px-12 pointer-events-none">
+    <>
+      <section ref={containerRef} className="relative min-h-screen bg-pts-bg">
+      {/* Section Heading — offset clears the fixed navbar (~72–82 px tall) */}
+      <div className="absolute top-[4.75rem] sm:top-[5rem] left-0 right-0 z-50 flex flex-col items-start px-6 md:px-12 pointer-events-none">
         <p className="lux-heading text-[0.65rem] tracking-[0.4em] text-pts-gold/70 uppercase mb-2">
           GERVAE
         </p>
@@ -270,5 +293,9 @@ export function ServicesSection() {
         ))}
       </div>
     </section>
+
+    {/* Spacer to create space between slider and footer */}
+    <div className="h-[20vh] lg:h-[30vh]"></div>
+    </>
   );
 }

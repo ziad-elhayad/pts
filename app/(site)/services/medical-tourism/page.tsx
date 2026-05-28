@@ -47,8 +47,8 @@ export default function MedicalTourismPage() {
 
   return (
     <div className="bg-pts-bg min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20">
+      {/* Hero Section — pt clears the fixed navbar on mobile/tablet (lg already has layout-level offset) */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "medical.page.hero" as DictionaryKey)}</p>
@@ -68,10 +68,9 @@ export default function MedicalTourismPage() {
       </section>
 
       {/* Tabs Section */}
-      <section className="border-t border-pts-line bg-pts-black py-16 px-6">
+      <section className="border-t border-pts-line bg-pts-black py-16 px-6 pt-[2rem] sm:pt-[3rem] lg:pt-[4rem]">
         <div className="max-w-[1200px] mx-auto">
-          <div className="mb-12 text-center">
-            <p className="lux-heading text-[0.5rem] text-pts-gold mb-4 tracking-[0.5em] uppercase">{t(locale, "medical.page.pillars" as DictionaryKey)}</p>
+          <div className="mb-12 text-center pt-8">
             <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
               {t(locale, "medical.page.services" as DictionaryKey)}
             </h2>

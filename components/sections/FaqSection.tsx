@@ -41,7 +41,7 @@ export function FaqSection() {
                 onClick={() => toggleFaq(index)}
                 className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-pts-gold/5 transition-colors"
               >
-                <span className="font-heading text-[0.7rem] sm:text-[0.8rem] uppercase tracking-[0.15em] text-pts-parchment pr-4">
+                <span className={`font-heading uppercase tracking-[0.15em] text-pts-parchment pr-4 ${locale === "ar" ? "text-[0.85rem] sm:text-[0.95rem]" : "text-[0.7rem] sm:text-[0.8rem]"}`}>
                   {faq.question}
                 </span>
                 <span

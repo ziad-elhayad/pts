@@ -46,7 +46,7 @@ export function BrandIntroSection() {
 
       /* Floating gold glow — skip on mobile (infinite repeat = constant repaints) */
       if (floater && !isTouch) {
-        gsap.to(floater, {
+        const floatAnim = gsap.to(floater, {
           y: -22,
           x: 15,
           rotation: 3,
@@ -55,6 +55,11 @@ export function BrandIntroSection() {
           repeat: -1,
           ease: "sine.inOut",
         });
+        
+        // Cleanup animation on unmount
+        return () => {
+          floatAnim.kill();
+        };
       }
 
       const accent = col.querySelector<HTMLElement>(".bi-accent");
@@ -73,7 +78,7 @@ export function BrandIntroSection() {
 
       /* Image shell: iris reveal — desktop only (clip-path is GPU-heavy on mobile) */
       if (!isTouch) {
-        gsap.fromTo(
+        const shellAnim = gsap.fromTo(
           shell,
           { clipPath: "circle(18% at 50% 50%)", filter: "brightness(0.6)" },
           {
@@ -88,6 +93,11 @@ export function BrandIntroSection() {
             },
           },
         );
+        
+        // Cleanup animation on unmount
+        return () => {
+          shellAnim.kill();
+        };
       }
 
     },

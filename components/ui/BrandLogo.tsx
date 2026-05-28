@@ -21,7 +21,7 @@ export const BrandLogo = memo(function BrandLogo({ className, size = 32, variant
         alt="GERVAE"
         width={size}
         height={size}
-        className={clsx("opacity-90 object-contain", className)}
+        className={clsx("opacity-90", className)}
         style={{ background: "transparent" }}
         loading="lazy"
       />

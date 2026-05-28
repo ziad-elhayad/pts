@@ -10,7 +10,7 @@ export default function SiteLayout({
   return (
     <>
       <LuxuryNavbar />
-      <div className="w-full pb-[env(safe-area-inset-bottom,0px)] lg:pt-[max(5.5rem,env(safe-area-inset-top,0px)+3.5rem)]">
+      <div className="w-full pb-[env(safe-area-inset-bottom,0px)] pt-[4.5rem] sm:pt-[5rem] lg:pt-[max(5.5rem,env(safe-area-inset-top,0px)+3.5rem)]">
         {children}
       </div>
       <LuxuryFooter />
