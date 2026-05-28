@@ -19,7 +19,7 @@ if (typeof window !== "undefined") {
  * Brand intro — scroll-scrubbed “editorial depth” + kinetic stats (unique vs other sections).
  */
 export function BrandIntroSection() {
-  const { locale } = useLocale();
+  const { locale, dir } = useLocale();
   const sectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -143,12 +143,12 @@ export function BrandIntroSection() {
           <div className="mb-4">
             <div className="mb-8 flex items-center justify-center gap-4 sm:mb-10">
               <div className="h-px w-8 bg-pts-gold" />
-              <p className="lux-heading text-[0.5rem] tracking-[0.4em] text-pts-gold sm:text-[0.55rem] sm:tracking-[0.6em]">
+              <p className={`lux-heading text-pts-gold ${dir === 'rtl' ? 'text-[0.85rem] sm:text-[1.0rem] tracking-[0.2em]' : 'text-[0.5rem] tracking-[0.4em] sm:text-[0.55rem] sm:tracking-[0.6em]'}`}>
                 {t(locale, "brand.kicker")}
               </p>
               <div className="h-px w-8 bg-pts-gold" />
             </div>
-            <TextScrollReveal as="h2" className="font-heading text-[clamp(1.4rem,6vw,2.4rem)] font-bold uppercase leading-[1.2] tracking-[0.08em] text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]">
+            <TextScrollReveal as="h2" className={`font-heading font-bold uppercase text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] ${dir === 'rtl' ? 'text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.3] sm:text-[clamp(3.5rem,6vw,5.5rem)] sm:leading-[1.25] tracking-[0.02em]' : 'text-[clamp(1.4rem,6vw,2.4rem)] leading-[1.2] tracking-[0.08em] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]'}`}>
               {titleWords.map((w, i) => (
                 <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
                   <span className="inline-block">{w}</span>
@@ -161,7 +161,7 @@ export function BrandIntroSection() {
           <div className="bi-copy mt-8 max-w-2xl [transform-style:preserve-3d] sm:mt-10">
             <TextScrollReveal
               as="p"
-              className="text-[0.7rem] font-bold uppercase leading-[2] tracking-[0.12em] text-pts-parchment drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-[0.95rem] sm:leading-[2.2] sm:tracking-[0.18em]"
+              className={`font-bold uppercase text-pts-parchment drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] ${dir === 'rtl' ? 'text-[1.2rem] leading-[2.2] tracking-normal sm:text-[1.6rem] sm:leading-[2.4]' : 'text-[0.7rem] leading-[2] tracking-[0.12em] sm:text-[0.95rem] sm:leading-[2.2] sm:tracking-[0.18em]'}`}
               delay={90}
             >
               {t(locale, "brand.body")}

@@ -122,8 +122,8 @@ export function LoaderScreen() {
       />
 
       <div className="relative flex flex-col items-center gap-8">
-        <div data-loader-label className="flex flex-col items-center gap-6">
-          <BrandLogo size={80} className="text-pts-gold sm:size-100" variant="image" />
+        <div data-loader-label className="flex flex-col items-center gap-3">
+          <BrandLogo size={150} className="text-pts-gold sm:size-150 w-[120px] h-[120px] sm:w-[150px] sm:h-[150px]" variant="image" />
         </div>
 
         <p data-loader-sub className="text-center text-[0.55rem] uppercase tracking-[0.4em] text-pts-muted sm:text-[0.62rem] sm:tracking-[0.5em]">

@@ -43,7 +43,7 @@ export const WhatsAppButton = memo(function WhatsAppButton() {
       </div>
 
       <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <div className={`whitespace-nowrap rounded border border-pts-gold/30 bg-pts-deep px-3 py-2 uppercase tracking-[0.2em] text-pts-parchment shadow-lg ${locale === "ar" ? "text-[0.75rem]" : "text-[0.65rem]"}`}>
+        <div className="whitespace-nowrap rounded border border-pts-gold/30 bg-pts-deep px-3 py-2 uppercase tracking-[0.2em] text-pts-parchment shadow-lg text-[0.65rem]">
           Chat with us
         </div>
       </div>

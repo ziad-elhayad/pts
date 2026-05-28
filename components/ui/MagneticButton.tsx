@@ -51,7 +51,7 @@ export const MagneticButton = memo(function MagneticButton({
         "relative inline-flex transform-gpu items-center justify-center gap-2 overflow-hidden",
         "translate-x-[var(--magnetic-x,0px)] translate-y-[var(--magnetic-y,0px)]",
         "border border-pts-gold/40 bg-pts-gold/8 px-7 py-3.5",
-        locale === "ar" ? "text-[0.75rem]" : "text-[0.66rem]",
+        "text-[0.66rem]",
         "uppercase tracking-[0.36em] text-pts-gold-2",
         "transition-[border-color,box-shadow,transform] duration-300 ease-out",
         "hover:scale-[1.02] hover:border-pts-gold hover:shadow-[0_0_40px_rgba(168,143,100,0.22),0_0_100px_rgba(168,143,100,0.08)] active:scale-[0.98]",

@@ -17,7 +17,7 @@ if (typeof window !== "undefined") {
 }
 
 export const CinematicHero = memo(function CinematicHero() {
-  const { locale } = useLocale();
+  const { locale, dir } = useLocale();
   const sectionRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -99,7 +99,7 @@ export const CinematicHero = memo(function CinematicHero() {
 
       if (!topLineRef.current || !botLineRef.current || !kicker || !sub || !ctas || !scrollEl || !coords || !wordInners || !mounted) return;
 
-      const intro = gsap.timeline({ 
+      const intro = gsap.timeline({
         defaults: { ease: "expo.out" },
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -138,16 +138,16 @@ export const CinematicHero = memo(function CinematicHero() {
         gsap.set(media, { clearProps: "transform" });
       } else {
         gsap.to(media, {
-        yPercent: isLowEnd || isTouch ? 15 : 32,
-        scale: isLowEnd || isTouch ? 1 : 1.12,
-        rotateY: isLowEnd || isTouch ? 0 : -4,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: isLowEnd ? 0.1 : (isTouch ? 0.3 : 0),
-        },
+          yPercent: isLowEnd || isTouch ? 15 : 32,
+          scale: isLowEnd || isTouch ? 1 : 1.12,
+          rotateY: isLowEnd || isTouch ? 0 : -4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: isLowEnd ? 0.1 : (isTouch ? 0.3 : 0),
+          },
         });
       }
 
@@ -270,14 +270,26 @@ export const CinematicHero = memo(function CinematicHero() {
         <div className="mx-auto w-full max-w-6xl">
           <div className="hero-kicker mb-6 flex items-center gap-4 sm:mb-8 sm:gap-5">
             <div className="h-px w-8 bg-pts-gold sm:w-12" />
-            <p className="lux-heading text-[0.5rem] sm:text-[0.52rem] tracking-[0.4em] sm:tracking-[0.55em] text-pts-gold">
+            <p
+              className={`lux-heading text-pts-gold ${dir === 'rtl'
+                  ? 'tracking-[0.2em] sm:tracking-[0.3em]'
+                  : 'text-[0.5rem] sm:text-[0.52rem] tracking-[0.4em] sm:tracking-[0.55em]'
+                }`}
+              style={dir === 'rtl' ? { fontSize: '22px' } : undefined}
+            >
               <span suppressHydrationWarning>{t(locale, "hero.kicker")}</span>
             </p>
           </div>
 
-          <h1 className="max-w-5xl font-heading text-[clamp(1.6rem,6vw,4rem)] font-bold uppercase leading-[1.08] tracking-[0.04em] text-pts-parchment [perspective:1200px] drop-shadow-[0_8px_40px_rgba(0,0,0,1)] sm:leading-[1.04] sm:tracking-[0.06em]">
+          <h1
+            className={`font-heading font-bold uppercase text-pts-parchment [perspective:1200px] drop-shadow-[0_8px_40px_rgba(0,0,0,1)] ${dir === 'rtl'
+                ? 'max-w-6xl leading-[1.2] tracking-[0.02em] sm:leading-[1.1] sm:tracking-[0.04em]'
+                : 'max-w-5xl text-[clamp(1.6rem,6vw,4rem)] leading-[1.08] tracking-[0.04em] sm:leading-[1.04] sm:tracking-[0.06em]'
+              }`}
+            style={dir === 'rtl' ? { fontSize: '68px' } : undefined}
+          >
             {words.map((word, wi) => (
-              <span key={wi} className="mr-[0.25em] inline-block overflow-hidden py-1 align-top sm:py-2">
+              <span key={wi} className={`inline-block overflow-hidden py-1 align-top sm:py-2 ${dir === 'rtl' ? 'ml-[0.25em]' : 'mr-[0.25em]'}`}>
                 <span className="hero-word-inner relative inline-block will-change-transform">
                   <span suppressHydrationWarning>{word}</span>
                 </span>
@@ -285,12 +297,18 @@ export const CinematicHero = memo(function CinematicHero() {
             ))}
           </h1>
 
-          <p className="hero-sub mt-8 max-w-xl text-[0.68rem] sm:mt-10 sm:text-[0.85rem] font-bold uppercase leading-[1.8] tracking-[0.12em] text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] sm:leading-[2.15] sm:tracking-[0.18em]">
+          <p
+            className={`hero-sub mt-8 font-bold uppercase text-pts-parchment drop-shadow-[0_4px_20px_rgba(0,0,0,1)] sm:mt-10 ${dir === 'rtl'
+                ? 'max-w-4xl leading-[1.6] tracking-[0.05em] sm:leading-[1.7]'
+                : 'max-w-xl text-[0.68rem] leading-[1.8] tracking-[0.12em] sm:text-[0.85rem] sm:leading-[2.15] sm:tracking-[0.18em]'
+              }`}
+            style={dir === 'rtl' ? { fontSize: '25px' } : undefined}
+          >
             <span suppressHydrationWarning>{t(locale, "hero.sub")}</span>
           </p>
 
           <div className="hero-cta mt-10 flex flex-col items-stretch gap-4 sm:mt-16 sm:flex-row sm:items-center sm:gap-8">
-            <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black sm:py-5 sm:text-[0.7rem] sm:w-auto">
+            <MagneticButton href="/contact" className="btn-gold-glow border-pts-gold bg-pts-gold px-12 py-4 font-bold text-pts-black sm:py-5 sm:w-auto text-[0.65rem] sm:text-[0.7rem]">
               <span suppressHydrationWarning>{t(locale, "hero.cta.inquire")}</span>
             </MagneticButton>
           </div>
@@ -303,8 +321,8 @@ export const CinematicHero = memo(function CinematicHero() {
         </div>
 
         <div className="hero-coords absolute bottom-6 right-6 text-right sm:bottom-8 sm:right-10">
-          <p className="lux-heading text-[0.4rem] tracking-[0.4em] text-pts-gold sm:text-[0.45rem] sm:tracking-[0.5em]">21°N 39°E</p>
-          <p className="lux-heading mt-1 text-[0.35rem] tracking-[0.3em] text-pts-gold/60 sm:text-[0.4rem] sm:tracking-[0.4em]">JEDDAH · GLOBAL</p>
+          <p className="lux-heading tracking-[0.4em] text-pts-gold sm:tracking-[0.5em] text-[0.4rem] sm:text-[0.45rem]">21°N 39°E</p>
+          <p className="lux-heading mt-1 tracking-[0.3em] text-pts-gold/60 sm:tracking-[0.4em] text-[0.35rem] sm:text-[0.4rem]">JEDDAH · GLOBAL</p>
         </div>
       </div>
     </section>

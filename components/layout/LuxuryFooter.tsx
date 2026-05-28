@@ -105,7 +105,7 @@ export function LuxuryFooter() {
                     locale === lang
                       ? "border-pts-gold text-pts-gold bg-pts-gold/8"
                       : "border-pts-line/20 text-pts-muted/35 hover:border-pts-gold/30 hover:text-pts-muted/60"
-                  } ${locale === "ar" ? "text-[0.6rem]" : "text-[0.52rem]"}`}
+                  } text-[0.52rem]`}
                   onClick={() => setLocale(lang)}
                 >
                   {lang.toUpperCase()}

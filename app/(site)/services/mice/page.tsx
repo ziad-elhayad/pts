@@ -220,7 +220,7 @@ export default function MicePage() {
       </section>
 
       {/* Spacer to create space between slider and footer */}
-      <div className="h-[20vh] lg:h-[30vh]"></div>
+      <div className="h-[8vh] lg:h-[12vh]"></div>
 
       {/* Enquiry Modal */}
       <Modal isOpen={showEnquiry} onClose={() => setShowEnquiry(false)}>

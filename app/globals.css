@@ -686,88 +686,61 @@ html[dir="rtl"] h6:not(.service-slide):not([class*="service"]):not(.service-slid
   line-height: 1.6;
 }
 
-/* Increase Arabic paragraph text size for better readability */
+/* Slightly increase Arabic paragraph text size for better readability */
 html[dir="rtl"] p:not(.service-slide):not([class*="service"]):not(.service-slide *) {
-  font-size: 1.25em;
+  font-size: 1.08em;
 }
 
-/* Increase Arabic heading text size */
+/* Slightly increase Arabic heading text size */
 html[dir="rtl"] h1:not(.service-slide):not([class*="service"]):not(.service-slide *),
 html[dir="rtl"] h2:not(.service-slide):not([class*="service"]):not(.service-slide *),
 html[dir="rtl"] h3:not(.service-slide):not([class*="service"]):not(.service-slide *),
 html[dir="rtl"] h4:not(.service-slide):not([class*="service"]):not(.service-slide *),
 html[dir="rtl"] h5:not(.service-slide):not([class*="service"]):not(.service-slide *),
 html[dir="rtl"] h6:not(.service-slide):not([class*="service"]):not(.service-slide *) {
-  font-size: 1.15em;
+  font-size: 1.05em;
 }
 
-/* Increase Arabic button text size */
-html[dir="rtl"] button:not(.service-slide):not([class*="service"]):not(.service-slide *),
-html[dir="rtl"] a:not(.service-slide):not([class*="service"]):not(.service-slide *) {
-  font-size: 1.1em;
+/* Slightly increase Arabic service description text sizes */
+html[dir="rtl"] .service-slide p,
+html[dir="rtl"] [class*="service"] p {
+  font-size: 1.1em !important;
 }
 
-/* Increase Arabic label and category text size */
-html[dir="rtl"] label:not(.service-slide):not([class*="service"]):not(.service-slide *),
-html[dir="rtl"] span:not(.service-slide):not([class*="service"]):not(.service-slide *) {
-  font-size: 1.1em;
-}
-
-/* Increase Arabic hero section text sizes */
-html[dir="rtl"] .hero-kicker {
-  font-size: 1.2em !important;
-}
-
-html[dir="rtl"] .hero-sub {
-  font-size: 1.3em !important;
-}
-
-html[dir="rtl"] .hero-cta {
+/* Slightly increase Arabic small text sizes for better readability */
+html[dir="rtl"] .text-\[0\.65rem\],
+html[dir="rtl"] .text-\[0\.66rem\] {
   font-size: 1.15em !important;
 }
 
-html[dir="rtl"] .hero-coords {
-  font-size: 1.2em !important;
+html[dir="rtl"] .text-\[0\.68rem\] {
+  font-size: 1.12em !important;
 }
 
-/* Increase Arabic service description text sizes */
-html[dir="rtl"] .service-slide p,
-html[dir="rtl"] [class*="service"] p {
-  font-size: 1.2em !important;
-}
-
-/* Increase Arabic service description text in ServicesSection */
 html[dir="rtl"] .text-\[0\.7rem\] {
-  font-size: 1.3em !important;
+  font-size: 1.1em !important;
+}
+
+html[dir="rtl"] .text-\[0\.75rem\] {
+  font-size: 1.08em !important;
 }
 
 html[dir="rtl"] .text-\[0\.8rem\] {
-  font-size: 1.25em !important;
-}
-
-/* Increase Arabic button text sizes further */
-html[dir="rtl"] button,
-html[dir="rtl"] a {
-  font-size: 1.2em !important;
-}
-
-/* Increase Arabic small text sizes */
-html[dir="rtl"] .text-\[0\.65rem\],
-html[dir="rtl"] .text-\[0\.66rem\] {
-  font-size: 1.4em !important;
-}
-
-html[dir="rtl"] .text-\[0\.68rem\] {
-  font-size: 1.35em !important;
-}
-
-html[dir="rtl"] .text-\[0\.7rem\] {
-  font-size: 1.3em !important;
+  font-size: 1.06em !important;
 }
 
 html[dir="rtl"] .text-\[0\.85rem\] {
-  font-size: 1.25em !important;
+  font-size: 1.05em !important;
 }
+
+
+
+
+
+
+
+
+
 
 /* Ensure service pages maintain English-style styling in RTL mode */
 html[dir="rtl"] .service-slide,
@@ -825,6 +798,15 @@ html[dir="rtl"] .progress-line {
   transform-origin: right center;
 }
 
+/* Hero section Arabic typography - larger sizes for stronger hierarchy */
+html[dir="rtl"] .hero-cta .btn-gold-glow {
+  font-size: 1.3em !important;
+}
+
+html[dir="rtl"] .hero-coords p.lux-heading {
+  font-size: 1.35em !important;
+}
+
 /* Mobile Arabic adjustments */
 @media (max-width: 768px) {
   html[dir="rtl"] .lux-heading {
@@ -834,6 +816,14 @@ html[dir="rtl"] .progress-line {
   html[dir="rtl"] .section-label {
     right: auto;
     left: 20px;
+  }
+
+  html[dir="rtl"] .hero-cta .btn-gold-glow {
+    font-size: 1.35em !important;
+  }
+
+  html[dir="rtl"] .hero-coords p.lux-heading {
+    font-size: 1.4em !important;
   }
 }
 
