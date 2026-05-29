@@ -21,6 +21,7 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 const STORAGE_KEY = "pts-locale";
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const [locale, setLocaleState] = useState<Locale>(() => {
     if (typeof window === "undefined") return "en";
     const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -28,6 +29,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    setMounted(true);
     const stored = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
     if (stored === "ar" || stored === "en") {
       setLocaleState(stored);
@@ -56,7 +58,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+    <LocaleContext.Provider value={value}>
+      {!mounted ? null : children}
+    </LocaleContext.Provider>
   );
 }
 

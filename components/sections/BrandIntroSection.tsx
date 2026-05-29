@@ -148,12 +148,20 @@ export function BrandIntroSection() {
               </p>
               <div className="h-px w-8 bg-pts-gold" />
             </div>
-            <TextScrollReveal as="h2" className={`font-heading font-bold uppercase text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] ${dir === 'rtl' ? 'text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.3] sm:text-[clamp(3.5rem,6vw,5.5rem)] sm:leading-[1.25] tracking-[0.02em]' : 'text-[clamp(1.4rem,6vw,2.4rem)] leading-[1.2] tracking-[0.08em] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]'}`}>
-              {titleWords.map((w, i) => (
-                <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
-                  <span className="inline-block">{w}</span>
-                </span>
-              ))}
+            <TextScrollReveal 
+              as="h2" 
+              className={`font-heading font-bold uppercase text-pts-parchment drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)] ${dir === 'rtl'
+                ? 'max-w-6xl leading-[1.3] sm:leading-[1.25] tracking-[0.02em]'
+                : 'text-[clamp(1.4rem,6vw,2.4rem)] leading-[1.2] tracking-[0.08em] sm:text-[clamp(1.85rem,4vw,3.2rem)] sm:leading-[1.12] sm:tracking-[0.12em]'
+              }`}
+            >
+              <div style={dir === 'rtl' ? { fontSize: '30px' } : undefined}>
+                {titleWords.map((w, i) => (
+                  <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-baseline">
+                    <span className="inline-block">{w}</span>
+                  </span>
+                ))}
+              </div>
             </TextScrollReveal>
             <div className="bi-accent mt-6 h-[2px] w-16 scale-x-0 bg-pts-gold will-change-transform sm:mt-8 sm:w-24" />
           </div>
