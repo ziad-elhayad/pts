@@ -10,7 +10,7 @@ import { usePerformance } from "@/contexts/PerformanceContext";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
 import { buildServiceSlides } from "@/lib/service-slides";
-import { conciergeCategoryImages } from "@/lib/service-category-images";
+import { visaCategoryImages } from "@/lib/service-category-images";
 import { useClientLayoutMode } from "@/hooks/useClientLayoutMode";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
@@ -22,22 +22,22 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function ConciergePage() {
+export default function VisaPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const { isLowEnd, reducedMotion } = usePerformance();
   const { locale } = useLocale();
   const { ready, useMobileSlides } = useClientLayoutMode();
-  const enquiry = useEnquirySubmit("concierge");
+  const enquiry = useEnquirySubmit("visa");
 
-  const services = conciergeCategoryImages.map((image, index) => ({
-    title: t(locale, `concierge.service${index + 1}.title` as DictionaryKey),
-    description: t(locale, `concierge.service${index + 1}.description` as DictionaryKey),
+  const services = visaCategoryImages.map((image, index) => ({
+    title: t(locale, `visa.service${index + 1}.title` as DictionaryKey),
+    description: t(locale, `visa.service${index + 1}.description` as DictionaryKey),
     image,
   }));
 
   const slides = buildServiceSlides(services, useMobileSlides);
-  const conciergeTypes = services.map((service) => service.title);
+  const visaTypes = services.map((service) => service.title);
 
   useEffect(() => {
     if (!useMobileSlides || reducedMotion || !containerRef.current) return;
@@ -112,15 +112,13 @@ export default function ConciergePage() {
       if (idx > 0) {
         const startTime = idx * 0.8;
 
-        // Animate current slide in
         tl.to(slide, {
           yPercent: 0,
           opacity: 1,
           zIndex: idx + 1,
           ease: "power2.inOut",
-        }, startTime);
+        }, startTime); 
 
-        // Animate previous slide out
         const prevSlide = slideElements[idx - 1];
         tl.to(prevSlide, {
           scale: isLowEnd ? 1 : 0.94,
@@ -145,18 +143,21 @@ export default function ConciergePage() {
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "services.concierge.hero" as DictionaryKey)}</p>
-          <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-8">
-            {t(locale, "services.concierge.title" as DictionaryKey)}
+          <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "visa.page.hero" as DictionaryKey)}</p>
+          <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6">
+            {t(locale, "visa.page.title" as DictionaryKey)}
           </h1>
+          <p className="lux-heading text-[0.6rem] text-pts-gold mb-8 tracking-[0.4em] uppercase">
+            {t(locale, "visa.page.tagline" as DictionaryKey)}
+          </p>
           <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
-            {t(locale, "services.concierge.subtitle" as DictionaryKey)}
+            {t(locale, "visa.page.subtitle" as DictionaryKey)}
           </p>
           <MagneticButton
             onClick={() => setShowEnquiry(true)}
             className="border-pts-gold bg-pts-gold px-12 py-4 text-[0.65rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90"
           >
-            {t(locale, "services.concierge.cta" as DictionaryKey)}
+            {t(locale, "visa.page.cta" as DictionaryKey)}
           </MagneticButton>
         </div>
       </section>
@@ -166,7 +167,7 @@ export default function ConciergePage() {
         <div className="max-w-[1400px] mx-auto relative z-10">
           <div className="mb-12 text-center pt-8">
             <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
-              {t(locale, "services.concierge.categories" as DictionaryKey)}
+              {t(locale, "visa.page.categories" as DictionaryKey)}
             </h2>
           </div>
 
@@ -224,7 +225,7 @@ export default function ConciergePage() {
         <div className="p-5 sm:p-6 md:p-8 flex-shrink-0">
           <div className="flex justify-between items-start mb-4 sm:mb-6">
             <h3 className="font-heading text-lg sm:text-xl uppercase tracking-[0.1em] text-pts-parchment">
-              {t(locale, "services.concierge.enquiry.title" as DictionaryKey)}
+              {t(locale, "visa.page.enquiry.title" as DictionaryKey)}
             </h3>
             <button
               type="button"
@@ -235,7 +236,7 @@ export default function ConciergePage() {
             </button>
           </div>
           <p className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.2em] text-pts-muted/70 mb-4 sm:mb-6">
-            {t(locale, "services.concierge.enquiry.subtitle" as DictionaryKey)}
+            {t(locale, "visa.page.enquiry.subtitle" as DictionaryKey)}
           </p>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-6 md:px-8 pb-5 sm:pb-6 md:pb-8" style={{ WebkitOverflowScrolling: 'touch' }}>
@@ -251,41 +252,31 @@ export default function ConciergePage() {
           >
             <div>
               <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                {t(locale, "services.concierge.form.firstName" as DictionaryKey)}
+                {t(locale, "visa.page.form.fullName" as DictionaryKey)}
               </label>
               <input
                 type="text"
                 name="firstName"
                 required
                 className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                placeholder={locale === "ar" ? "الاسم الأول" : "Your first name"}
+                placeholder={t(locale, "visa.page.form.placeholder.name" as DictionaryKey)}
               />
             </div>
             <div>
               <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                {t(locale, "services.concierge.form.email" as DictionaryKey)}
+                {t(locale, "visa.page.form.email" as DictionaryKey)}
               </label>
               <input
                 type="email"
                 name="email"
                 required
                 className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors"
-                placeholder={locale === "ar" ? "بريدك الإلكتروني" : "your@email.com"}
+                placeholder={t(locale, "visa.page.form.placeholder.email" as DictionaryKey)}
               />
             </div>
             <div>
               <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                {locale === "ar" ? "الجنسية" : "Nationality"}
-              </label>
-              <CountrySelect
-                name="nationality"
-                required
-                placeholder={locale === "ar" ? "اختر جنسيتك" : "Select your nationality"}
-              />
-            </div>
-            <div>
-              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                Phone
+                {t(locale, "visa.page.form.phone" as DictionaryKey)}
               </label>
               <input
                 type="tel"
@@ -297,25 +288,35 @@ export default function ConciergePage() {
             </div>
             <div>
               <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                {locale === "ar" ? "نوع الخدمة" : "Service Type"}
+                {t(locale, "visa.page.form.visaType" as DictionaryKey)}
               </label>
               <LuxurySelect
-                name="serviceType"
+                name="visaType"
                 required
-                placeholder={locale === "ar" ? "اختر نوع الخدمة" : "Select service type"}
-                options={conciergeTypes.map((type) => ({ value: type, label: type }))}
+                placeholder={t(locale, "visa.page.form.selectVisa" as DictionaryKey)}
+                options={visaTypes.map((type) => ({ value: type, label: type }))}
               />
             </div>
             <div>
               <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                {t(locale, "services.concierge.form.message" as DictionaryKey)}
+                {t(locale, "visa.page.form.destination" as DictionaryKey)}
+              </label>
+              <CountrySelect
+                name="destination"
+                required
+                placeholder={t(locale, "visa.page.form.selectCountry" as DictionaryKey)}
+              />
+            </div>
+            <div>
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                {t(locale, "visa.page.form.message" as DictionaryKey)}
               </label>
               <textarea
                 name="message"
                 rows={4}
                 required
                 className="w-full bg-pts-black/50 border border-pts-gold/20 px-3 sm:px-4 py-2.5 sm:py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors resize-none"
-                placeholder={locale === "ar" ? "أخبرنا عن متطلباتك..." : "Tell us about your requirements..."}
+                placeholder={t(locale, "visa.page.form.placeholder.message" as DictionaryKey)}
               />
             </div>
             <FormStatusMessage status={enquiry.status} errorMessage={enquiry.errorMessage} />
@@ -324,7 +325,7 @@ export default function ConciergePage() {
               disabled={enquiry.isSending}
               className="w-full border-pts-gold bg-pts-gold px-6 sm:px-8 py-3 sm:py-4 text-[0.65rem] sm:text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.25em] sm:tracking-[0.3em] hover:bg-pts-gold/90"
             >
-              {t(locale, "services.concierge.form.submit" as DictionaryKey)}
+              {t(locale, "visa.page.form.submit" as DictionaryKey)}
             </MagneticButton>
           </form>
         </div>

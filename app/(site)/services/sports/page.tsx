@@ -91,7 +91,7 @@ export default function SportsPage() {
         snap: {
           snapTo: snapPoints,
           duration: { min: 0.8, max: 1.2 },
-          delay: 0.3,
+          delay: 0,
           ease: "power2.inOut",
           inertia: false,
         },

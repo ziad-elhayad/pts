@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState, useEffect, useCallback } from "react";
+import { memo, useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { usePerformance } from "@/contexts/PerformanceContext";
 import { useLocale } from "@/contexts/LocaleContext";
@@ -33,18 +33,39 @@ export const SlideGallery = memo(function SlideGallery() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { isLowEnd, reducedMotion } = usePerformance();
   const { locale } = useLocale();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startAutoplay = useCallback(() => {
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    // Create new interval
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
+    }, reducedMotion ? 3000 : 2000);
+  }, [reducedMotion]);
 
   const handleDotClick = useCallback((index: number) => {
     setCurrentIndex(index);
-  }, []);
+    // Clear existing interval immediately
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    // Restart timer immediately
+    startAutoplay();
+  }, [startAutoplay]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
-    }, reducedMotion ? 3000 : 2000);
-
-    return () => clearInterval(interval);
-  }, [reducedMotion]);
+    startAutoplay();
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [startAutoplay]);
 
   return (
     <div className="relative w-full h-[100svh] flex flex-col items-center justify-center bg-pts-bg p-6 sm:p-8 md:p-12">

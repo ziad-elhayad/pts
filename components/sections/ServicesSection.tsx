@@ -50,6 +50,20 @@ export function ServicesSection() {
       image: "/images/services/sports/photo-1554068865-24cecd4e34b8 (1).jpeg",
       link: "/services/sports",
     },
+    {
+      title: t(locale, "services.section.visa.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.visa.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.visa.description" as DictionaryKey),
+      image: "/images/services/visa/visa-passport-travel.jpg",
+      link: "/services/visa",
+    },
+    {
+      title: t(locale, "services.section.education.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.education.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.education.description" as DictionaryKey),
+      image: "/images/services/education/education-study-abroad.jpg",
+      link: "/services/education",
+    },
   ];
 
   // Group services into slides of 1 each
@@ -58,6 +72,8 @@ export function ServicesSection() {
     [services[1]],
     [services[2]],
     [services[3]],
+    [services[4]],
+    [services[5]],
   ];
 
   useEffect(() => {
@@ -119,15 +135,15 @@ export function ServicesSection() {
         pin: true,
         anticipatePin: 1,
         // Lower scrub value for faster scroll response
-        scrub: isLowEnd ? 1 : 2,
+        scrub: 0.5,
         // Snap to each slide after scrolling stops
-        snap: {
-          snapTo: snapPoints,
-          duration: { min: 0.8, max: 1.2 },
-          delay: 0.3,
-          ease: "power2.inOut",
-          inertia: false,
-        },
+        // snap: {
+        //   snapTo: snapPoints,
+        //   duration: 0.3,
+        //   delay: 0,
+        //   ease: "power2.inOut",
+        //   inertia: false,
+        // },
         fastScrollEnd: true,
       },
     });
@@ -260,7 +276,7 @@ export function ServicesSection() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                       {/* Text and Button on Left */}
                       <div className="relative z-10 flex flex-col justify-center order-2 md:order-1">
-                        <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl tracking-[0.1em] text-pts-gold uppercase mb-4">
+                        <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl tracking-[0.1em] text-pts-gold uppercase mb-4 pt-4">
                           {service.title}
                         </h3>
                         <p className={`lux-heading text-pts-parchment/80 tracking-[0.3em] uppercase mb-5 ${dir === 'rtl' ? 'text-[0.85rem] md:text-[0.95rem]' : 'text-[0.7rem] md:text-[0.8rem]'}`}>

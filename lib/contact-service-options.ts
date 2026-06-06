@@ -3,10 +3,12 @@ import {
   conciergeCategoryImages,
   miceCategoryImages,
   sportsCategoryImages,
+  visaCategoryImages,
+  educationDestinationImages,
 } from "@/lib/service-category-images";
 import type { LuxurySelectOption } from "@/components/forms/LuxurySelect";
 
-export type ContactServiceKey = "concierge" | "mice" | "medical" | "sports";
+export type ContactServiceKey = "concierge" | "mice" | "medical" | "sports" | "visa" | "education";
 
 type ContactServiceConfig = {
   key: ContactServiceKey;
@@ -14,10 +16,16 @@ type ContactServiceConfig = {
   categoryKeys: DictionaryKey[];
 };
 
-const serviceTitleKeys = (prefix: "concierge" | "mice" | "sports", count: number) =>
+const serviceTitleKeys = (prefix: "concierge" | "mice" | "sports" | "visa" | "education", count: number) =>
   Array.from(
     { length: count },
     (_, index) => `${prefix}.service${index + 1}.title` as DictionaryKey
+  );
+
+const destinationTitleKeys = (prefix: "education", count: number) =>
+  Array.from(
+    { length: count },
+    (_, index) => `${prefix}.destination${index + 1}.title` as DictionaryKey
   );
 
 const contactServiceConfig: ContactServiceConfig[] = [
@@ -44,6 +52,16 @@ const contactServiceConfig: ContactServiceConfig[] = [
     key: "sports",
     labelKey: "services.sports",
     categoryKeys: serviceTitleKeys("sports", sportsCategoryImages.length),
+  },
+  {
+    key: "visa",
+    labelKey: "services.section.visa.title",
+    categoryKeys: serviceTitleKeys("visa", visaCategoryImages.length),
+  },
+  {
+    key: "education",
+    labelKey: "services.section.education.title",
+    categoryKeys: destinationTitleKeys("education", educationDestinationImages.length),
   },
 ];
 

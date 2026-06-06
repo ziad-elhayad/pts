@@ -52,3 +52,34 @@ export const medicalTabImages = {
   doctors: "/images/services/medical/medical-alex-bertha.webp",
   wellness: "/images/services/medical/medical-whatsapp.webp",
 } as const;
+
+export const visaCategoryImages = [
+  "/images/services/visa/visa-tourist-regular1.jpg", // 1 Tourist Visas for Regular Passports
+  "/images/services/visa/visa-schengen-uk.jpg", // 2 Schengen UK
+  "/images/services/visa/visa-schengen-usa.jpg", // 3 Schengen USA
+  "/images/services/visa/visa-tourist-diplomatic1.jpg", // 4 Tourist Visas for Diplomatic Passports
+  "/images/services/visa/visa-official-diplomatic.jpg", // 5 Official Visas for Diplomatic Passports
+  "/images/services/visa/visa-family-reunification.jpg", // 6 Family Reunification Visa
+  "/images/services/visa/visa-transit.jpg", // 7 Transit Visas
+  "/images/services/visa/visa-media-film.jpg", // 8 Media & Film Crew Visas
+  "/images/services/visa/visa-religious.jpg", // 9 Religious Activities Visas
+  "/images/services/visa/visa-studying.jpg", // 10 Studying Visas
+  "/images/services/visa/visa-business.jpg", // 11 Business Visas
+  "/images/services/visa/visa-work.jpg", // 12 Work Visas
+  "/images/services/visa/visa-d-visa.jpg", // 13 D Visa
+  "/images/services/visa/visa-research-science.jpg", // 14 Research & Science Visas
+  "/images/services/visa/visa-retirement.jpg", // 15 Retirement Visas
+  "/images/services/visa/visa-medical-treatment.jpg", // 16 Medical Treatment Visas
+  "/images/services/visa/visa-staying-family.jpg", // 17 Staying With Family Visas
+  "/images/services/visa/visa-long-term-resident.jpg", // 18 Long Term Resident Visas
+] as const;
+
+export const educationDestinationImages = [
+  "/images/services/education/education-germany.jpg", // 1 Germany
+  "/images/services/education/education-switzerland.jpg", // 2 Switzerland
+  "/images/services/education/education-poland.jpg", // 3 Poland
+  "/images/services/education/education-spain.jpg", // 4 Spain
+  "/images/services/education/education-italy.jpg", // 5 Italy
+  "/images/services/education/education-uk.jpg", // 6 United Kingdom (UK)
+  "/images/services/education/education-usa.jpg", // 7 United States of America (USA)
+] as const;
