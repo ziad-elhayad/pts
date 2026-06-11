@@ -48,13 +48,16 @@ export default function MedicalTourismPage() {
   return (
     <div className="bg-pts-bg min-h-screen">
       {/* Hero Section — pt clears the fixed navbar on mobile/tablet (lg already has layout-level offset) */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
+      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "medical.page.hero" as DictionaryKey)}</p>
-          <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-8">
+          <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6">
             {t(locale, "medical.page.title" as DictionaryKey)}
           </h1>
+          <p className="lux-heading text-[0.6rem] text-pts-gold mb-8 tracking-[0.4em] uppercase">
+            {t(locale, "medical.page.tagline" as DictionaryKey)}
+          </p>
           <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
             {t(locale, "medical.page.subtitle" as DictionaryKey)}
           </p>

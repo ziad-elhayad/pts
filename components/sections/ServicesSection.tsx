@@ -121,9 +121,9 @@ export function ServicesSection() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
 
     const totalSlides = slideElements.length;
-    // Build snap points: one per slide except last slide to allow scrolling past it
+    // Build snap points: evenly distributed across slides
     const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
-      i === 0 ? 0 : i / (totalSlides - 2)
+      i / (totalSlides - 1)
     );
 
     const tl = gsap.timeline({
@@ -131,19 +131,19 @@ export function ServicesSection() {
         trigger: containerRef.current,
         start: "top top",
         // Reduce scroll distance further
-        end: `+=${(totalSlides + 1) * (isLowEnd ? 120 : 150)}%`,
+        end: `+=${(totalSlides + 1) * (isLowEnd ? 80 : 100)}%`,
         pin: true,
         anticipatePin: 1,
         // Lower scrub value for faster scroll response
-        scrub: 0.5,
+        scrub: 0.3,
         // Snap to each slide after scrolling stops
-        // snap: {
-        //   snapTo: snapPoints,
-        //   duration: 0.3,
-        //   delay: 0,
-        //   ease: "power2.inOut",
-        //   inertia: false,
-        // },
+        snap: {
+          snapTo: snapPoints,
+          duration: { min: 0.4, max: 0.6 },
+          delay: 0,
+          ease: "power2.out",
+          inertia: false,
+        },
         fastScrollEnd: true,
       },
     });
@@ -161,7 +161,7 @@ export function ServicesSection() {
 
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        const startTime = idx * 0.8;
+        const startTime = idx * 1.0;
 
         // Animate current slide in
         tl.to(slide, {
@@ -169,7 +169,8 @@ export function ServicesSection() {
           opacity: 1,
           zIndex: slides.length,
           pointerEvents: 'auto',
-          ease: "power2.inOut",
+          ease: "power3.inOut",
+          duration: 0.8,
         }, startTime);
 
         const prevSlide = slideElements[idx - 1];
@@ -180,7 +181,8 @@ export function ServicesSection() {
           zIndex: slides.length - idx,
           pointerEvents: 'none',
           filter: (isTouch || isLowEnd) ? "none" : "blur(8px)",
-          ease: "power2.inOut"
+          ease: "power3.inOut",
+          duration: 0.8,
         }, startTime);
       }
     });
@@ -209,8 +211,8 @@ export function ServicesSection() {
           <div className="mx-auto w-full max-w-7xl px-6 pb-8 md:px-12">
             {services.map((service) => (
               <div key={service.link} className="mobile-service-slide min-h-[84svh] flex items-center py-6">
-                <div className="w-full overflow-hidden rounded-lg border border-pts-gold/15 bg-pts-black">
-                  <div className="relative h-[42svh]">
+                <div className="w-full rounded-lg border border-pts-gold/15 bg-pts-black flex flex-col">
+                  <div className="relative h-[42svh] overflow-hidden flex-shrink-0">
                     <Image
                       src={service.image}
                       alt={service.title}
@@ -220,13 +222,13 @@ export function ServicesSection() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pts-deep/90 via-pts-deep/50 to-transparent" />
                   </div>
-                  <div className="p-6">
-                    <h3 className="mb-3 font-heading text-2xl uppercase tracking-[0.1em] text-pts-gold">{service.title}</h3>
-                    <p className={`mb-4 lux-heading uppercase tracking-[0.28em] text-pts-parchment/80 ${dir === 'rtl' ? 'text-[0.8rem]' : 'text-[0.66rem]'}`}>{service.subtitle}</p>
-                    <p className={`mb-6 uppercase leading-relaxed tracking-[0.16em] text-pts-muted/70 ${dir === 'rtl' ? 'text-[0.85rem]' : 'text-[0.7rem]'}`}>{service.description}</p>
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="mb-3 font-heading text-2xl uppercase tracking-[0.08em] text-pts-gold flex-shrink-0 leading-tight">{service.title}</h3>
+                    <p className={`mb-4 lux-heading uppercase tracking-[0.22em] text-pts-parchment/80 ${dir === 'rtl' ? 'text-[0.8rem]' : 'text-[0.66rem]'} flex-shrink-0 leading-tight`}>{service.subtitle}</p>
+                    <p className={`mb-6 uppercase leading-relaxed tracking-[0.14em] text-pts-muted/70 ${dir === 'rtl' ? 'text-[0.85rem]' : 'text-[0.7rem]'} flex-1`}>{service.description}</p>
                     <MagneticButton
                       href={service.link}
-                      className="w-fit border-pts-gold bg-pts-gold px-8 py-3.5 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-pts-black hover:bg-pts-gold/90"
+                      className="w-fit border-pts-gold bg-pts-gold px-8 py-3.5 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-pts-black hover:bg-pts-gold/90 flex-shrink-0"
                     >
                       {t(locale, "services.read.more" as DictionaryKey)}
                     </MagneticButton>
@@ -275,26 +277,26 @@ export function ServicesSection() {
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                       {/* Text and Button on Left */}
-                      <div className="relative z-10 flex flex-col justify-center order-2 md:order-1">
-                        <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl tracking-[0.1em] text-pts-gold uppercase mb-4 pt-4">
+                      <div className="relative z-10 flex flex-col justify-center order-2 md:order-1 flex-1">
+                        <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl tracking-[0.08em] text-pts-gold uppercase mb-4 pt-4 flex-shrink-0 leading-tight">
                           {service.title}
                         </h3>
-                        <p className={`lux-heading text-pts-parchment/80 tracking-[0.3em] uppercase mb-5 ${dir === 'rtl' ? 'text-[0.85rem] md:text-[0.95rem]' : 'text-[0.7rem] md:text-[0.8rem]'}`}>
+                        <p className={`lux-heading text-pts-parchment/80 tracking-[0.22em] uppercase mb-5 ${dir === 'rtl' ? 'text-[0.85rem] md:text-[0.95rem]' : 'text-[0.7rem] md:text-[0.8rem]'} flex-shrink-0 leading-tight`}>
                           {service.subtitle}
                         </p>
-                        <p className={`uppercase tracking-[0.18em] text-pts-muted/70 leading-relaxed mb-8 max-w-xl ${dir === 'rtl' ? 'text-[0.85rem] md:text-[0.95rem]' : 'text-[0.7rem] md:text-[0.8rem]'}`}>
+                        <p className={`uppercase tracking-[0.14em] text-pts-muted/70 leading-relaxed mb-8 max-w-xl ${dir === 'rtl' ? 'text-[0.85rem] md:text-[0.95rem]' : 'text-[0.7rem] md:text-[0.8rem]'} flex-1`}>
                           {service.description}
                         </p>
                         <MagneticButton
                           href={service.link}
-                          className="border-pts-gold bg-pts-gold px-10 py-4 text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90 w-fit"
+                          className="border-pts-gold bg-pts-gold px-10 py-4 text-[0.7rem] font-bold text-pts-black uppercase tracking-[0.3em] hover:bg-pts-gold/90 w-fit flex-shrink-0"
                         >
                           {t(locale, "services.read.more" as DictionaryKey)}
                         </MagneticButton>
                       </div>
 
                       {/* Image on Right */}
-                      <div className="relative h-[350px] md:h-[450px] lg:h-[500px] order-1 md:order-2">
+                      <div className="relative h-[350px] md:h-[450px] lg:h-[500px] order-1 md:order-2 flex-shrink-0">
                         <div className="absolute inset-0">
                           <Image
                             src={service.image}

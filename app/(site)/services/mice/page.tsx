@@ -75,9 +75,9 @@ export default function MicePage() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
 
     const totalSlides = slideElements.length;
-    // Build snap points: one per slide except last slide to allow scrolling past it
+    // Build snap points: evenly distributed across slides
     const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
-      i === 0 ? 0 : i / (totalSlides - 2)
+      i / (totalSlides - 1)
     );
 
     const tl = gsap.timeline({
@@ -85,19 +85,19 @@ export default function MicePage() {
         trigger: containerRef.current,
         start: "top top",
         // Reduce scroll distance further
-        end: `+=${(totalSlides + 1) * (isLowEnd ? 120 : 150)}%`,
+        end: `+=${(totalSlides + 1) * (isLowEnd ? 80 : 100)}%`,
         pin: true,
         anticipatePin: 1,
         // Lower scrub value for faster scroll response
-        scrub: isLowEnd ? 1 : 2,
-        // Disable snap to allow free scrolling past last slide
-        // snap: {
-        //   snapTo: snapPoints,
-        //   duration: { min: 0.8, max: 1.2 },
-        //   delay: 0.3,
-        //   ease: "power2.inOut",
-        //   inertia: false,
-        // },
+        scrub: 0.3,
+        // Snap to each slide after scrolling stops
+        snap: {
+          snapTo: snapPoints,
+          duration: { min: 0.4, max: 0.6 },
+          delay: 0,
+          ease: "power2.out",
+          inertia: false,
+        },
         fastScrollEnd: true,
       },
     });
@@ -113,14 +113,15 @@ export default function MicePage() {
 
     slideElements.forEach((slide, idx) => {
       if (idx > 0) {
-        const startTime = idx * 0.8;
+        const startTime = idx * 1.0;
 
         // Animate current slide in
         tl.to(slide, {
           yPercent: 0,
           opacity: 1,
           zIndex: idx + 1,
-          ease: "power2.inOut",
+          ease: "power3.inOut",
+          duration: 0.8,
         }, startTime);
 
         // Animate previous slide out with consistent spacing
@@ -131,7 +132,8 @@ export default function MicePage() {
           yPercent: isLowEnd ? 0 : -8,
           zIndex: idx,
           filter: isLowEnd ? "none" : "blur(8px)",
-          ease: "power2.inOut"
+          ease: "power3.inOut",
+          duration: 0.8,
         }, startTime);
       }
     });
@@ -145,13 +147,16 @@ export default function MicePage() {
   return (
     <div className="bg-pts-bg min-h-screen">
       {/* Hero Section — pt clears the fixed navbar on mobile/tablet (lg already has layout-level offset) */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
+      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center border-b border-pts-line/20 pt-[4.5rem] sm:pt-[5rem] lg:pt-0">
         <div className="absolute inset-0 bg-gradient-to-b from-pts-deep to-pts-bg" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <p className="lux-heading text-[0.5rem] text-pts-gold mb-6 tracking-[0.5em] uppercase">{t(locale, "mice.page.hero" as DictionaryKey)}</p>
           <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-pts-parchment uppercase leading-[1.05] mb-6">
             {t(locale, "mice.page.title" as DictionaryKey)}
           </h1>
+          <p className="lux-heading text-[0.6rem] text-pts-gold mb-8 tracking-[0.4em] uppercase">
+            {t(locale, "mice.page.tagline" as DictionaryKey)}
+          </p>
           <p className="max-w-2xl mx-auto text-[0.65rem] sm:text-[0.75rem] uppercase tracking-[0.2em] text-pts-muted/70 leading-relaxed mb-10">
             {t(locale, "mice.page.subtitle" as DictionaryKey)}
           </p>
@@ -185,14 +190,14 @@ export default function MicePage() {
                 }
               >
                 <div
-                  className="mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-8"
+                  className="mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-8 items-stretch"
                 >
                   {slideServices.map((service, serviceIndex) => (
                     <div
                       key={serviceIndex}
-                      className="w-full border border-pts-gold/40 bg-pts-deep/40 overflow-hidden hover:border-pts-gold/60 hover:bg-pts-deep/50 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                      className="w-full border border-pts-gold/40 bg-pts-deep/40 hover:border-pts-gold/60 hover:bg-pts-deep/50 transition-all duration-300 shadow-lg hover:shadow-2xl flex flex-col"
                     >
-                      <div className="relative h-48 sm:h-52 overflow-hidden">
+                      <div className="relative h-48 sm:h-52 overflow-hidden flex-shrink-0">
                         <Image
                           src={service.image}
                           alt={service.title}
@@ -202,11 +207,11 @@ export default function MicePage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
                       </div>
-                      <div className="p-6">
-                        <h3 className="font-heading text-[1rem] sm:text-[1.1rem] uppercase tracking-[0.12em] text-pts-parchment mb-4">
+                      <div className="p-6 flex-1 flex flex-col">
+                        <h3 className="font-heading text-[1.1rem] sm:text-[1.15rem] uppercase tracking-[0.1em] text-pts-parchment mb-3 flex-shrink-0 leading-tight">
                           {service.title}
                         </h3>
-                        <p className="text-[0.75rem] sm:text-[0.8rem] uppercase tracking-[0.18em] text-pts-muted/70 leading-loose">
+                        <p className="text-[0.8rem] sm:text-[0.85rem] uppercase tracking-[0.14em] text-pts-muted/70 leading-relaxed flex-1 max-w-none">
                           {service.description}
                         </p>
                       </div>
