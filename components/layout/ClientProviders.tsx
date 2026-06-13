@@ -92,6 +92,8 @@ function GlobalEffects({ disableWebGL = false }: { disableWebGL?: boolean }) {
   );
 }
 
+import { ContentProtection } from "@/components/layout/ContentProtection";
+
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
@@ -146,6 +148,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
     <PerformanceProvider>
       <LocaleProvider>
+        <ContentProtection />
         {mounted && !isContactPage && <TunnelEffect />}
         <SmoothScrollProvider disabled={isContactPage}>
           <GlobalEffects disableWebGL={isContactPage} />

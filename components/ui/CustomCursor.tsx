@@ -72,8 +72,8 @@ export const CustomCursor = memo(function CustomCursor() {
 
       gsap.to(ring, {
         scale: 2.2,
-        opacity: 0.7,
-        borderColor: "rgba(168,143,100,0.8)",
+        opacity: 1,
+        borderColor: "rgba(168,143,100,1)",
         duration: 0.4,
         ease: "power3.out",
         overwrite: true,
@@ -89,8 +89,8 @@ export const CustomCursor = memo(function CustomCursor() {
     const onLeave = () => {
       gsap.to(ring, {
         scale: 1,
-        opacity: 0.5,
-        borderColor: "rgba(168,143,100,0.4)",
+        opacity: 1,
+        borderColor: "rgba(168,143,100,1)",
         duration: 0.5,
         ease: "power3.out",
         overwrite: true,
@@ -135,8 +135,9 @@ export const CustomCursor = memo(function CustomCursor() {
         style={{
           width: 40,
           height: 40,
-          borderColor: "rgba(168,143,100,0.4)",
-          opacity: 0.5,
+          borderWidth: 3,
+          borderColor: "rgba(168,143,100,1)",
+          opacity: 1,
           top: 0,
           left: 0,
           mixBlendMode: "normal",
@@ -150,7 +151,7 @@ export const CustomCursor = memo(function CustomCursor() {
         style={{
           width: 6,
           height: 6,
-          background: "rgba(168,143,100,0.9)",
+          background: "rgba(168,143,100,1)",
           top: 0,
           left: 0,
         }}

@@ -11,6 +11,9 @@ import { t, type DictionaryKey } from "@/lib/dictionary";
 import {
   getContactServiceCategoryOptions,
   getContactServiceOptions,
+  getVisaTypeCategoryOptions,
+  getInternationalVisaLabel,
+  type VisaTypeKey,
 } from "@/lib/contact-service-options";
 
 export default function ContactPage() {
@@ -19,20 +22,58 @@ export default function ContactPage() {
   const [selectedService, setSelectedService] = useState("");
   const [selectedType, setSelectedType] = useState("");
 
+  // Visa-type radio state (only used when International Visa is selected)
+  const [selectedVisaType, setSelectedVisaType] = useState<VisaTypeKey | "">("");
+  const [selectedVisaCategory, setSelectedVisaCategory] = useState("");
+
   const serviceOptions = useMemo(() => getContactServiceOptions(locale), [locale]);
+
+  const internationalVisaLabel = useMemo(() => getInternationalVisaLabel(locale), [locale]);
+  const isVisaSelected = selectedService === internationalVisaLabel;
+
+  // For non-visa services: flat category list
   const typeOptions = useMemo(
-    () => getContactServiceCategoryOptions(locale, selectedService),
-    [locale, selectedService]
+    () => isVisaSelected ? [] : getContactServiceCategoryOptions(locale, selectedService),
+    [locale, selectedService, isVisaSelected]
   );
+
+  // Visa type options (Long Stay / Short Stay / Specialized)
+  const visaTypeOptions = useMemo(
+    () => [
+      { value: "long-stay" as VisaTypeKey, label: t(locale, "visa.categories.longStay.title" as DictionaryKey) },
+      { value: "short-stay" as VisaTypeKey, label: t(locale, "visa.categories.shortStay.title" as DictionaryKey) },
+      { value: "specialized" as VisaTypeKey, label: t(locale, "visa.categories.specialized.title" as DictionaryKey) },
+    ],
+    [locale]
+  );
+
+  // Visa category options filtered by selected visa type
+  const visaCategoryOptions = useMemo(
+    () => getVisaTypeCategoryOptions(locale, selectedVisaType),
+    [locale, selectedVisaType]
+  );
+
   const hasSelectedService = selectedService.length > 0;
 
   const handleServiceChange = useCallback((value: string) => {
     setSelectedService(value);
     setSelectedType("");
+    // Reset visa-specific state when service changes
+    setSelectedVisaType("");
+    setSelectedVisaCategory("");
   }, []);
 
   const handleTypeChange = useCallback((value: string) => {
     setSelectedType(value);
+  }, []);
+
+  const handleVisaTypeChange = useCallback((type: VisaTypeKey) => {
+    setSelectedVisaType(type);
+    setSelectedVisaCategory(""); // reset category when visa type changes
+  }, []);
+
+  const handleVisaCategoryChange = useCallback((value: string) => {
+    setSelectedVisaCategory(value);
   }, []);
 
   return (
@@ -121,8 +162,60 @@ export default function ContactPage() {
                 />
               </div>
 
-              {hasSelectedService ? (
-                <div>
+              {/* ── International Visa: show Visa Type radio group ── */}
+              {isVisaSelected && (
+                <div className="visa-category-field">
+                  <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
+                    {t(locale, "visa.page.form.visaTypeGroup" as DictionaryKey)}
+                    <span className="text-pts-gold/60 ml-1">*</span>
+                  </label>
+                  <div className="visa-type-radio-group">
+                    {visaTypeOptions.map((option) => (
+                      <label key={option.value} className="visa-type-radio-option">
+                        <input
+                          type="radio"
+                          name="visaTypeGroup"
+                          value={option.value}
+                          required
+                          checked={selectedVisaType === option.value}
+                          onChange={() => handleVisaTypeChange(option.value)}
+                        />
+                        <span className="visa-type-radio-label">
+                          <span className="visa-type-radio-dot" aria-hidden="true" />
+                          <span className="visa-type-radio-text">{option.label}</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {/* Hidden fields to pass visa type label to form submission */}
+                  <input
+                    type="hidden"
+                    name="visaType"
+                    value={selectedVisaType ? (visaTypeOptions.find(o => o.value === selectedVisaType)?.label ?? "") : ""}
+                  />
+                </div>
+              )}
+
+              {/* ── Visa category dropdown (after visa type is selected) ── */}
+              {isVisaSelected && selectedVisaType && (
+                <div key={selectedVisaType} className="visa-category-field">
+                  <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
+                    {t(locale, "visa.page.form.category" as DictionaryKey)}
+                  </label>
+                  <LuxurySelect
+                    name="type"
+                    value={selectedVisaCategory}
+                    onChange={handleVisaCategoryChange}
+                    required
+                    placeholder={t(locale, "visa.page.form.selectCategory" as DictionaryKey)}
+                    options={visaCategoryOptions}
+                  />
+                </div>
+              )}
+
+              {/* ── Non-visa services: flat type dropdown ── */}
+              {hasSelectedService && !isVisaSelected && (
+                <div className="visa-category-field">
                   <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
                     Type
                   </label>
@@ -135,7 +228,7 @@ export default function ContactPage() {
                     options={typeOptions}
                   />
                 </div>
-              ) : null}
+              )}
 
               <div>
                 <label className="block text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">

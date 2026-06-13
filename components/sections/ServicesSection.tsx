@@ -23,6 +23,13 @@ export function ServicesSection() {
 
   const services = [
     {
+      title: t(locale, "services.section.visa.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.visa.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.visa.description" as DictionaryKey),
+      image: "/images/services/visa/visa-passport-travel.jpg",
+      link: "/services/visa",
+    },
+    {
       title: t(locale, "services.section.concierge.title" as DictionaryKey),
       subtitle: t(locale, "services.section.concierge.subtitle" as DictionaryKey),
       description: t(locale, "services.section.concierge.description" as DictionaryKey),
@@ -37,6 +44,13 @@ export function ServicesSection() {
       link: "/services/mice",
     },
     {
+      title: t(locale, "services.section.education.title" as DictionaryKey),
+      subtitle: t(locale, "services.section.education.subtitle" as DictionaryKey),
+      description: t(locale, "services.section.education.description" as DictionaryKey),
+      image: "/images/services/education/education-study-abroad.jpg",
+      link: "/services/education",
+    },
+    {
       title: t(locale, "services.section.medical.title" as DictionaryKey),
       subtitle: t(locale, "services.section.medical.subtitle" as DictionaryKey),
       description: t(locale, "services.section.medical.description" as DictionaryKey),
@@ -49,20 +63,6 @@ export function ServicesSection() {
       description: t(locale, "services.section.sports.description" as DictionaryKey),
       image: "/images/services/sports/photo-1554068865-24cecd4e34b8 (1).jpeg",
       link: "/services/sports",
-    },
-    {
-      title: t(locale, "services.section.visa.title" as DictionaryKey),
-      subtitle: t(locale, "services.section.visa.subtitle" as DictionaryKey),
-      description: t(locale, "services.section.visa.description" as DictionaryKey),
-      image: "/images/services/visa/visa-passport-travel.jpg",
-      link: "/services/visa",
-    },
-    {
-      title: t(locale, "services.section.education.title" as DictionaryKey),
-      subtitle: t(locale, "services.section.education.subtitle" as DictionaryKey),
-      description: t(locale, "services.section.education.description" as DictionaryKey),
-      image: "/images/services/education/education-study-abroad.jpg",
-      link: "/services/education",
     },
   ];
 
@@ -121,29 +121,18 @@ export function ServicesSection() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
 
     const totalSlides = slideElements.length;
-    // Build snap points: evenly distributed across slides
-    const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
-      i / (totalSlides - 1)
-    );
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        // Reduce scroll distance further
-        end: `+=${(totalSlides + 1) * (isLowEnd ? 80 : 100)}%`,
+        // Shorter scroll distance for one-scroll-one-slide
+        end: `+=${totalSlides * 75}%`,
         pin: true,
         anticipatePin: 1,
-        // Lower scrub value for faster scroll response
-        scrub: 0.3,
-        // Snap to each slide after scrolling stops
-        snap: {
-          snapTo: snapPoints,
-          duration: { min: 0.4, max: 0.6 },
-          delay: 0,
-          ease: "power2.out",
-          inertia: false,
-        },
+        // Lower scrub value for instant response
+        scrub: 0.1,
+        // Remove snap for instant control
         fastScrollEnd: true,
       },
     });
@@ -163,14 +152,14 @@ export function ServicesSection() {
       if (idx > 0) {
         const startTime = idx * 1.0;
 
-        // Animate current slide in
+        // Animate current slide in - reduced duration for instant feel
         tl.to(slide, {
           yPercent: 0,
           opacity: 1,
           zIndex: slides.length,
           pointerEvents: 'auto',
-          ease: "power3.inOut",
-          duration: 0.8,
+          ease: "power2.inOut",
+          duration: 0.4,
         }, startTime);
 
         const prevSlide = slideElements[idx - 1];
@@ -181,8 +170,8 @@ export function ServicesSection() {
           zIndex: slides.length - idx,
           pointerEvents: 'none',
           filter: (isTouch || isLowEnd) ? "none" : "blur(8px)",
-          ease: "power3.inOut",
-          duration: 0.8,
+          ease: "power2.inOut",
+          duration: 0.4,
         }, startTime);
       }
     });

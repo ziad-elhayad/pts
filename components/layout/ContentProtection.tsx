@@ -12,7 +12,6 @@ export function ContentProtection() {
 
     // Disable keyboard shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Check if the target is an input, textarea, or contenteditable element
       const target = e.target as HTMLElement;
       const isInput = 
         target.tagName === "INPUT" ||
@@ -20,22 +19,25 @@ export function ContentProtection() {
         target.tagName === "SELECT" ||
         target.isContentEditable;
 
-      // Allow all keyboard events on inputs and interactive elements
+      // Allow default input handling (like select all, copy, cut, paste, save) on interactive input elements
       if (isInput) {
         return;
       }
 
-      // Disable specific keyboard shortcuts
+      const key = e.key.toLowerCase();
+      const ctrlOrMeta = e.ctrlKey || e.metaKey;
+
+      // Disable specific keyboard shortcuts globally
       if (
-        (e.ctrlKey || e.metaKey) &&
-        (e.key === "c" || // Ctrl+C / Cmd+C (Copy)
-         e.key === "x" || // Ctrl+X / Cmd+X (Cut)
-         e.key === "a" || // Ctrl+A / Cmd+A (Select All)
-         e.key === "s" || // Ctrl+S / Cmd+S (Save)
-         e.key === "u" || // Ctrl+U / Cmd+U (View Source)
-         e.key === "p" || // Ctrl+P / Cmd+P (Print)
-         e.key === "f" || // Ctrl+F / Cmd+F (Find)
-         e.key === "g")   // Ctrl+G / Cmd+G (Find Next)
+        ctrlOrMeta &&
+        (key === "c" || // Copy
+         key === "x" || // Cut
+         key === "a" || // Select All
+         key === "s" || // Save Page
+         key === "u" || // View Source
+         key === "p" || // Print Page
+         key === "f" || // Find
+         key === "g")   // Find Next
       ) {
         e.preventDefault();
         return false;
@@ -47,31 +49,11 @@ export function ContentProtection() {
         return false;
       }
 
-      // Disable Ctrl+Shift+I (Developer Tools)
+      // Disable Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C (Inspect Element and DevTools)
       if (
-        (e.ctrlKey || e.metaKey) &&
+        ctrlOrMeta &&
         e.shiftKey &&
-        (e.key === "I" || e.key === "i")
-      ) {
-        e.preventDefault();
-        return false;
-      }
-
-      // Disable Ctrl+Shift+J (Console)
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        e.shiftKey &&
-        (e.key === "J" || e.key === "j")
-      ) {
-        e.preventDefault();
-        return false;
-      }
-
-      // Disable Ctrl+Shift+C (Inspect Element)
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        e.shiftKey &&
-        (e.key === "C" || e.key === "c")
+        (key === "i" || key === "j" || key === "c")
       ) {
         e.preventDefault();
         return false;
@@ -87,7 +69,6 @@ export function ContentProtection() {
         target.tagName === "SELECT" ||
         target.isContentEditable;
 
-      // Allow copy on inputs and interactive elements
       if (isInput) {
         return;
       }
@@ -104,7 +85,6 @@ export function ContentProtection() {
         target.tagName === "SELECT" ||
         target.isContentEditable;
 
-      // Allow cut on inputs and interactive elements
       if (isInput) {
         return;
       }
@@ -121,7 +101,6 @@ export function ContentProtection() {
         target.tagName === "SELECT" ||
         target.isContentEditable;
 
-      // Allow paste on inputs and interactive elements
       if (isInput) {
         return;
       }

@@ -1,26 +1,22 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/contexts/PerformanceContext";
 import { useLocale } from "@/contexts/LocaleContext";
 import { t, type DictionaryKey } from "@/lib/dictionary";
-import { buildServiceSlides } from "@/lib/service-slides";
-import { visaCategoryImages } from "@/lib/service-category-images";
 import { useClientLayoutMode } from "@/hooks/useClientLayoutMode";
 import { useEnquirySubmit } from "@/hooks/useEnquirySubmit";
 import { FormStatusMessage } from "@/components/forms/FormStatusMessage";
 import { CountrySelect } from "@/components/forms/CountrySelect";
 import { LuxurySelect } from "@/components/forms/LuxurySelect";
 import { Modal } from "@/components/ui/Modal";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import {
+  getVisaTypeCategoryOptions,
+  type VisaTypeKey,
+} from "@/lib/contact-service-options";
 
 export default function VisaPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,18 +26,133 @@ export default function VisaPage() {
   const { ready, useMobileSlides } = useClientLayoutMode();
   const enquiry = useEnquirySubmit("visa");
 
-  const services = visaCategoryImages.map((image, index) => ({
-    title: t(locale, `visa.service${index + 1}.title` as DictionaryKey),
-    description: t(locale, `visa.service${index + 1}.description` as DictionaryKey),
-    image,
-  }));
+  // Visa type radio + category state
+  const [selectedVisaType, setSelectedVisaType] = useState<VisaTypeKey | "">("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const slides = buildServiceSlides(services, useMobileSlides);
-  const visaTypes = services.map((service) => service.title);
+  const visaTypeOptions = useMemo(
+    () => [
+      { value: "long-stay" as VisaTypeKey, label: t(locale, "visa.categories.longStay.title" as DictionaryKey) },
+      { value: "short-stay" as VisaTypeKey, label: t(locale, "visa.categories.shortStay.title" as DictionaryKey) },
+      { value: "specialized" as VisaTypeKey, label: t(locale, "visa.categories.specialized.title" as DictionaryKey) },
+    ],
+    [locale]
+  );
+
+  const categoryOptions = useMemo(
+    () => getVisaTypeCategoryOptions(locale, selectedVisaType),
+    [locale, selectedVisaType]
+  );
+
+  const handleVisaTypeChange = useCallback((type: VisaTypeKey) => {
+    setSelectedVisaType(type);
+    setSelectedCategory(""); // reset category when visa type changes
+  }, []);
+
+  const handleCategoryChange = useCallback((value: string) => {
+    setSelectedCategory(value);
+  }, []);
+
+  const categories = [
+    {
+      id: "short-stay",
+      title: t(locale, "visa.categories.shortStay.title" as DictionaryKey),
+      description: t(locale, "visa.categories.shortStay.description" as DictionaryKey),
+      visas: [
+        {
+          title: t(locale, "visa.shortStay.medical.title" as DictionaryKey),
+          description: t(locale, "visa.shortStay.medical.description" as DictionaryKey),
+          image: "/images/services/visa/visa-medical-treatment.jpg",
+        },
+        {
+          title: t(locale, "visa.shortStay.business.title" as DictionaryKey),
+          description: t(locale, "visa.shortStay.business.description" as DictionaryKey),
+          image: "/images/services/visa/visa-business.jpg",
+        },
+        {
+          title: t(locale, "visa.shortStay.tourist.title" as DictionaryKey),
+          description: t(locale, "visa.shortStay.tourist.description" as DictionaryKey),
+          image: "/images/services/visa/visa-tourist-regular1.jpg",
+        },
+        {
+          title: t(locale, "visa.shortStay.family.title" as DictionaryKey),
+          description: t(locale, "visa.shortStay.family.description" as DictionaryKey),
+          image: "/images/services/visa/visa-family-reunification.jpg",
+        },
+      ],
+    },
+    {
+      id: "long-stay",
+      title: t(locale, "visa.categories.longStay.title" as DictionaryKey),
+      description: t(locale, "visa.categories.longStay.description" as DictionaryKey),
+      visas: [
+        {
+          title: t(locale, "visa.longStay.student.title" as DictionaryKey),
+          description: t(locale, "visa.longStay.student.description" as DictionaryKey),
+          image: "/images/services/visa/visa-studying.jpg",
+        },
+        {
+          title: t(locale, "visa.longStay.employment.title" as DictionaryKey),
+          description: t(locale, "visa.longStay.employment.description" as DictionaryKey),
+          image: "/images/services/visa/visa-work.jpg",
+        },
+        {
+          title: t(locale, "visa.longStay.jobSeeker.title" as DictionaryKey),
+          description: t(locale, "visa.longStay.jobSeeker.description" as DictionaryKey),
+          image: "/images/services/visa/visa-d-visa.jpg",
+        },
+        {
+          title: t(locale, "visa.longStay.familyReunion.title" as DictionaryKey),
+          description: t(locale, "visa.longStay.familyReunion.description" as DictionaryKey),
+          image: "/images/services/visa/visa-family-reunification.jpg",
+        },
+        {
+          title: t(locale, "visa.longStay.euBlueCard.title" as DictionaryKey),
+          description: t(locale, "visa.longStay.euBlueCard.description" as DictionaryKey),
+          image: "/images/services/visa/visa-schengen-uk.jpg",
+        },
+      ],
+    },
+    {
+      id: "specialized",
+      title: t(locale, "visa.categories.specialized.title" as DictionaryKey),
+      description: t(locale, "visa.categories.specialized.description" as DictionaryKey),
+      visas: [
+        {
+          title: t(locale, "visa.specialized.retirement.title" as DictionaryKey),
+          description: t(locale, "visa.specialized.retirement.description" as DictionaryKey),
+          image: "/images/services/visa/visa-retirement.jpg",
+        },
+        {
+          title: t(locale, "visa.specialized.investor.title" as DictionaryKey),
+          description: t(locale, "visa.specialized.investor.description" as DictionaryKey),
+          image: "/images/services/visa/visa-business.jpg",
+        },
+        {
+          title: t(locale, "visa.specialized.digitalNomad.title" as DictionaryKey),
+          description: t(locale, "visa.specialized.digitalNomad.description" as DictionaryKey),
+          image: "/images/services/visa/visa-schengen-usa.jpg",
+        },
+        {
+          title: t(locale, "visa.specialized.permanent.title" as DictionaryKey),
+          description: t(locale, "visa.specialized.permanent.description" as DictionaryKey),
+          image: "/images/services/visa/visa-long-term-resident.jpg",
+        },
+        {
+          title: t(locale, "visa.specialized.transit.title" as DictionaryKey),
+          description: t(locale, "visa.specialized.transit.description" as DictionaryKey),
+          image: "/images/services/visa/visa-transit.jpg",
+        },
+      ],
+    },
+  ];
+
+  const [activeCategory, setActiveCategory] = useState(categories[0].id);
+  const activeCategoryData = categories.find((cat) => cat.id === activeCategory) || categories[0];
 
   useEffect(() => {
     if (!useMobileSlides || reducedMotion || !containerRef.current) return;
-    const slideEls = Array.from(containerRef.current.querySelectorAll<HTMLElement>(".service-slide"));
+    const slideEls = Array.from(containerRef.current.querySelectorAll<HTMLElement>(".visa-card"));
     if (!slideEls.length) return;
 
     slideEls.forEach((slide) => {
@@ -64,80 +175,7 @@ export default function VisaPage() {
 
     slideEls.forEach((slide) => io.observe(slide));
     return () => io.disconnect();
-  }, [useMobileSlides, reducedMotion, services.length]);
-
-  useGSAP(() => {
-    if (!containerRef.current || reducedMotion || !ready || useMobileSlides) return;
-
-    const slideElements = containerRef.current.querySelectorAll(".service-slide");
-
-    const totalSlides = slideElements.length;
-    // Build snap points: evenly distributed across slides
-    const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
-      i / (totalSlides - 1)
-    );
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        // Reduce scroll distance further
-        end: `+=${(totalSlides + 1) * (isLowEnd ? 80 : 100)}%`,
-        pin: true,
-        anticipatePin: 1,
-        // Lower scrub value for faster scroll response
-        scrub: 0.3,
-        // Snap to each slide after scrolling stops
-        snap: {
-          snapTo: snapPoints,
-          duration: { min: 0.4, max: 0.6 },
-          delay: 0,
-          ease: "power2.out",
-          inertia: false,
-        },
-        fastScrollEnd: true,
-      },
-    });
-
-    // Set initial states
-    slideElements.forEach((slide, idx) => {
-      if (idx === 0) {
-        gsap.set(slide, { yPercent: 0, opacity: 1, scale: 1, zIndex: 1 });
-      } else {
-        gsap.set(slide, { yPercent: 100, opacity: 0, scale: 1, zIndex: idx + 1 });
-      }
-    });
-
-    slideElements.forEach((slide, idx) => {
-      if (idx > 0) {
-        const startTime = idx * 1.0;
-
-        tl.to(slide, {
-          yPercent: 0,
-          opacity: 1,
-          zIndex: idx + 1,
-          ease: "power3.inOut",
-          duration: 0.8,
-        }, startTime);
-
-        const prevSlide = slideElements[idx - 1];
-        tl.to(prevSlide, {
-          scale: isLowEnd ? 1 : 0.94,
-          opacity: 0,
-          yPercent: isLowEnd ? 0 : -8,
-          zIndex: idx,
-          filter: isLowEnd ? "none" : "blur(8px)",
-          ease: "power3.inOut",
-          duration: 0.8,
-        }, startTime);
-      }
-    });
-
-    return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
-    };
-  }, { scope: containerRef, dependencies: [ready, reducedMotion, isLowEnd, useMobileSlides], revertOnUpdate: true });
+  }, [useMobileSlides, reducedMotion, categories.length]);
 
   return (
     <div className="bg-pts-bg min-h-screen">
@@ -165,53 +203,63 @@ export default function VisaPage() {
       </section>
 
       {/* Services Section */}
-      <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-8 px-4 sm:py-10 sm:px-8 lg:px-10 relative overflow-hidden touch-pan-y pt-[2rem] sm:pt-[3rem] lg:pt-[4rem]">
-        <div className="max-w-[1400px] mx-auto relative z-10">
+      <section ref={containerRef} className="border-t border-pts-line bg-pts-black py-8 px-4 sm:py-10 sm:px-8 lg:px-10 relative overflow-hidden touch-pan-y pt-[2rem] sm:pt-[3rem] lg:pt-[4rem] min-h-screen">
+        <div className="w-full relative z-10">
           <div className="mb-12 text-center pt-8">
             <h2 className="font-heading text-3xl sm:text-5xl tracking-[0.1em] text-pts-parchment uppercase">
               {t(locale, "visa.page.categories" as DictionaryKey)}
             </h2>
           </div>
 
-          <div className={`relative ${useMobileSlides ? "min-h-0" : "min-h-[min(72vh,680px)] sm:min-h-[450px] lg:min-h-[500px]"} overflow-hidden rounded-lg touch-pan-y`}>
-            {slides.map((slideServices, slideIndex) => (
-              <div
-                key={`slide-${slideIndex}`}
-                className={`service-slide bg-pts-black will-change-transform ${useMobileSlides ? "relative mb-6 min-h-[78svh] flex items-center" : "absolute inset-0"}`}
-                style={
-                  useMobileSlides
-                    ? undefined
-                    : { zIndex: slideIndex + 1, opacity: slideIndex === 0 ? 1 : 0 }
-                }
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`px-6 py-3 text-[0.7rem] sm:text-[0.75rem] uppercase tracking-[0.25em] transition-all duration-300 ${
+                  activeCategory === category.id
+                    ? "bg-pts-gold text-pts-black"
+                    : "bg-pts-deep/40 text-pts-parchment border border-pts-gold/40 hover:border-pts-gold/60"
+                }`}
               >
-                <div
-                  className="mx-auto grid h-full w-full max-w-md grid-cols-1 gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-8 items-stretch"
-                >
-                  {slideServices.map((service, serviceIndex) => (
-                    <div
-                      key={serviceIndex}
-                      className="w-full border border-pts-gold/40 bg-pts-deep/40 hover:border-pts-gold/60 hover:bg-pts-deep/50 transition-all duration-300 shadow-lg hover:shadow-2xl flex flex-col"
-                    >
-                      <div className="relative h-48 sm:h-52 overflow-hidden flex-shrink-0">
-                        <Image
-                          src={service.image}
-                          alt={service.title}
-                          fill
-                          className="object-cover brightness-100 saturate-100"
-                          sizes="(max-width: 767px) 100vw, 33vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
-                      </div>
-                      <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="font-heading text-[1.1rem] sm:text-[1.15rem] uppercase tracking-[0.1em] text-pts-parchment mb-3 flex-shrink-0 leading-tight">
-                          {service.title}
-                        </h3>
-                        <p className="text-[0.8rem] sm:text-[0.85rem] uppercase tracking-[0.14em] text-pts-muted/70 leading-relaxed flex-1 max-w-none">
-                          {service.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                {category.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Category Description */}
+          <div className="mb-8 text-center">
+            <p className="text-[0.7rem] sm:text-[0.8rem] uppercase tracking-[0.2em] text-pts-muted/80 leading-loose max-w-3xl mx-auto">
+              {activeCategoryData.description}
+            </p>
+          </div>
+
+          {/* Visa Cards Grid */}
+          <div className="mx-auto grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10 max-w-[1200px]">
+            {activeCategoryData.visas.map((visa, index) => (
+              <div
+                key={index}
+                className="visa-card w-full border border-pts-gold/40 bg-pts-deep/40 hover:border-pts-gold/60 hover:bg-pts-deep/50 transition-all duration-300 shadow-lg hover:shadow-2xl flex flex-col items-stretch animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="relative h-48 sm:h-52 overflow-hidden flex-shrink-0">
+                  <Image
+                    src={visa.image}
+                    alt={visa.title || "Visa"}
+                    fill
+                    className="object-cover brightness-100 saturate-100"
+                    sizes="(max-width: 767px) 100vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-pts-black/80 via-transparent to-transparent" />
+                </div>
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <h3 className="font-heading text-[1.1rem] sm:text-[1.15rem] uppercase tracking-[0.1em] text-pts-parchment mb-3 flex-shrink-0 leading-tight">
+                    {visa.title}
+                  </h3>
+                  <p className="text-[0.8rem] sm:text-[0.85rem] uppercase tracking-[0.14em] text-pts-muted/70 leading-relaxed flex-1">
+                    {visa.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -249,6 +297,8 @@ export default function VisaPage() {
               if (ok) {
                 setShowEnquiry(false);
                 enquiry.reset();
+                setSelectedVisaType("");
+                setSelectedCategory("");
               }
             }}
           >
@@ -288,17 +338,56 @@ export default function VisaPage() {
                 placeholder="+966 500 000 0000"
               />
             </div>
+
+            {/* ── Visa Type Radio Group ── */}
             <div>
-              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
-                {t(locale, "visa.page.form.visaType" as DictionaryKey)}
+              <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-2 sm:mb-3">
+                {t(locale, "visa.page.form.visaTypeGroup" as DictionaryKey)}
+                <span className="text-pts-gold/60 ml-1">*</span>
               </label>
-              <LuxurySelect
+              <div className="visa-type-radio-group">
+                {visaTypeOptions.map((option) => (
+                  <label key={option.value} className="visa-type-radio-option">
+                    <input
+                      type="radio"
+                      name="visaTypeGroup"
+                      value={option.value}
+                      required
+                      checked={selectedVisaType === option.value}
+                      onChange={() => handleVisaTypeChange(option.value)}
+                    />
+                    <span className="visa-type-radio-label">
+                      <span className="visa-type-radio-dot" aria-hidden="true" />
+                      <span className="visa-type-radio-text">{option.label}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {/* Hidden field to submit the visa type label */}
+              <input
+                type="hidden"
                 name="visaType"
-                required
-                placeholder={t(locale, "visa.page.form.selectVisa" as DictionaryKey)}
-                options={visaTypes.map((type) => ({ value: type, label: type }))}
+                value={selectedVisaType ? (visaTypeOptions.find(o => o.value === selectedVisaType)?.label ?? "") : ""}
               />
             </div>
+
+            {/* ── Category Dropdown (conditional on visa type) ── */}
+            {selectedVisaType && (
+              <div key={selectedVisaType} className="visa-category-field">
+                <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
+                  {t(locale, "visa.page.form.category" as DictionaryKey)}
+                </label>
+                <LuxurySelect
+                  name="category"
+                  required
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                  placeholder={t(locale, "visa.page.form.selectCategory" as DictionaryKey)}
+                  options={categoryOptions}
+                />
+              </div>
+            )}
+
             <div>
               <label className="block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-pts-gold mb-1.5 sm:mb-2">
                 {t(locale, "visa.page.form.destination" as DictionaryKey)}

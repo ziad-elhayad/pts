@@ -167,11 +167,59 @@ export const dictionary = {
     "visa.page.form.submit": "Submit Enquiry",
     "visa.page.form.selectVisa": "Select visa type",
     "visa.page.form.selectCountry": "Select destination country",
+    "visa.page.form.visaTypeGroup": "Visa Type",
+    "visa.page.form.radio.shortStay": "Short Stay",
+    "visa.page.form.radio.longStay": "Long Stay",
+    "visa.page.form.radio.specialized": "Specialized",
+    "visa.page.form.category": "Category",
+    "visa.page.form.selectCategory": "Select category",
     "visa.page.form.placeholder.name": "Your full name",
     "visa.page.form.placeholder.email": "your@email.com",
     "visa.page.form.placeholder.message": "Tell us about your visa requirements...",
 
-    // Visa Categories
+    // Visa Categories (NEW)
+    "visa.categories.shortStay.title": "Short Stay Visa",
+    "visa.categories.shortStay.description": "Comprehensive visa support for short-term stays including medical treatment, business travel, tourism, and family visits.",
+    "visa.categories.longStay.title": "Long Stay Visa",
+    "visa.categories.longStay.description": "Expert guidance for long-term residence including study, employment, job seeking, family reunification, and EU Blue Card applications.",
+    "visa.categories.specialized.title": "Specialized Visa",
+    "visa.categories.specialized.description": "Specialised visa facilitation for retirement, investment, digital nomad status, permanent residence, and transit purposes.",
+
+    // Short Stay Visas
+    "visa.shortStay.medical.title": "Medical Visa",
+    "visa.shortStay.medical.description": "Medical visa facilitation for healthcare travel. Gervae coordinates medical visa applications for patients seeking treatment abroad, working with healthcare providers to ensure all medical documentation and requirements are properly prepared and submitted.",
+    "visa.shortStay.business.title": "Business Visa",
+    "visa.shortStay.business.description": "Expert business visa facilitation for corporate travel. Gervae manages business visa applications with precision, handling documentation, invitation letters, and submission processes for executives, entrepreneurs, and professionals conducting international business.",
+    "visa.shortStay.tourist.title": "Tourist Visa — Wellness Retreats",
+    "visa.shortStay.tourist.description": "Comprehensive tourist visa support for regular passport holders. Gervae manages the entire application process, from document preparation and appointment scheduling to final submission, ensuring a smooth and efficient experience for leisure travellers.",
+    "visa.shortStay.family.title": "Family Visit Visa",
+    "visa.shortStay.family.description": "Family visit visa support for visiting relatives abroad. Gervae assists with family visit visa applications, managing documentation requirements and invitation verification to enable seamless family reunions and extended stays with loved ones.",
+
+    // Long Stay Visas
+    "visa.longStay.student.title": "Student Visa",
+    "visa.longStay.student.description": "Transform your educational dreams into European reality. From university selection and admission support to complete visa facilitation and accommodation coordination, Gervae handles every detail so you can concentrate on academic excellence.",
+    "visa.longStay.employment.title": "Employment Work Visa",
+    "visa.longStay.employment.description": "Expert Employment Work Visa facilitation for skilled professionals. Gervae manages employer sponsorship, regulatory compliance, complete documentation, and relocation logistics — enabling you to focus entirely on professional excellence in your new role.",
+    "visa.longStay.jobSeeker.title": "Job Seeker Visa",
+    "visa.longStay.jobSeeker.description": "Expert Job Seeker Visa support for career flexibility. Gervae verifies your qualifications, manages visa applications, coordinates job search strategy, and facilitates your transition to permanent employment — allowing you to discover the perfect European opportunity.",
+    "visa.longStay.familyReunion.title": "Family Reunion",
+    "visa.longStay.familyReunion.description": "Bridge the distance to your European family. From invitation letter preparation and document verification to flight coordination and accommodation arrangement, Gervae handles every detail so you can focus entirely on reconnecting with those you love.",
+    "visa.longStay.euBlueCard.title": "EU Blue Card",
+    "visa.longStay.euBlueCard.description": "Expert EU Blue Card support for exceptional professionals. Gervae verifies your qualifications, manages salary documentation, coordinates visa applications, and ensures your transition to EU-wide employment mobility — recognising your position as Europe's most talented workforce.",
+
+    // Other Specialized Visas
+    "visa.specialized.retirement.title": "Retirement Visa / Residence Permit",
+    "visa.specialized.retirement.description": "Embrace your European retirement with sophistication and ease. Gervae curates your ideal retirement destination, manages financial documentation, coordinates healthcare and banking, and orchestrates complete relocation logistics — transforming your well-deserved rest into an elegant Mediterranean or Continental lifestyle.",
+    "visa.specialized.investor.title": "Investor / Entrepreneur Visa",
+    "visa.specialized.investor.description": "Empower your vision with European opportunity. Gervae provides end-to-end support for investors and entrepreneurs — from business plan validation and capital documentation to regulatory compliance and residency facilitation. We coordinate every detail of your investment or entrepreneurial journey, ensuring smooth establishment and growth in Europe, while you focus entirely on innovation and success.",
+    "visa.specialized.digitalNomad.title": "Digital Nomad Visa",
+    "visa.specialized.digitalNomad.description": "Work remotely, live globally. Gervae provides complete Digital Nomad Visa support — from income verification and residency documentation to accommodation coordination and long-term stay facilitation. We handle every detail of your relocation, ensuring you can focus entirely on productivity and lifestyle while enjoying Europe's cultural and professional opportunities.",
+    "visa.specialized.permanent.title": "Residence Permit / Permanent Residence",
+    "visa.specialized.permanent.description": "Secure your long-term future in Europe. Gervae provides comprehensive Residence Permit and Permanent Residence support — from eligibility assessment and documentation management to regulatory compliance and accommodation coordination. We handle every detail of your application process, ensuring a seamless transition to permanent settlement while you focus entirely on building your life and career in Europe.",
+    "visa.specialized.transit.title": "Transit Visa",
+    "visa.specialized.transit.description": "Seamless passage through Europe. Gervae provides complete Transit Visa support — from itinerary verification and documentation management to flight coordination and compliance with Schengen regulations. We handle every detail of your short-stay transit, ensuring smooth travel connections while you focus entirely on reaching your final destination.",
+
+    // Visa Categories (OLD - Kept for compatibility)
     "visa.service1.title": "Tourist Visas for Regular Passports",
     "visa.service1.description": "Comprehensive tourist visa support for regular passport holders. Gervae manages the entire application process, from document preparation and appointment scheduling to final submission, ensuring a smooth and efficient experience for leisure travellers.",
     "visa.service2.title": "Schengen UK",
@@ -581,9 +629,23 @@ export const dictionary = {
     "visa.page.form.submit": "إرسال الاستفسار",
     "visa.page.form.selectVisa": "اختر نوع التأشيرة",
     "visa.page.form.selectCountry": "اختر الوجهة",
+    "visa.page.form.visaTypeGroup": "نوع التأشيرة",
+    "visa.page.form.category": "الفئة",
+    "visa.page.form.selectCategory": "اختر الفئة",
+    "visa.page.form.radio.shortStay": "إقامة قصيرة",
+    "visa.page.form.radio.longStay": "إقامة طويلة",
+    "visa.page.form.radio.specialized": "تأشيرة متخصصة",
     "visa.page.form.placeholder.name": "اسمك الكامل",
     "visa.page.form.placeholder.email": "your@email.com",
     "visa.page.form.placeholder.message": "أخبرنا عن متطلبات التأشيرة الخاصة بك...",
+
+    // Visa Type Group Titles (for radio buttons)
+    "visa.categories.shortStay.title": "تأشيرة الإقامة القصيرة",
+    "visa.categories.shortStay.description": "دعم شامل للإقامات القصيرة بما فيها العلاج الطبي والسفر التجاري والسياحة وزيارات العائلة.",
+    "visa.categories.longStay.title": "تأشيرة الإقامة الطويلة",
+    "visa.categories.longStay.description": "إرشاد خبير للإقامة طويلة المدى بما يشمل الدراسة والتوظيف والباحث عن عمل ولم الشمل العائلي والبطاقة الزرقاء الأوروبية.",
+    "visa.categories.specialized.title": "التأشيرات المتخصصة",
+    "visa.categories.specialized.description": "تيسير تأشيرات متخصصة للتقاعد والاستثمار والرحالة الرقمي والإقامة الدائمة والعبور.",
 
     // Visa Categories
     "visa.service1.title": "تأشيرات السياحة للجوازات العادية",
@@ -622,6 +684,40 @@ export const dictionary = {
     "visa.service17.description": "دعم تأشيرة زيارة العائلة لزيارة الأقارب في الخارج. تساعد Gervae في طلبات تأشيرة زيارة العائلة، إدارة متطلبات التوثيق والتحقق من الدعوات لتمكين لم الشمل العائلي السلس والإقامات الممتدة مع الأحباء.",
     "visa.service18.title": "تأشيرات الإقامة طويلة المدى",
     "visa.service18.description": "دعم شامل لتأشيرة الإقامة طويلة المدى. ترشد Gervae المتقدمين عبر العملية المعقدة للحصول على الإقامة طويلة المدى، إدارة التوثيق والتحقق من الخلفية وعمليات التقديم لطلبات الإقامة الدائمة.",
+
+    // Short Stay Visas
+    "visa.shortStay.medical.title": "تأشيرة العلاج الطبي",
+    "visa.shortStay.medical.description": "تسهيل تأشيرة العلاج للسفر الطبي. تنسق Gervae طلبات تأشيرة العلاج للمرضى الذين يسعون للعلاج في الخارج، بالعمل مع مقدمي الرعاية الصحية لضمان إعداد جميع الوثائق والمتطلبات الطبية وتقديمها بشكل صحيح.",
+    "visa.shortStay.business.title": "تأشيرة الأعمال",
+    "visa.shortStay.business.description": "تسهيل تأشيرة الأعمال الخبير للسفر التجاري. تدير Gervae طلبات تأشيرة الأعمال بدقة، معالجة الوثائق ورسائل الدعوة وعمليات التقديم للمديرين التنفيذيين ورواد الأعمال والمحترفين الذين يجرون أعمالاً دولية.",
+    "visa.shortStay.tourist.title": "تأشيرة السياحة — ملاذات الصحة والعافية",
+    "visa.shortStay.tourist.description": "دعم شامل لتأشيرات السياحة لحاملي الجوازات العادية. تدير Gervae عملية التقديم بالكامل، من إعداد الوثائق وجدولة المواعيد إلى التقديم النهائي، لضمان تجربة سلسة وفعالة للمسافرين لأغراض الترفيه والاستجمام.",
+    "visa.shortStay.family.title": "تأشيرة زيارة العائلة",
+    "visa.shortStay.family.description": "دعم تأشيرة زيارة العائلة لزيارة الأقارب في الخارج. تساعد Gervae في طلبات تأشيرة زيارة العائلة، إدارة متمتطلبات التوثيق والتحقق من الدعوات لتمكين لم الشمل العائلي السلس والإقامات الممتدة مع الأحباء.",
+
+    // Long Stay Visas
+    "visa.longStay.student.title": "تأشيرة الطالب",
+    "visa.longStay.student.description": "حوّل أحلامك التعليمية إلى واقع أوروبي ملموس. من اختيار الجامعة ودعم القبول إلى تيسير التأشيرة بالكامل وتنسيق الإقامة، تتولى Gervae كل تفصيل لتتفرغ تماماً للتميز الأكاديمي.",
+    "visa.longStay.employment.title": "تأشيرة العمل والتوظيف",
+    "visa.longStay.employment.description": "تسهيل خبير لتأشيرة العمل والتوظيف للمحترفين المهرة. تدير Gervae رعاية صاحب العمل والامتثال التنظيمي والتوثيق الكامل ولوجستيات الانتقال — لتتفرغ تماماً للتميز المهني في دورك الجديد.",
+    "visa.longStay.jobSeeker.title": "تأشيرة الباحث عن عمل",
+    "visa.longStay.jobSeeker.description": "دعم خبير لتأشيرة الباحثين عن عمل لمرونة مهنية أكبر. تتحقق Gervae من مؤهلاتك وتدير طلبات التأشيرة وتنسق استراتيجية البحث عن عمل وتُيسّر انتقالك إلى التوظيف الدائم — لتكتشف الفرصة الأوروبية المثالية.",
+    "visa.longStay.familyReunion.title": "لم الشمل العائلي",
+    "visa.longStay.familyReunion.description": "اختصر المسافة إلى عائلتك في أوروبا. من إعداد خطابات الدعوة والتحقق من الوثائق إلى تنسيق الرحلات وترتيب الإقامة، تتولى Gervae كل تفصيل لتتفرغ تماماً لإعادة التواصل مع أحبائك.",
+    "visa.longStay.euBlueCard.title": "البطاقة الزرقاء الأوروبية (EU Blue Card)",
+    "visa.longStay.euBlueCard.description": "دعم خبير للبطاقة الزرقاء الأوروبية (EU Blue Card) للمحترفين المتميزين. تتحقق Gervae من مؤهلاتك وتدير توثيق الراتب وتنسق طلبات التأشيرة وتضمن انتقالك إلى حرية التنقل الوظيفي في الاتحاد الأوروبي — تقديراً لمكانتك كأحد أبرز الكفاءات في أوروبا.",
+
+    // Other Specialized Visas
+    "visa.specialized.retirement.title": "تأشيرة التقاعد / تصريح الإقامة",
+    "visa.specialized.retirement.description": "عِش تقاعدك الأوروبي بأناقة وسهولة. تختار Gervae لك وجهة التقاعد المثالية وتدير التوثيق المالي وتنسق الرعاية الصحية والخدمات المصرفية وتُنظّم لوجستيات الانتقال بالكامل — لتحويل راحتك التي تستحقها إلى أسلوب حياة متوسطي أو قاري راقٍ.",
+    "visa.specialized.investor.title": "تأشيرة المستثمر / رائد الأعمال",
+    "visa.specialized.investor.description": "حقّق رؤيتك مع الفرص الأوروبية. تقدم Gervae دعماً متكاملاً للمستثمرين ورواد الأعمال — من التحقق من خطة العمل وتوثيق رأس المال إلى الامتثال التنظيمي وتيسير الإقامة. ننسق كل تفصيل في رحلتك الاستثمارية أو الريادية، لضمان تأسيس ونمو سلسين في أوروبا، بينما تتفرغ تماماً للابتكار والنجاح.",
+    "visa.specialized.digitalNomad.title": "تأشيرة الرحالة الرقمي",
+    "visa.specialized.digitalNomad.description": "اعمل عن بُعد، وعِش بلا حدود. تقدم Gervae دعماً متكاملاً لتأشيرة الرحالة الرقمي — من التحقق من الدخل وتوثيق الإقامة إلى تنسيق الإقامة وتيسير الإقامة طويلة المدى. نتولى كل تفصيل في انتقالك، لتتفرغ تماماً للإنتاجية ونمط الحياة بينما تستمتع بالفرص الثقافية والمهنية في أوروبا.",
+    "visa.specialized.permanent.title": "تصريح الإقامة / الإقامة الدائمة",
+    "visa.specialized.permanent.description": "أمّن مستقبلك على المدى الطويل في أوروبا. تقدم Gervae دعماً شاملاً لتصاريح الإقامة والإقامة الدائمة — من تقييم الأهلية وإدارة التوثيق إلى الامتثال التنظيمي وتنسيق الإقامة. نتولى كل تفصيل في عملية طلبك، لضمان انتقال سلس إلى الاستقرار الدائم بينما تتفرغ تماماً لبناء حياتك ومسارك المهني في أوروبا.",
+    "visa.specialized.transit.title": "تأشيرة العبور",
+    "visa.specialized.transit.description": "عبور سلس خلال أوروبا. تقدم Gervae دعماً متكاملاً لتأشيرة العبور — من التحقق من خط الرحلة وإدارة التوثيق إلى تنسيق الرحلات والامتثال لأنظمة شنغن. نتولى كل تفصيل في عبورك القصير، لضمان اتصالات سفر سلسة بينما تتفرغ تماماً للوصول إلى وجهتك النهائية.",
 
     // Education Services Section (NEW)
     "services.section.education.title": "التعليم",

@@ -72,29 +72,18 @@ export default function EducationPage() {
     const slideElements = containerRef.current.querySelectorAll(".service-slide");
 
     const totalSlides = slideElements.length;
-    // Build snap points: evenly distributed across slides
-    const snapPoints = Array.from({ length: totalSlides - 1 }, (_, i) =>
-      i / (totalSlides - 1)
-    );
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        // Reduce scroll distance further
-        end: `+=${(totalSlides + 1) * (isLowEnd ? 80 : 100)}%`,
+        // Shorter scroll distance for one-scroll-one-slide
+        end: `+=${totalSlides * 75}%`,
         pin: true,
         anticipatePin: 1,
-        // Lower scrub value for faster scroll response
-        scrub: 0.3,
-        // Snap to each slide after scrolling stops
-        snap: {
-          snapTo: snapPoints,
-          duration: { min: 0.4, max: 0.6 },
-          delay: 0,
-          ease: "power2.out",
-          inertia: false,
-        },
+        // Lower scrub value for instant response
+        scrub: 0.1,
+        // Remove snap for instant control
         fastScrollEnd: true,
       },
     });
@@ -116,8 +105,8 @@ export default function EducationPage() {
           yPercent: 0,
           opacity: 1,
           zIndex: idx + 1,
-          ease: "power3.inOut",
-          duration: 0.8,
+          ease: "power2.inOut",
+          duration: 0.4,
         }, startTime);
 
         const prevSlide = slideElements[idx - 1];
@@ -127,8 +116,8 @@ export default function EducationPage() {
           yPercent: isLowEnd ? 0 : -8,
           zIndex: idx,
           filter: isLowEnd ? "none" : "blur(8px)",
-          ease: "power3.inOut",
-          duration: 0.8,
+          ease: "power2.inOut",
+          duration: 0.4,
         }, startTime);
       }
     });

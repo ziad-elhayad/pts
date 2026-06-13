@@ -25,10 +25,10 @@ export const navItems = [
 ] as const;
 
 export const serviceItems = [
+  { href: "/services/visa", key: "services.section.visa.title" as const },
   { href: "/services/concierge", key: "services.concierge" as const },
   { href: "/services/mice", key: "services.mice" as const },
+  { href: "/services/education", key: "services.section.education.title" as const },
   { href: "/services/medical-tourism", key: "services.medical" as const },
   { href: "/services/sports", key: "services.sports" as const },
-  { href: "/services/visa", key: "services.section.visa.title" as const },
-  { href: "/services/education", key: "services.section.education.title" as const },
 ] as const;
