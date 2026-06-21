@@ -144,7 +144,7 @@ export default function ContactPage() {
                   name="phone"
                   required
                   className="w-full bg-pts-black/50 border border-pts-gold/20 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-[0.7rem] sm:text-[0.72rem] md:text-[0.75rem] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-pts-parchment placeholder-pts-muted/50 focus:border-pts-gold focus:outline-none transition-colors rounded-none"
-                  placeholder="+966 500 000 0000"
+                  placeholder="+20 101 018 0344"
                 />
               </div>
 
@@ -244,6 +244,10 @@ export default function ContactPage() {
               </div>
 
               <FormStatusMessage status={status} errorMessage={errorMessage} />
+
+              <p className="text-[0.55rem] sm:text-[0.6rem] text-pts-muted/40 text-center uppercase tracking-[0.2em] leading-relaxed">
+                {t(locale, "contact.page.form.privacy.note" as DictionaryKey)}
+              </p>
 
               <div className="flex justify-center pt-2 sm:pt-4">
                 <MagneticButton

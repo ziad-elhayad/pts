@@ -7,7 +7,7 @@ export const site = {
   url: "https://pts-private-travel.com",
   email: "info@gervae.com",
   enquiryEmail: "info@gervae.com",
-  phone: "+966 12 000 0000",
+  phone: "+20 101 018 0344",
   whatsapp: "https://wa.me/966500000000",
   city: "Jeddah, Saudi Arabia",
   social: {

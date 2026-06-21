@@ -69,6 +69,8 @@ export function LuxuryFooter() {
                 "info@gervae.com",
                 "support@gervae.com",
                 "visa@gervae.com",
+                "concierge@gervae.com",
+                "medical@gervae.com",
                 "hr@gervae.com",
                 "accounts@gervae.com",
               ].map((email) => (
